@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_home"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.goockr.inductioncooker.activity.HomeActivity">
+
+    <RelativeLayout
+        android:id="@+id/activity_home_narbar"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/activity_home_title_tv"
+            android:text="xxxx"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textStyle ="bold"
+            />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorlightgray"
+            />
+
+    </RelativeLayout>
+
+
+    <!-- 存放主要页面内容 -->
+
+    <FrameLayout
+        android:id="@+id/maincontent"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.01" >
+    </FrameLayout>
+
+    <!--<com.goockr.inductioncooker.view.CustomView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="45dp"-->
+        <!--android:background="@color/colorPrimary">-->
+
+
+    <!--</com.goockr.inductioncooker.view.CustomView>-->
+
+    <com.goockr.inductioncooker.view.Tabbar
+        android:id="@+id/tabbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </com.goockr.inductioncooker.view.Tabbar>
+
+    <!--<include layout="@layout/activity_bottom" />-->
+
+</LinearLayout>

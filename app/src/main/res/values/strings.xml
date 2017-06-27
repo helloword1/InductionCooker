@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">和一电磁炉</string>
+
+
+    <string name="title_activity_main">MainActivity</string>
+    <string name="project">首页</string>
+    <string name="msg">通知</string>
+    <string name="mine">更多</string>
+    <string name="two">2</string>
+    <string name="top_hint">将条形码或二维码置于取景框内系统会自动扫描</string>
+
+
+</resources>
