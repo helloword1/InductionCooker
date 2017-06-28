@@ -13,6 +13,14 @@
         android:background="@color/colorGreen"
         >
 
+        <com.goockr.inductioncooker.view.SegmentController
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/fragment_home_segment"
+            >
+
+        </com.goockr.inductioncooker.view.SegmentController>
+
     </LinearLayout>
 
     <LinearLayout

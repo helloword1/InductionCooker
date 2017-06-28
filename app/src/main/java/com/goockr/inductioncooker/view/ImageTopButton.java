@@ -28,6 +28,8 @@ public class ImageTopButton extends LinearLayout implements View.OnTouchListener
 
     View contentView;
 
+    private ImageTopButtonOnClickListener callback;
+
     @BindView(R.id.imagetop_button_title_tv)
     TextView title_tv;
     @BindView(R.id.imagetop_button_top_iv)
@@ -164,6 +166,10 @@ public class ImageTopButton extends LinearLayout implements View.OnTouchListener
 
     }
 
+    public void  buttonOnClickListener(ImageTopButtonOnClickListener callback)
+    {
+        this.callback=callback;
+    }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -193,6 +199,19 @@ public class ImageTopButton extends LinearLayout implements View.OnTouchListener
     @Override
     public void onClick(View v) {
 
-        Toast.makeText(MyApplication.getContext(),"onClick",Toast.LENGTH_SHORT);
+       // Toast.makeText(MyApplication.getContext(),"onClick",Toast.LENGTH_SHORT);
+
+        if (this.callback!=null)
+        {
+            this.callback.imageTopButtonOnClickListener(this);
+        }
+
+
     }
+
+    public interface  ImageTopButtonOnClickListener
+    {
+        public void  imageTopButtonOnClickListener(ImageTopButton button);
+    }
+
 }

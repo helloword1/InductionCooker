@@ -14,16 +14,19 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by CMQ on 2017/6/27.
  */
 
-public class LeftDeviceFragment extends Fragment {
+public class LeftDeviceFragment extends Fragment implements View.OnClickListener, ImageTopButton.ImageTopButtonOnClickListener {
 
     View contentView;
 
     List<ImageTopButton> buttons;
+
+    private LeftDeviceFragmentCallback callback;
 
     @BindView(R.id.fragment_leftdevice_bt0)
     ImageTopButton bt_0;
@@ -101,6 +104,66 @@ public class LeftDeviceFragment extends Fragment {
     private void  initEvent()
     {
 
+        for (ImageTopButton bt:buttons) {
+
+            bt.setClickable(true);
+            bt.buttonOnClickListener(this);
+
+          //  bt.setOnClickListener();
+
+        }
+
     }
+
+    public void buttonOnClickListener(LeftDeviceFragmentCallback callback)
+    {
+        this.callback=callback;
+    }
+
+    @Override
+    public void onClick(View v) {
+
+
+
+    }
+
+    @Override
+    public void imageTopButtonOnClickListener(ImageTopButton button) {
+
+        button.setSelect(!button.isSelect());
+
+        if (this.callback!=null)
+        {
+            this.callback.leftDeviceFragmentButtonClick(button);
+        }
+
+
+
+    }
+
+
+//    public void onClick(View v) {
+//
+//        switch (v.getId()){
+//
+//            default:
+//
+//                ImageTopButton bt=(ImageTopButton)v;
+//                bt.setSelect(!bt.isSelect());
+//
+//                break;
+//
+//        }
+//
+//    }
+
+    public interface LeftDeviceFragmentCallback{
+
+         void leftDeviceFragmentButtonClick(ImageTopButton button);
+
+    }
+
+
+
 
 }

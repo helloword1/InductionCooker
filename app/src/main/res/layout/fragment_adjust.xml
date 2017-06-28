@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_adjust_lower_ib"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center"
+        android:background="@color/colorCusTransparent"
+        android:src="@mipmap/home_btn_icon_lower"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_adjust_moden_tv"
+        android:text="XXXX"
+        android:textSize="18sp"
+        android:layout_marginLeft="20dp"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/home_data_backplane"
+            />
+
+        <com.goockr.inductioncooker.view.ProgressView
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:id="@+id/fragment_adjust_pv"
+            android:layout_centerInParent="true"
+
+            />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fragment_adjust_reservation_ib"
+            android:background="@drawable/btn_data_reservation"
+            android:layout_alignBottom="@+id/fragment_adjust_pv"
+            android:layout_toLeftOf="@+id/fragment_adjust_pv"
+            android:layout_marginRight="20dp"
+            />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fragment_adjust_unreservation_ib"
+            android:background="@drawable/btn_data_cancel"
+            android:layout_alignBottom="@+id/fragment_adjust_pv"
+            android:layout_toRightOf="@+id/fragment_adjust_pv"
+            android:layout_marginLeft="20dp"
+            />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/home_data_backplane"
+            />
+
+    </RelativeLayout>
+
+
+</LinearLayout>

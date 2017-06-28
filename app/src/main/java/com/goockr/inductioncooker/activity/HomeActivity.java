@@ -7,15 +7,18 @@ import android.app.FragmentTransaction;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.fragment.HomeFragment;
@@ -34,10 +37,8 @@ public class HomeActivity extends FragmentActivity {
 
     @BindView(R.id.tabbar)
     Tabbar tabbar;
-    @BindView(R.id.activity_home_title_tv)
-    TextView title_tv;
-    @BindView(R.id.activity_home_narbar)
-    RelativeLayout narbar;
+
+
 
 
 
@@ -65,23 +66,22 @@ public class HomeActivity extends FragmentActivity {
             public void tabbarItenChange(int selectIndex) {
                 FragmentManager fragmentManager= getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
 
                 switch (selectIndex){
                     case (0):
-                        narbar.setVisibility(View.GONE);
+
                         fragmentTransaction.replace(R.id.maincontent,new HomeFragment(),"HomeFragment");
 
                         break;
                     case (1):
                         fragmentTransaction.replace(R.id.maincontent,new NoticeFragment(),"HomeFragment");
-                        narbar.setVisibility(View.VISIBLE);
-                        title_tv.setText("通知");
+
                         break;
                     case (2):
                         fragmentTransaction.replace(R.id.maincontent,new MoreFragment(),"HomeFragment");
-                        narbar.setVisibility(View.VISIBLE);
-                        title_tv.setText("更多");
+
                         break;
                 }
 
@@ -134,6 +134,31 @@ public class HomeActivity extends FragmentActivity {
     }
 
 
+    private  int backCount=0;
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode==KeyEvent.KEYCODE_BACK)
+        {
+            backCount++;
+
+            if (backCount<2)
+            {
+                Toast.makeText(this, "5秒内按返回键退出应用", Toast.LENGTH_SHORT).show();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        backCount=0;
+                    }
+                },5000);
+                return false;
+            }
 
 
+
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
 }

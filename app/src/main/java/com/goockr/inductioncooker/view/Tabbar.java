@@ -69,9 +69,9 @@ public class Tabbar extends LinearLayout {
         // TODO Auto-generated constructor stub
 //        LayoutInflater inflater=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 //        inflater.inflate(R.layout.tabbar,this);
-        LayoutInflater.from(context).inflate(R.layout.tabbar, this, true);
+       View view= LayoutInflater.from(context).inflate(R.layout.tabbar, this, true);
 
-        ButterKnife.bind(this);
+        ButterKnife.bind(this,view);
 
         selLinearLayout=ll_home;
 

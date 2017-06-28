@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.view.ImageTopButton;
+import com.goockr.inductioncooker.view.SegmentController;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,10 +23,14 @@ import butterknife.OnClick;
  * Created by CMQ on 2017/6/21.
  */
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements SegmentController.SegmentControllerCallback, LeftDeviceFragment.LeftDeviceFragmentCallback {
 
 
     View contentView;
+
+    private LeftDeviceFragment leftFragment;
+    private RightDeviceFragment rightFragment;
+
 
     @BindView(R.id.fragment_home_power_bt)
     ImageTopButton power_bt;
@@ -35,6 +40,8 @@ public class HomeFragment extends Fragment {
     ImageTopButton unreservation_bt;
     @BindView(R.id.fragment_home_moden_ll)
     LinearLayout moden_ll;
+    @BindView(R.id.fragment_home_segment)
+    SegmentController segmentController;
 
 
 
@@ -57,6 +64,9 @@ public class HomeFragment extends Fragment {
     }
 
     private void initEvent() {
+
+        segmentController.addListener(this);
+
     }
 
     private void initUI() {
@@ -79,9 +89,17 @@ public class HomeFragment extends Fragment {
         unreservation_bt.setNormTextCoclor(R.color.colorBlack);
         unreservation_bt.setText("取消预约");
 
+
+
         FragmentManager fragmentManager= getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_home_moden_ll,new LeftDeviceFragment(),"LeftDeviceFragment");
+        if (leftFragment==null)
+        {
+            leftFragment=new LeftDeviceFragment();
+            leftFragment.buttonOnClickListener(this);
+            fragmentTransaction.add(R.id.fragment_home_moden_ll,leftFragment,"LeftDeviceFragment");
+        }
+
         fragmentTransaction.commit();
 
 
@@ -103,5 +121,73 @@ public class HomeFragment extends Fragment {
     }
 
 
+    @Override
+    public void selectIndexChange(int index) {
+
+        FragmentManager fragmentManager= getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        if (index==0)
+        {
+
+            if (leftFragment==null)
+            {
+                leftFragment=new LeftDeviceFragment();
+                leftFragment.buttonOnClickListener(this);
+                fragmentTransaction.add(R.id.fragment_home_moden_ll,leftFragment,"LeftDeviceFragment");
+            }
+
+            //隐藏所有fragment
+            hideFragment(fragmentTransaction);
+            //显示需要显示的fragment
+            fragmentTransaction.show(leftFragment);
+        }else {
+
+            if (rightFragment==null)
+            {
+                rightFragment=new RightDeviceFragment();
+                fragmentTransaction.add(R.id.fragment_home_moden_ll,rightFragment,"RightDeviceFragment");
+            }
+            //隐藏所有fragment
+            hideFragment(fragmentTransaction);
+            //显示需要显示的fragment
+            fragmentTransaction.show(rightFragment);
+        }
+
+
+
+        fragmentTransaction.commit();
+
+    }
+
+    @Override
+    public void leftDeviceFragmentButtonClick(ImageTopButton button) {
+
+
+        FragmentManager fragmentManager= getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        hideFragment(fragmentTransaction);
+
+        AdjustFragment fragment=new AdjustFragment();
+        fragmentTransaction.add(R.id.fragment_home_moden_ll,fragment,"AdjustFragment");
+
+        fragmentTransaction.show(fragment);
+        fragmentTransaction.commit();
+
+
+
+
+    }
+
+    //隐藏所有的fragment
+    private void hideFragment(FragmentTransaction transaction){
+        if(leftFragment != null){
+            transaction.hide(leftFragment);
+        }
+        if(rightFragment != null){
+            transaction.hide(rightFragment);
+        }
+
+    }
 
 }
