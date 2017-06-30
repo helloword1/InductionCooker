@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <!--public int progress=10;-->
+
+    <!--public int maxCount=10;-->
+    <!---->
+    <!--public int startAngle=120;-->
+
+    <!--public  int sweepAngle=300;-->
+
+    <declare-styleable name="RingRoundProgressView">
+        <attr name="progress" format="integer" /><!--当前进度值-->
+        <attr name="maxCount" format="integer" /><!--最大进度-->
+        <attr name="startAngle" format="integer" /><!--起始角度-->
+        <attr name="sweepAngle" format="integer" /><!--经过角度-->
+    </declare-styleable>
+
+</resources>
