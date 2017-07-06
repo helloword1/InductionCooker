@@ -3,6 +3,7 @@ package com.goockr.inductioncooker.fragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.goockr.inductioncooker.R;
+import com.goockr.inductioncooker.activity.ReservationActivity;
+import com.goockr.inductioncooker.common.Common;
 import com.goockr.inductioncooker.view.ImageTopButton;
 import com.goockr.inductioncooker.view.SegmentController;
 
@@ -23,13 +26,16 @@ import butterknife.OnClick;
  * Created by CMQ on 2017/6/21.
  */
 
-public class HomeFragment extends Fragment implements SegmentController.SegmentControllerCallback, LeftDeviceFragment.LeftDeviceFragmentCallback {
+public class HomeFragment extends Fragment implements SegmentController.SegmentControllerCallback, LeftDeviceFragment.LeftDeviceFragmentCallback, AdjustFragment.AdjustFragmentCallback, ImageTopButton.ImageTopButtonOnClickListener {
 
 
     View contentView;
 
     private LeftDeviceFragment leftFragment;
     private RightDeviceFragment rightFragment;
+    private AdjustFragment adjustFragment;
+
+    private boolean isShowAdjustFragment=false;
 
 
     @BindView(R.id.fragment_home_power_bt)
@@ -89,6 +95,10 @@ public class HomeFragment extends Fragment implements SegmentController.SegmentC
         unreservation_bt.setNormTextCoclor(R.color.colorBlack);
         unreservation_bt.setText("取消预约");
 
+        reservation_bt.buttonOnClickListener(this);
+        unreservation_bt.buttonOnClickListener(this);
+        power_bt.buttonOnClickListener(this);
+
 
 
         FragmentManager fragmentManager= getFragmentManager();
@@ -113,6 +123,8 @@ public class HomeFragment extends Fragment implements SegmentController.SegmentC
             case (R.id.fragment_home_power_bt):
                 break;
             case (R.id.fragment_home_reservation_bt):
+
+
                 break;
             case (R.id.fragment_home_unreservation_bt):
                 break;
@@ -166,12 +178,22 @@ public class HomeFragment extends Fragment implements SegmentController.SegmentC
 
         FragmentManager fragmentManager= getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+
+
+
+        if (adjustFragment==null)
+        {
+            adjustFragment=new AdjustFragment();
+
+        }
+
+        adjustFragment.setCallback(this);
+
+
+        fragmentTransaction.add(R.id.fragment_home_moden_ll,adjustFragment,"AdjustFragment");
         hideFragment(fragmentTransaction);
-
-        AdjustFragment fragment=new AdjustFragment();
-        fragmentTransaction.add(R.id.fragment_home_moden_ll,fragment,"AdjustFragment");
-
-        fragmentTransaction.show(fragment);
+        fragmentTransaction.show(adjustFragment);
         fragmentTransaction.commit();
 
 
@@ -190,4 +212,40 @@ public class HomeFragment extends Fragment implements SegmentController.SegmentC
 
     }
 
+    @Override
+    public void removeAdjustFragment() {
+
+        if (adjustFragment!=null)
+        {
+            FragmentManager fragmentManager= getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+            fragmentTransaction.remove(adjustFragment);
+            fragmentTransaction.commit();
+            adjustFragment=null;
+        }
+
+
+
+    }
+
+    @Override
+    public void imageTopButtonOnClickListener(ImageTopButton button) {
+
+        switch (button.getId())
+        {
+            case (R.id.fragment_home_reservation_bt):
+
+                Intent intent=new Intent(getActivity(),ReservationActivity.class);
+                intent.putExtra(Common.HomeFragmentSelectIndexKey,segmentController.getSelectIndex());
+                getActivity().startActivity(intent);
+
+                break;
+            case (R.id.fragment_home_unreservation_bt):
+                break;
+            case (R.id.fragment_home_power_bt):
+                break;
+        }
+
+    }
 }

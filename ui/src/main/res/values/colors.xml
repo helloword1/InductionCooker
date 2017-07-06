@@ -1,2 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+
+    <color name="colorNavbar">#f0f0f0</color>
+    <color name="colorNavbarTitle">#000000</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorCusTrans">#00000000</color>
+
+</resources>

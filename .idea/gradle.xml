@@ -10,6 +10,8 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/library" />
+            <option value="$PROJECT_DIR$/libraryFragmentTransactionExtended" />
+            <option value="$PROJECT_DIR$/ui" />
             <option value="$PROJECT_DIR$/zxing-demo-1" />
           </set>
         </option>

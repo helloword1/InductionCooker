@@ -41,4 +41,8 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.2.0'
     compile project(':library')
     compile project(':zxing-demo-1')
+    compile project(':ui')
+    //PickerView依赖
+    compile 'com.contrarywind:Android-PickerView:3.2.5'
+    compile project(':libraryFragmentTransactionExtended')
 }

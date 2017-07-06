@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="ImageTopButton">
+        <attr name="normImage" format="reference" /><!--普通状态图片-->
+        <attr name="selImage" format="reference" /><!--选中状态图片-->
+        <attr name="displayImage" format="reference" /><!--禁止状态图片-->
+        <attr name="text" format="string" /><!--按钮标题-->
+        <attr name="textColor" format="color" /><!--按钮标题颜色-->
+    </declare-styleable>
+
+</resources>

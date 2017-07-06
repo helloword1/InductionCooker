@@ -86,7 +86,7 @@ public class LeftDeviceFragment extends Fragment implements View.OnClickListener
         setButtonType(bt_3,R.mipmap.btn_water_normal,R.mipmap.btn_water__selected,R.mipmap.btn_water_disabled,R.color.colorGrayText,"烧水");
         setButtonType(bt_4,R.mipmap.brn_hotpot__normal,R.mipmap.brn_hotpot_selected,R.mipmap.brn_hotpot_disabled,R.color.colorGrayText,"火锅");
         setButtonType(bt_5,R.mipmap.btn_fry_normal,R.mipmap.btn_fry_selected,R.mipmap.btn_fry_disabled,R.color.colorGrayText,"煎炒");
-        setButtonType(bt_6,R.mipmap.btn_baked_normal,R.mipmap.btn_baked_selected,R.mipmap.btn_baked_disabled,R.color.colorGrayText,"烤炸");
+        setButtonType(bt_6,R.mipmap.btn_baked_fried_normal,R.mipmap.btn_baked_fried__selected,R.mipmap.btn_baked_fried_disabled,R.color.colorGrayText,"烤炸");
         setButtonType(bt_7,R.mipmap.btn_temperature_normal,R.mipmap.btn_temperature__selected,R.mipmap.btn_temperature_disabled,R.color.colorGrayText,"保温");
 
     }

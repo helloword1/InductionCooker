@@ -1,5 +1,6 @@
 package com.goockr.ui.view.activity;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
@@ -9,10 +10,10 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-import it.gk.environmentalprotectionbox.BaseActivity.BaseActivity;
-import it.gk.environmentalprotectionbox.R;
+import com.goockr.ui.R;
 
-public class CompanyIntroduceActivity extends BaseActivity {
+
+public class CompanyIntroduceActivity extends Activity {
     Button bt_ComIntroduceBack;
     ProgressBar pb_ProgressBar;
     WebView web_View;
@@ -61,7 +62,7 @@ public class CompanyIntroduceActivity extends BaseActivity {
             }
         });
 
-        web_View.loadUrl("http://www.landscape-city.com/about.html");
+        web_View.loadUrl("http://www.goockr.com");
 
         bt_ComIntroduceBack =(Button)findViewById(R.id.bt_ComIntroduceBack);
 

@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 
 import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.view.ProgressView;
+import com.goockr.ui.view.RingRoundProgressView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,6 +24,12 @@ import butterknife.OnClick;
 public class AdjustFragment extends Fragment {
 
 
+    public AdjustFragmentCallback callback;
+
+    public void setCallback(AdjustFragmentCallback callback) {
+        this.callback = callback;
+    }
+
     View contentView;
 
     @BindView(R.id.fragment_adjust_pv)
@@ -33,6 +40,12 @@ public class AdjustFragment extends Fragment {
     ImageButton unreservation_ib;
     @BindView(R.id.fragment_adjust_lower_ib)
     ImageButton lower_ib;
+    @BindView(R.id.fragment_adjust_reduce_ib)
+    ImageButton reduce_ib;
+    @BindView(R.id.fragment_adjust_plus_ib)
+    ImageButton plus_ib;
+    @BindView(R.id.fragment_adjust_round_pv)
+    RingRoundProgressView ring_pv;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,6 +69,12 @@ public class AdjustFragment extends Fragment {
 
         progressView.setCurrentCount(50);
 
+        ring_pv.setProgress(1);
+        ring_pv.setMaxCount(12);
+        ring_pv.setStartAngle(120);
+        ring_pv.setSweepAngle(300);
+        ring_pv.reload();
+
 
     }
 
@@ -64,13 +83,12 @@ public class AdjustFragment extends Fragment {
 
     }
 
-    @OnClick({R.id.fragment_adjust_reservation_ib,R.id.fragment_adjust_unreservation_ib,R.id.fragment_adjust_lower_ib})
-    public void onClick(View v) {
+    @OnClick({R.id.fragment_adjust_reservation_ib,R.id.fragment_adjust_unreservation_ib,R.id.fragment_adjust_lower_ib,R.id.fragment_adjust_reduce_ib,R.id.fragment_adjust_plus_ib
+    }) public void onClick(View v) {
 
         switch (v.getId())
         {
             case (R.id.fragment_adjust_reservation_ib):
-
 
 
                 break;
@@ -82,10 +100,46 @@ public class AdjustFragment extends Fragment {
 
             case (R.id.fragment_adjust_lower_ib):
 
+                if (callback!=null)callback.removeAdjustFragment();
+
+                break;
+            case (R.id.fragment_adjust_reduce_ib):
+
+                reducePower();
+                break;
+            case (R.id.fragment_adjust_plus_ib):
+
+                plusPower();
                 break;
 
         }
 
+    }
+
+    private void  reducePower()
+    {
+        if (ring_pv.progress<=1)
+        {
+            ring_pv.setProgress(1);
+            return;
+        }
+
+        ring_pv.setProgress(ring_pv.progress-1);
+    }
+
+    private void plusPower()
+    {
+        if (ring_pv.progress>ring_pv.maxCount)
+        {
+            ring_pv.setProgress(ring_pv.maxCount);
+            return;
+        }
+        ring_pv.setProgress(ring_pv.progress+1);
+    }
+
+    public interface AdjustFragmentCallback
+    {
+        void  removeAdjustFragment();
     }
 
 }

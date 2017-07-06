@@ -13,9 +13,16 @@
     <color name="colorGreen">#00FF00</color>
     <color name="colorBlue">#0000FF</color>
     <color name="colorBlack">#000000</color>
-    <color name="colorbg">#f0f0f0</color>
+    <color name="colorbg">#fafafa</color>
     <color name="colorGrayText">#838383</color>
     <color name="colorCirleBg">#F5F6F9</color>
+    <color name="colorGray1">#e6e6e6</color>
+    <color name="colorGray2">#8899a7</color>
+    <color name="colorOrange1">#ff8212</color>
+    <color name="colorNavbarBg">#f2f2f2</color>
+    <color name="colorLineBg">#d9d9d9</color>
+
+
 
 
 

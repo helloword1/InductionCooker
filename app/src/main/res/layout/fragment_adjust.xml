@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    >
 
     <ImageButton
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/fragment_adjust_lower_ib"
         android:layout_marginTop="15dp"
@@ -79,6 +82,39 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:src="@mipmap/home_data_backplane"
+            />
+
+        <com.goockr.ui.view.RingRoundProgressView
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:id="@+id/fragment_adjust_round_pv"
+            android:layout_centerInParent="true"
+            app:maxCount="10"
+            app:progress="1"
+            app:startAngle="120"
+            app:sweepAngle="300"
+            >
+
+        </com.goockr.ui.view.RingRoundProgressView>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fragment_adjust_reduce_ib"
+            android:background="@drawable/btn_reduce"
+            android:layout_alignBottom="@+id/fragment_adjust_round_pv"
+            android:layout_toLeftOf="@+id/fragment_adjust_round_pv"
+            android:layout_marginRight="20dp"
+            />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fragment_adjust_plus_ib"
+            android:background="@drawable/btn_plus"
+            android:layout_alignBottom="@+id/fragment_adjust_round_pv"
+            android:layout_toRightOf="@+id/fragment_adjust_round_pv"
+            android:layout_marginLeft="20dp"
             />
 
     </RelativeLayout>

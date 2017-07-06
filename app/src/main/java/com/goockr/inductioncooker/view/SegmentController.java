@@ -23,6 +23,10 @@ public class SegmentController extends LinearLayout {
 
     private int selectIndex;
 
+    public int getSelectIndex() {
+        return selectIndex;
+    }
+
     private SegmentControllerCallback callback;
 
     @BindView(R.id.segment_controller_left_rl)

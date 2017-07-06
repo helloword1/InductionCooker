@@ -1,1 +1,2 @@
-include ':app', ':library', ':zxing-demo-1'
+include ':app', ':library', ':zxing-demo-1', ':ui'
+include ':libraryFragmentTransactionExtended'

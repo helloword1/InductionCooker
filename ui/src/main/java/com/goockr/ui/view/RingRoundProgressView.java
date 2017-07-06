@@ -9,6 +9,8 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.goockr.ui.R;
+
 import static java.lang.Math.PI;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
@@ -31,6 +33,24 @@ public class RingRoundProgressView extends View {
 
     public int getProgress() {
         return progress;
+    }
+
+
+    public void setMaxCount(int maxCount) {
+        this.maxCount = maxCount;
+    }
+
+    public void setStartAngle(int startAngle) {
+        this.startAngle = startAngle;
+    }
+
+    public void setSweepAngle(int sweepAngle) {
+        this.sweepAngle = sweepAngle;
+    }
+
+    public void reload()
+    {
+        invalidate();
     }
 
     public void setProgress(int progress) {
@@ -71,6 +91,27 @@ public class RingRoundProgressView extends View {
             mTypedArray.recycle();
         }
 
+        init();
+
+    }
+    Paint paint1;
+    Paint p;
+
+    float w;
+    private void init() {
+
+        w=40;
+
+        paint1=new Paint();
+        paint1.setAntiAlias(true);
+        paint1.setStrokeWidth((float) w);
+        paint1.setStyle(Paint.Style.STROKE);
+        paint1.setStrokeCap(Paint.Cap.ROUND);
+        paint1.setColor(0x80ebeef3);
+
+        p= new Paint();
+        p.setAntiAlias(true);// 设置画笔的锯齿效果。 true是去除，大家一看效果就明白了
+
     }
 
     public RingRoundProgressView(Context context, AttributeSet attrs, int defStyle) {
@@ -110,19 +151,14 @@ public class RingRoundProgressView extends View {
 
 //        RectF oval = new RectF( x, y,
 //                getWidth() - x, getHeight() - y);
-        float w=40;
+
 //        Paint paint=new Paint();
 //        paint.setAntiAlias(true);
 //        paint.setStrokeWidth((float) 1);
 //        paint.setStyle(Paint.Style.STROKE);
 //        paint.setStrokeCap(Paint.Cap.ROUND);
 //        paint.setColor(Color.GREEN);
-        Paint paint1=new Paint();
-        paint1.setAntiAlias(true);
-        paint1.setStrokeWidth((float) w);
-        paint1.setStyle(Paint.Style.STROKE);
-        paint1.setStrokeCap(Paint.Cap.ROUND);
-        paint1.setColor(0x80ebeef3);
+
 
         RectF oval = new RectF(0,0,getWidth(),getHeight());
         //canvas.drawRect(oval,paint);
@@ -133,9 +169,7 @@ public class RingRoundProgressView extends View {
         canvas.drawArc(oval, 0,  360, false, paint1);//背景圆
 //        paint.setColor(Color.BLUE);
 //        canvas.drawRect(oval,paint);
-        Paint p = new Paint();
-        p.setColor(Color.YELLOW);// 设置红色
-        p.setAntiAlias(true);// 设置画笔的锯齿效果。 true是去除，大家一看效果就明白了
+
        // canvas.drawCircle(getWidth()/2, w/2, w/2, p);// 小圆
 
        // canvas.drawCircle(100, 100, 100, p);// 大圆

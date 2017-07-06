@@ -4,14 +4,14 @@
     android:id="@+id/activity_company_introduce"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="it.gk.environmentalprotectionbox.SetFragment.CompanyIntroduceActivity">
+    tools:context=".view.activity.CompanyIntroduceActivity">
     <RelativeLayout
         android:id="@+id/rl_ComIntroduce"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_alignParentTop="true"
         android:layout_gravity="center"
-        android:background="@color/colorThem"
+        android:background="@color/colorNavbar"
         >
         <Button
             android:id="@+id/bt_ComIntroduceBack"
@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:drawableLeft="@mipmap/back"
+            android:drawableLeft="@mipmap/title_back"
             android:background="@color/colorCusTrans"
             />
         <TextView
@@ -27,9 +27,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_centerInParent="true"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:text="公司简介"
-            android:textColor="@color/colorWhite"
+            android:textStyle ="bold"
+            android:textColor="@color/colorNavbarTitle"
             />
     </RelativeLayout>
 

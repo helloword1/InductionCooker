@@ -5,6 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/InductionCooker.iml" filepath="$PROJECT_DIR$/InductionCooker.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraryFragmentTransactionExtended/libraryFragmentTransactionExtended.iml" filepath="$PROJECT_DIR$/libraryFragmentTransactionExtended/libraryFragmentTransactionExtended.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ui/ui.iml" filepath="$PROJECT_DIR$/ui/ui.iml" />
       <module fileurl="file://$PROJECT_DIR$/zxing-demo-1/zxing-demo-1.iml" filepath="$PROJECT_DIR$/zxing-demo-1/zxing-demo-1.iml" />
     </modules>
   </component>

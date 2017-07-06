@@ -10,4 +10,17 @@
     <string name="top_hint">将条形码或二维码置于取景框内系统会自动扫描</string>
 
 
+    <!--短信登录相关-->
+    <string name="login_sms_title">手机快捷登录</string>
+    <string name="login_sms_getCode">手机快捷登录</string>
+    <string name="login_sms_moden">手机快捷登录</string>
+
+    <!--密码登录相关-->
+    <string name="login_pwd_title">账号登录</string>
+    <string name="login_pwd_forgetPwd">忘记密码？</string>
+    <string name="login_pwd_moden">手机快捷登录</string>
+
+
+
+
 </resources>

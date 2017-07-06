@@ -8,8 +8,6 @@
     tools:context="com.goockr.inductioncooker.activity.HomeActivity">
 
 
-
-
     <!-- 存放主要页面内容 -->
 
     <FrameLayout
