@@ -25,7 +25,7 @@ public class HudHelper {
     {
         final TextView tv_Reset = new TextView(context);
         tv_Reset.setTextColor(Color.WHITE);
-        tv_Reset.setTextSize(16);
+        tv_Reset.setTextSize(13);
         tv_Reset.setText(tip);
         tv_Reset.setPadding(0,0,0,0);
         hud = KProgressHUD.create(context)

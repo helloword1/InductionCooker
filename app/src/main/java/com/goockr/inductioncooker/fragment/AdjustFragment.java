@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.goockr.inductioncooker.R;
+import com.goockr.inductioncooker.common.Common;
+import com.goockr.inductioncooker.utils.FragmentHelper;
 import com.goockr.inductioncooker.view.ProgressView;
 import com.goockr.ui.view.RingRoundProgressView;
 
@@ -63,6 +65,11 @@ public class AdjustFragment extends Fragment {
         return contentView;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
     private void initUI() {
 
         progressView.setMaxCount(100.0f);
@@ -99,6 +106,10 @@ public class AdjustFragment extends Fragment {
                 break;
 
             case (R.id.fragment_adjust_lower_ib):
+
+              //  FragmentHelper.pop(AdjustFragment.this);
+
+               FragmentHelper.pop(this,Common.AdjustFragment,1);
 
                 if (callback!=null)callback.removeAdjustFragment();
 

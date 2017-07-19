@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dialog_tip_bg"
+    android:padding="20dp"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dialog_tip_tip_tv"
+        android:layout_gravity="center_horizontal"
+        android:text="提示"
+        android:textColor="@color/ui_colorBlack"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:background="@color/colorCusTrans"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dialog_tip_text_tv"
+        android:layout_gravity="center_horizontal"
+        android:text="过法鲨口就是个卡刷公交卡监控工具卡洛斯更健康老顾客啦江苏高考拉开了嘎健康噶"
+        android:textColor="@color/ui_colorBlack"
+        android:layout_marginTop="10dp"
+        android:textSize="18sp"
+        android:background="@color/colorCusTrans"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/colorCusTrans"
+        android:layout_marginTop="10dp"
+        >
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:id="@+id/dialog_tip_cancle_bt"
+            android:layout_height="wrap_content"
+            android:text="取消"
+            android:background="@drawable/btn_radius1_stroke"
+
+            />
+
+        <TextView
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/dialog_tip_btmargin_tv"
+            android:visibility="invisible"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:id="@+id/dialog_tip_action_bt"
+            android:layout_height="wrap_content"
+            android:text="确定"
+            android:background="@drawable/btn_radius1_stroke"
+
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>

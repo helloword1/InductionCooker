@@ -11,6 +11,8 @@ import com.goockr.inductioncooker.MyApplication;
 
 public class Common {
 
+    public static final String AdjustFragment  = "AdjustFragment";
+
     public static final String ReservationFragment  = "ReservationFragment";
 
     public static final String ReservationBootFragment  = "ReservationBootFragment";
@@ -30,5 +32,22 @@ public class Common {
     public static final String SetPwdFragment  = "SetPwdFragment";
 
 
+
+
+
+
+    /************************************fragmnet切换动画****************************************************/
+    public static final int FragmentAnimationBottom  = 6;
+
+
+
+    /***********************************WIFI相关参数*****************************************************/
+    public static final String KWIFINameHead  = "abc";
+
+
+    /***********************************Sokect参数*****************************************************/
+    public static final String KIP  = "192.168.43.1";
+
+    public static final int KPORT = 1234;
 
 }

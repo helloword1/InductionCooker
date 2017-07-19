@@ -1,26 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<com.goockr.ui.view.SlidingRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorbg"
     >
 
-    <include layout="@layout/navbar"></include>
+    <LinearLayout
 
-    <com.goockr.inductioncooker.view.BarProgress
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:id="@+id/fragment_reservationroot_bar_pv"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_height="60dp" />
+        android:layout_height="match_parent"
+        android:background="@color/colorbg"
+        >
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="210dp"
-        android:id="@+id/fragment_reservationroot_date_fl"
-        ></FrameLayout>
+        <include layout="@layout/navbar"></include>
+
+        <com.goockr.inductioncooker.view.BarProgress
+            android:layout_width="match_parent"
+            android:id="@+id/fragment_reservationroot_bar_pv"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_height="60dp" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="210dp"
+            android:id="@+id/fragment_reservationroot_date_fl"
+            ></FrameLayout>
 
 
-</LinearLayout>
+    </LinearLayout>
+
+</com.goockr.ui.view.SlidingRelativeLayout>

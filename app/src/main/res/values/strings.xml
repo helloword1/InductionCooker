@@ -12,15 +12,18 @@
 
     <!--短信登录相关-->
     <string name="login_sms_title">手机快捷登录</string>
-    <string name="login_sms_getCode">手机快捷登录</string>
-    <string name="login_sms_moden">手机快捷登录</string>
+    <string name="sms_getCode">获取验证码</string>
+    <string name="login_sms_moden">账号登录</string>
 
     <!--密码登录相关-->
     <string name="login_pwd_title">账号登录</string>
     <string name="login_pwd_forgetPwd">忘记密码？</string>
     <string name="login_pwd_moden">手机快捷登录</string>
 
-
+    <!--dialog 提示-->
+    <string name="dialog_tip">提示</string>
+    <string name="dialog_disconnect">设备连接已断开，请检查重试！</string>
+    <string name="dialog_failconnect">连接设备失败，请检查重试！</string>
 
 
 </resources>

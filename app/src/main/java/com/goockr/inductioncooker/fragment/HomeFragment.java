@@ -26,7 +26,7 @@ import butterknife.OnClick;
  * Created by CMQ on 2017/6/21.
  */
 
-public class HomeFragment extends Fragment implements SegmentController.SegmentControllerCallback, LeftDeviceFragment.LeftDeviceFragmentCallback, AdjustFragment.AdjustFragmentCallback, ImageTopButton.ImageTopButtonOnClickListener {
+public class HomeFragment extends Fragment implements SegmentController.SegmentControllerCallback, LeftDeviceFragment.LeftDeviceFragmentCallback, AdjustFragment.AdjustFragmentCallback {
 
 
     View contentView;
@@ -37,13 +37,6 @@ public class HomeFragment extends Fragment implements SegmentController.SegmentC
 
     private boolean isShowAdjustFragment=false;
 
-
-    @BindView(R.id.fragment_home_power_bt)
-    ImageTopButton power_bt;
-    @BindView(R.id.fragment_home_reservation_bt)
-    ImageTopButton reservation_bt;
-    @BindView(R.id.fragment_home_unreservation_bt)
-    ImageTopButton unreservation_bt;
     @BindView(R.id.fragment_home_moden_ll)
     LinearLayout moden_ll;
     @BindView(R.id.fragment_home_segment)
@@ -77,30 +70,6 @@ public class HomeFragment extends Fragment implements SegmentController.SegmentC
 
     private void initUI() {
 
-        power_bt.setNormImageId(R.mipmap.btn_openkey_normal);
-        power_bt.setHightLightImageId(R.mipmap.btn_openkey_pressed);
-        power_bt.setSelImageId(R.mipmap.btn_openkey_selected);
-        power_bt.setNormTextCoclor(R.color.colorBlack);
-        power_bt.setText("开关机");
-
-        reservation_bt.setNormImageId(R.mipmap.btn_reservation_normal);
-        reservation_bt.setHightLightImageId(R.mipmap.btn_reservation_pressed);
-        reservation_bt.setDisabledImageId(R.mipmap.btn_reservation_disabled);
-        reservation_bt.setNormTextCoclor(R.color.colorBlack);
-        reservation_bt.setText("预约");
-
-        unreservation_bt.setNormImageId(R.mipmap.btn_cancel_normal);
-        unreservation_bt.setHightLightImageId(R.mipmap.btn_cancel_pressed);
-        unreservation_bt.setDisabledImageId(R.mipmap.btn_cancel_disabled);
-        unreservation_bt.setNormTextCoclor(R.color.colorBlack);
-        unreservation_bt.setText("取消预约");
-
-        reservation_bt.buttonOnClickListener(this);
-        unreservation_bt.buttonOnClickListener(this);
-        power_bt.buttonOnClickListener(this);
-
-
-
         FragmentManager fragmentManager= getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if (leftFragment==null)
@@ -115,19 +84,12 @@ public class HomeFragment extends Fragment implements SegmentController.SegmentC
 
     }
 
-    @OnClick({R.id.fragment_home_power_bt, R.id.fragment_home_reservation_bt,R.id.fragment_home_unreservation_bt})
+    @OnClick({})
     public void onClick(View v) {
 
         switch (v.getId())
         {
-            case (R.id.fragment_home_power_bt):
-                break;
-            case (R.id.fragment_home_reservation_bt):
 
-
-                break;
-            case (R.id.fragment_home_unreservation_bt):
-                break;
         }
 
     }
@@ -176,25 +138,25 @@ public class HomeFragment extends Fragment implements SegmentController.SegmentC
     public void leftDeviceFragmentButtonClick(ImageTopButton button) {
 
 
-        FragmentManager fragmentManager= getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-
-
-
-        if (adjustFragment==null)
-        {
-            adjustFragment=new AdjustFragment();
-
-        }
-
-        adjustFragment.setCallback(this);
-
-
-        fragmentTransaction.add(R.id.fragment_home_moden_ll,adjustFragment,"AdjustFragment");
-        hideFragment(fragmentTransaction);
-        fragmentTransaction.show(adjustFragment);
-        fragmentTransaction.commit();
+//        FragmentManager fragmentManager= getFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//
+//
+//
+//
+//        if (adjustFragment==null)
+//        {
+//            adjustFragment=new AdjustFragment();
+//
+//        }
+//
+//        adjustFragment.setCallback(this);
+//
+//
+//        fragmentTransaction.add(R.id.fragment_home_moden_ll,adjustFragment,"AdjustFragment");
+//        hideFragment(fragmentTransaction);
+//        fragmentTransaction.show(adjustFragment);
+//        fragmentTransaction.commit();
 
 
 
@@ -225,27 +187,7 @@ public class HomeFragment extends Fragment implements SegmentController.SegmentC
             adjustFragment=null;
         }
 
-
-
     }
 
-    @Override
-    public void imageTopButtonOnClickListener(ImageTopButton button) {
 
-        switch (button.getId())
-        {
-            case (R.id.fragment_home_reservation_bt):
-
-                Intent intent=new Intent(getActivity(),ReservationActivity.class);
-                intent.putExtra(Common.HomeFragmentSelectIndexKey,segmentController.getSelectIndex());
-                getActivity().startActivity(intent);
-
-                break;
-            case (R.id.fragment_home_unreservation_bt):
-                break;
-            case (R.id.fragment_home_power_bt):
-                break;
-        }
-
-    }
 }

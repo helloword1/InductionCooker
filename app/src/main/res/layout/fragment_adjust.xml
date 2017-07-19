@@ -1,123 +1,208 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<com.goockr.ui.view.SlidingRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     >
-
-    <ImageButton
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/fragment_adjust_lower_ib"
-        android:layout_marginTop="15dp"
-        android:layout_gravity="center"
-        android:background="@color/colorCusTransparent"
-        android:src="@mipmap/home_btn_icon_lower"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/fragment_adjust_moden_tv"
-        android:text="XXXX"
-        android:textSize="18sp"
-        android:layout_marginLeft="20dp"
-        />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:paddingTop="15dp"
         >
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@mipmap/home_data_backplane"
-            />
-
-        <com.goockr.inductioncooker.view.ProgressView
-            android:layout_width="140dp"
-            android:layout_height="140dp"
-            android:id="@+id/fragment_adjust_pv"
-            android:layout_centerInParent="true"
-
-            />
-
         <ImageButton
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/fragment_adjust_reservation_ib"
-            android:background="@drawable/btn_data_reservation"
-            android:layout_alignBottom="@+id/fragment_adjust_pv"
-            android:layout_toLeftOf="@+id/fragment_adjust_pv"
-            android:layout_marginRight="20dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="10dp"
+            android:id="@+id/fragment_adjust_lower_ib"
+
+            android:layout_gravity="center"
+            android:background="@color/transparent"
+            android:src="@mipmap/home_btn_icon_lower"
+
             />
 
-        <ImageButton
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/fragment_adjust_unreservation_ib"
-            android:background="@drawable/btn_data_cancel"
-            android:layout_alignBottom="@+id/fragment_adjust_pv"
-            android:layout_toRightOf="@+id/fragment_adjust_pv"
+            android:id="@+id/fragment_adjust_moden_tv"
+            android:text="XXXX"
+            android:textSize="18sp"
             android:layout_marginLeft="20dp"
             />
 
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@mipmap/home_data_backplane"
-            />
-
-        <com.goockr.ui.view.RingRoundProgressView
-            android:layout_width="140dp"
-            android:layout_height="140dp"
-            android:id="@+id/fragment_adjust_round_pv"
-            android:layout_centerInParent="true"
-            app:maxCount="10"
-            app:progress="1"
-            app:startAngle="120"
-            app:sweepAngle="300"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             >
 
-        </com.goockr.ui.view.RingRoundProgressView>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@mipmap/home_data_backplane"
+                android:gravity="center"
+                android:orientation="vertical"
+                >
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/fragment_adjust_reduce_ib"
-            android:background="@drawable/btn_reduce"
-            android:layout_alignBottom="@+id/fragment_adjust_round_pv"
-            android:layout_toLeftOf="@+id/fragment_adjust_round_pv"
-            android:layout_marginRight="20dp"
-            />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fragment_adjust_date_tv"
+                    android:text="00:00"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorBlack"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" 时: 分"
+                    android:gravity="center"
+                    android:textColor="@color/colorGrayText"
+                    android:textSize="12sp"
+                    />
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/fragment_adjust_plus_ib"
-            android:background="@drawable/btn_plus"
-            android:layout_alignBottom="@+id/fragment_adjust_round_pv"
-            android:layout_toRightOf="@+id/fragment_adjust_round_pv"
-            android:layout_marginLeft="20dp"
-            />
-
-    </RelativeLayout>
+                <!--<ImageView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:src="@mipmap/home_data_backplane"-->
+                    <!--/>-->
 
 
-</LinearLayout>
+
+            </LinearLayout>
+
+
+            <com.goockr.inductioncooker.view.ProgressView
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:id="@+id/fragment_adjust_pv"
+                android:layout_centerInParent="true"
+
+                />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/fragment_adjust_reservation_ib"
+                android:background="@drawable/btn_data_reservation"
+                android:layout_alignBottom="@+id/fragment_adjust_pv"
+                android:layout_toLeftOf="@+id/fragment_adjust_pv"
+                android:layout_marginRight="20dp"
+                />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/fragment_adjust_unreservation_ib"
+                android:background="@drawable/btn_data_cancel"
+                android:layout_alignBottom="@+id/fragment_adjust_pv"
+                android:layout_toRightOf="@+id/fragment_adjust_pv"
+                android:layout_marginLeft="20dp"
+                />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@mipmap/home_data_backplane"
+                android:gravity="center"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fragment_adjust_power_tv"
+                    android:gravity="center"
+                    android:text="1600W"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="16sp"
+                    />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:id="@+id/fragment_adjust_line_iv"
+                    android:background="@color/colorGrayText"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:visibility="gone"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fragment_adjust_temperature_tv"
+                    android:gravity="center"
+                    android:text="260 C"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="16sp"
+                    android:visibility="gone"
+                    />
+
+                <!--<ImageView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_centerInParent="true"-->
+                    <!--android:src="@mipmap/home_data_backplane"-->
+                    <!--/>-->
+
+            </LinearLayout>
+
+
+
+            <com.goockr.ui.view.RingRoundProgressView
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:id="@+id/fragment_adjust_round_pv"
+                android:layout_centerInParent="true"
+                app:maxCount="10"
+                app:progress="1"
+                app:startAngle="120"
+                app:sweepAngle="300"
+                >
+
+            </com.goockr.ui.view.RingRoundProgressView>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/fragment_adjust_reduce_ib"
+                android:background="@drawable/btn_reduce"
+                android:layout_alignBottom="@+id/fragment_adjust_round_pv"
+                android:layout_toLeftOf="@+id/fragment_adjust_round_pv"
+                android:layout_marginRight="20dp"
+                />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/fragment_adjust_plus_ib"
+                android:background="@drawable/btn_plus"
+                android:layout_alignBottom="@+id/fragment_adjust_round_pv"
+                android:layout_toRightOf="@+id/fragment_adjust_round_pv"
+                android:layout_marginLeft="20dp"
+                />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+</com.goockr.ui.view.SlidingRelativeLayout>

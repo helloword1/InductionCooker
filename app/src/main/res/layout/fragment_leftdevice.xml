@@ -1,174 +1,309 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    android:orientation="vertical"
     >
-
-
-    <TableLayout
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent"
-         >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            >
-            <com.goockr.inductioncooker.view.ImageTopButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/fragment_leftdevice_bt0"
-                >
-
-            </com.goockr.inductioncooker.view.ImageTopButton>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            >
-
-            <com.goockr.inductioncooker.view.ImageTopButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/fragment_leftdevice_bt1"
-                >
-
-            </com.goockr.inductioncooker.view.ImageTopButton>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            >
-
-            <com.goockr.inductioncooker.view.ImageTopButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/fragment_leftdevice_bt2"
-                >
-
-            </com.goockr.inductioncooker.view.ImageTopButton>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            >
-
-            <com.goockr.inductioncooker.view.ImageTopButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/fragment_leftdevice_bt3"
-                >
-
-            </com.goockr.inductioncooker.view.ImageTopButton>
-
-        </LinearLayout>
-
-
-    </TableLayout>
-
     <LinearLayout
-        android:layout_width="1px"
-        android:layout_height="match_parent"
-        android:background="@color/colorblack"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="13"
+        android:orientation="horizontal"
         >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.goockr.inductioncooker.view.ImageTopButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fragment_leftdevice_power_bt"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+
+                    >
+
+                </com.goockr.inductioncooker.view.ImageTopButton>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                >
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.goockr.inductioncooker.view.ImageTopButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/fragment_leftdevice_reservation_bt"
+                        android:layout_centerHorizontal="true"
+                        android:layout_alignParentBottom="true"
+
+                        />
+
+                </RelativeLayout>
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.goockr.inductioncooker.view.ImageTopButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/fragment_leftdevice_unreservation_bt"
+                        android:layout_centerHorizontal="true"
+                        android:layout_alignParentBottom="true"
+
+                        />
+
+                </RelativeLayout>
+
+
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <TableLayout
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent"
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="80"
+        android:id="@+id/fragment_leftdevice_content"
         >
 
         <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/fragment_leftdevice_bottomview"
             >
-            <com.goockr.inductioncooker.view.ImageTopButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/fragment_leftdevice_bt4"
+
+
+            <TableLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
                 >
 
-            </com.goockr.inductioncooker.view.ImageTopButton>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    >
+                    <com.goockr.inductioncooker.view.ImageTopButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/fragment_leftdevice_bt0"
+                        >
+
+                    </com.goockr.inductioncooker.view.ImageTopButton>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    >
+
+                    <com.goockr.inductioncooker.view.ImageTopButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/fragment_leftdevice_bt1"
+                        >
+
+                    </com.goockr.inductioncooker.view.ImageTopButton>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    >
+
+                    <com.goockr.inductioncooker.view.ImageTopButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/fragment_leftdevice_bt2"
+                        >
+
+                    </com.goockr.inductioncooker.view.ImageTopButton>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    >
+
+                    <com.goockr.inductioncooker.view.ImageTopButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/fragment_leftdevice_bt3"
+                        >
+
+                    </com.goockr.inductioncooker.view.ImageTopButton>
+
+                </LinearLayout>
+
+
+            </TableLayout>
+
+            <LinearLayout
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:background="@color/colorblack"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"
+                >
+
+            </LinearLayout>
+
+            <TableLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    >
+                    <com.goockr.inductioncooker.view.ImageTopButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/fragment_leftdevice_bt4"
+                        >
+
+                    </com.goockr.inductioncooker.view.ImageTopButton>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    >
+
+                    <com.goockr.inductioncooker.view.ImageTopButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/fragment_leftdevice_bt5"
+                        >
+
+                    </com.goockr.inductioncooker.view.ImageTopButton>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    >
+
+                    <com.goockr.inductioncooker.view.ImageTopButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/fragment_leftdevice_bt6"
+                        >
+
+                    </com.goockr.inductioncooker.view.ImageTopButton>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    >
+
+                    <com.goockr.inductioncooker.view.ImageTopButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/fragment_leftdevice_bt7"
+                        >
+
+                    </com.goockr.inductioncooker.view.ImageTopButton>
+
+                </LinearLayout>
+
+
+            </TableLayout>
+
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@mipmap/home_btn_pull"
+            android:id="@+id/fragment_leftdevice_bottomview"
             android:gravity="center"
             >
 
-            <com.goockr.inductioncooker.view.ImageTopButton
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/fragment_leftdevice_bt5"
-                >
-
-            </com.goockr.inductioncooker.view.ImageTopButton>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            >
-
-            <com.goockr.inductioncooker.view.ImageTopButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/fragment_leftdevice_bt6"
-                >
-
-            </com.goockr.inductioncooker.view.ImageTopButton>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            >
-
-            <com.goockr.inductioncooker.view.ImageTopButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/fragment_leftdevice_bt7"
-                >
-
-            </com.goockr.inductioncooker.view.ImageTopButton>
+                android:src="@mipmap/home_btn_icon_upper"
+                android:background="@color/transparent"
+                android:clickable="false"
+                />
 
         </LinearLayout>
 
 
-    </TableLayout>
+    </RelativeLayout>
+
+
+
 
 
 </LinearLayout>
+

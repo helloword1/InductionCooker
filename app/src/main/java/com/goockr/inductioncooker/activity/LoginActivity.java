@@ -23,8 +23,8 @@ public class LoginActivity extends FragmentActivity {
 
     FragmentManager fragmentManager;
 
-    @BindView(R.id.activity_login_content_fl)
-    FrameLayout conten_fl;
+//    @BindView(R.id.activity_login_content_fl)
+//    FrameLayout conten_fl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

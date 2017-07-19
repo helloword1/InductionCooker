@@ -52,7 +52,6 @@ public class SetPwdFragment extends Fragment {
 
         initUI();
 
-
         initEvent();
 
         return contentView;
@@ -68,6 +67,14 @@ public class SetPwdFragment extends Fragment {
     }
 
     private void initEvent() {
+
+        newpwd_et.setBgImageVisibility(false);
+        newpwd_et.setHint("请输入密码");
+
+        again_et.setBgImageVisibility(false);
+        again_et.setHint("请确认密码");
+
+
     }
 
     @OnClick({R.id.navbar_left_bt,R.id.navbar_right_bt})

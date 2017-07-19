@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.activity.LoginActivity;
+import com.goockr.inductioncooker.activity.UpdatePwdActivity;
 import com.goockr.inductioncooker.adapter.MoreAdapter;
 import com.goockr.inductioncooker.models.MoreAdapterModel;
 import com.goockr.inductioncooker.models.MySection;
@@ -78,6 +79,7 @@ public class MoreFragment extends Fragment {
                         getActivity().startActivity(new Intent(getActivity(),LoginActivity.class));
                         break;
                     case (4):
+                        getActivity().startActivity(new Intent(getActivity(),UpdatePwdActivity.class));
                         break;
                     case (5):
                         break;

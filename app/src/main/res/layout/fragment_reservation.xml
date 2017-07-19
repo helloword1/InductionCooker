@@ -1,198 +1,207 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<com.goockr.ui.view.SlidingRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorbg"
+    >
+    <LinearLayout
 
-    <include layout="@layout/navbar"></include>
-
-    <com.goockr.inductioncooker.view.BarProgress
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:id="@+id/fragment_reservation_bar_pv"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_height="60dp" />
+        android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/fragment_reservation_content_rl"
-        >
+        <include layout="@layout/navbar"></include>
 
-        <LinearLayout
+        <com.goockr.inductioncooker.view.BarProgress
+            android:layout_width="match_parent"
+            android:id="@+id/fragment_reservation_bar_pv"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_height="60dp" />
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/fragment_reservation_left_ll"
-            android:orientation="vertical"
-            android:visibility="gone"
+            android:id="@+id/fragment_reservation_content_rl"
             >
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:id="@+id/fragment_reservation_left_ll"
                 android:orientation="vertical"
-                android:gravity="center"
+                android:visibility="gone"
                 >
 
-                <com.goockr.inductioncooker.view.ImageTopButton
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:id="@+id/fragment_reservation_soup_ib"
-                app:normImage="@mipmap/btn_soup_normal"
-                app:selImage="@mipmap/btn_soup_pressed"
-                app:displayImage="@mipmap/btn_soup_disabled"
-                app:textColor="@color/colorGrayText"
-                app:text="煲粥"
-                />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    >
+
+                    <com.goockr.inductioncooker.view.ImageTopButton
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/fragment_reservation_soup_ib"
+                        app:normImage="@mipmap/btn_soup_normal"
+                        app:selImage="@mipmap/btn_soup_pressed"
+                        app:displayImage="@mipmap/btn_soup_disabled"
+                        app:textColor="@color/colorGrayText"
+                        app:text="煲粥"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    >
+
+                    <com.goockr.inductioncooker.view.ImageTopButton
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/fragment_reservation_porridge_ib"
+                        app:normImage="@mipmap/btn_porridge_normal"
+                        app:selImage="@mipmap/btn_porridge_selected"
+                        app:displayImage="@mipmap/btn_porridge_disabled"
+                        app:textColor="@color/colorGrayText"
+                        app:text="煲汤"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    >
+
+                    <com.goockr.inductioncooker.view.ImageTopButton
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/fragment_reservation_rich_ib"
+                        app:normImage="@mipmap/btn_rice_normal"
+                        app:selImage="@mipmap/btn_rice__selected"
+                        app:displayImage="@mipmap/btn_rice_disabled"
+                        app:textColor="@color/colorGrayText"
+                        app:text="煮饭"
+                        />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    >
+
+                    <com.goockr.inductioncooker.view.ImageTopButton
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/fragment_reservation_water_ib"
+                        app:normImage="@mipmap/btn_water_normal"
+                        app:selImage="@mipmap/btn_water__selected"
+                        app:displayImage="@mipmap/btn_water_disabled"
+                        app:textColor="@color/colorGrayText"
+                        app:text="烧水"
+                        />
+
+                </LinearLayout>
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                >
-
-                <com.goockr.inductioncooker.view.ImageTopButton
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:id="@+id/fragment_reservation_porridge_ib"
-                app:normImage="@mipmap/btn_porridge_normal"
-                app:selImage="@mipmap/btn_porridge_selected"
-                app:displayImage="@mipmap/btn_porridge_disabled"
-                app:textColor="@color/colorGrayText"
-                app:text="煲汤"
-                />
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                >
-
-                <com.goockr.inductioncooker.view.ImageTopButton
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:id="@+id/fragment_reservation_rich_ib"
-                app:normImage="@mipmap/btn_rice_normal"
-                app:selImage="@mipmap/btn_rice__selected"
-                app:displayImage="@mipmap/btn_rice_disabled"
-                app:textColor="@color/colorGrayText"
-                app:text="煮饭"
-                />
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                >
-
-                <com.goockr.inductioncooker.view.ImageTopButton
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:id="@+id/fragment_reservation_water_ib"
-                app:normImage="@mipmap/btn_water_normal"
-                app:selImage="@mipmap/btn_water__selected"
-                app:displayImage="@mipmap/btn_water_disabled"
-                app:textColor="@color/colorGrayText"
-                app:text="烧水"
-                />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/fragment_reservation_right_ll"
-            android:orientation="vertical"
-            android:visibility="gone"
-            >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:id="@+id/fragment_reservation_right_ll"
                 android:orientation="vertical"
-                android:gravity="center"
+                android:visibility="gone"
                 >
 
-                <com.goockr.inductioncooker.view.ImageTopButton
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:id="@+id/fragment_reservation_baked_ib"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    >
 
-                    app:normImage="@mipmap/btn_baked_normal"
-                    app:selImage="@mipmap/btn_baked_selected"
-                    app:displayImage="@mipmap/btn_baked_disabled"
-                    app:textColor="@color/colorGrayText"
-                    app:text="煎焗"
+                    <com.goockr.inductioncooker.view.ImageTopButton
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/fragment_reservation_baked_ib"
 
-                    />
+                        app:normImage="@mipmap/btn_baked_normal"
+                        app:selImage="@mipmap/btn_baked_selected"
+                        app:displayImage="@mipmap/btn_baked_disabled"
+                        app:textColor="@color/colorGrayText"
+                        app:text="煎焗"
+
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    >
+
+                    <com.goockr.inductioncooker.view.ImageTopButton
+                        android:layout_height="wrap_content"
+
+                        android:layout_width="wrap_content"
+                        android:id="@+id/fragment_reservation_stew_ib"
+                        android:layout_gravity="center"
+                        app:normImage="@mipmap/btn_stew_normal"
+                        app:selImage="@mipmap/btn_stew_selected"
+                        app:displayImage="@mipmap/btn_stew_disabled"
+                        app:textColor="@color/colorGrayText"
+                        app:text="焖烧"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    >
+
+                    <com.goockr.inductioncooker.view.ImageTopButton
+                        android:layout_height="wrap_content"
+
+                        android:layout_width="wrap_content"
+                        android:id="@+id/fragment_reservation_temperature_ib"
+                        android:layout_gravity="center"
+                        app:normImage="@mipmap/btn_r_temperature_normal"
+                        app:selImage="@mipmap/btn_r_temperature_selected"
+                        app:displayImage="@mipmap/btn_r_temperature_disabled"
+                        app:textColor="@color/colorGrayText"
+                        app:text="保温"
+                        />
+
+                </LinearLayout>
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                >
 
-                <com.goockr.inductioncooker.view.ImageTopButton
-                    android:layout_height="wrap_content"
-
-                    android:layout_width="wrap_content"
-                    android:id="@+id/fragment_reservation_stew_ib"
-                    android:layout_gravity="center"
-                    app:normImage="@mipmap/btn_stew_normal"
-                    app:selImage="@mipmap/btn_stew_selected"
-                    app:displayImage="@mipmap/btn_stew_disabled"
-                    app:textColor="@color/colorGrayText"
-                    app:text="焖烧"
-                    />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                >
-
-                <com.goockr.inductioncooker.view.ImageTopButton
-                    android:layout_height="wrap_content"
-
-                    android:layout_width="wrap_content"
-                    android:id="@+id/fragment_reservation_temperature_ib"
-                    android:layout_gravity="center"
-                    app:normImage="@mipmap/btn_r_temperature_normal"
-                    app:selImage="@mipmap/btn_r_temperature_selected"
-                    app:displayImage="@mipmap/btn_r_temperature_disabled"
-                    app:textColor="@color/colorGrayText"
-                    app:text="保温"
-                    />
-
-            </LinearLayout>
-
-        </LinearLayout>
+        </RelativeLayout>
 
 
-    </RelativeLayout>
 
-    
+    </LinearLayout>
 
-</LinearLayout>
+</com.goockr.ui.view.SlidingRelativeLayout>
+
 

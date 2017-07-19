@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.goockr.ui.view.SlidingRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    android:background="@color/colorWhite"
     >
-
-    <include layout="@layout/navbar"/>
-
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/fragment_sms_code_tv"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:textSize="16dp"
-        android:text="12345678901"
-        android:textColor="@color/colorGray2"
-        />
-    <!--<com.goockr.inductioncooker.view.MyEditText-->
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/navbar"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/fragment_sms_code_tv"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:textSize="16dp"
+            android:text="12345678901"
+            android:textColor="@color/colorGray2"
+            />
+        <!--<com.goockr.inductioncooker.view.MyEditText-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="50dp"-->
         <!--android:id="@+id/fragment_sms_code_et"-->
@@ -28,36 +33,39 @@
 
         <!--/>-->
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@mipmap/inputbox_1"
-        >
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/fragment_sms_code_bt"
-            android:text="获取验证码"
-            android:padding="0dp"
-            android:textColor="@color/colorOrange1"
-            android:background="@color/transparent"
-            android:layout_alignParentRight="true"
-            />
-
-        <com.goockr.inductioncooker.view.MyEditText
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/fragment_sms_code_et"
-            android:layout_toLeftOf="@+id/fragment_sms_code_bt"
-            />
+            android:layout_height="50dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
 
-    </RelativeLayout>
+            android:background="@mipmap/inputbox_1"
+            >
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/fragment_sms_code_bt"
+                android:text="@string/sms_getCode"
+                android:paddingRight="5dp"
+                android:textColor="@color/colorOrange1"
+                android:background="@color/transparent"
+                android:layout_alignParentRight="true"
+                />
+
+            <com.goockr.inductioncooker.view.MyEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/fragment_sms_code_et"
+                android:layout_toLeftOf="@+id/fragment_sms_code_bt"
+                />
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
 
 
 
-</LinearLayout>
+
+</com.goockr.ui.view.SlidingRelativeLayout>

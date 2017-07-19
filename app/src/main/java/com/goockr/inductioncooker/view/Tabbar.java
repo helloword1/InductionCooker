@@ -15,6 +15,7 @@ import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.fragment.HomeFragment;
 import com.goockr.inductioncooker.fragment.MoreFragment;
 import com.goockr.inductioncooker.fragment.NoticeFragment;
+import com.goockr.ui.view.view.BadgeView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,6 +42,8 @@ public class Tabbar extends LinearLayout {
     TextView tv_home;
     @BindView(R.id.tv_notise) TextView tv_notice;
     @BindView(R.id.tv_more) TextView tv_more;
+    @BindView(R.id.bv_notise)
+    BadgeView  bv_notise;
 
     LinearLayout selLinearLayout;
 
@@ -74,6 +77,9 @@ public class Tabbar extends LinearLayout {
         ButterKnife.bind(this,view);
 
         selLinearLayout=ll_home;
+
+        bv_notise.setBadgeCount(50000);
+
 
     }
 
@@ -109,15 +115,15 @@ public class Tabbar extends LinearLayout {
                 tv_notice.setTextColor(getResources().getColor(R.color.white));
                 selectIndex=1;
 
-//                fragmentTransaction.replace(R.id.maincontent,new NoticeFragment(),"NoticeFragment");
-//                fragmentTransaction.commit();
+                bv_notise.setBadgeCount(0);
+
+
                 break;
             case R.id.ll_more:
                 iv_more.setImageResource(R.mipmap.tab_icon_more_selected);
                 tv_more.setTextColor(getResources().getColor(R.color.white));
                 selectIndex=2;
-//                fragmentTransaction.replace(R.id.maincontent,new MoreFragment(),"MoreFragment");
-//                fragmentTransaction.commit();
+
                 break;
 
 

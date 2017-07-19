@@ -6,4 +6,6 @@
     <color name="colorWhite">#ffffff</color>
     <color name="colorCusTrans">#00000000</color>
 
+    <color name="ui_colorBlack">#000000</color>
+
 </resources>

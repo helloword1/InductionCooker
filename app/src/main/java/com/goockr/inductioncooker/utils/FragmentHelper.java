@@ -6,9 +6,11 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 
+
 import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.common.Common;
 import com.goockr.inductioncooker.fragment.SmsLoginFragment;
+import com.goockr.ui.view.FragmentTransactionExtended;
 
 /**
  * Created by CMQ on 2017/7/5.
@@ -27,19 +29,39 @@ public class FragmentHelper {
         if (activity==null)return;
         FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
 
-        fragmentTransaction .setCustomAnimations(R.animator.slide_right_in, R.animator.fragment_slide_left_out);
+//        fragmentTransaction.setCustomAnimations(
+//                R.animator.fragment_slide_right_in, R.animator.fragment_slide_left_out,
+//                R.animator.fragment_slide_left_in, R.animator.fragment_slide_right_out);
 
-        fragmentTransaction.add(content,fragment, tag);
+//        fragmentTransaction.add(content,fragment, tag);
+//
+//        fragmentTransaction.hide(currentFragment);
+//
+//        fragmentTransaction.show(fragment);
+//
+//        fragmentTransaction.addToBackStack(tag);
 
-        fragmentTransaction.hide(currentFragment);
+ //      fragmentTransaction.commit();
 
-        fragmentTransaction.show(fragment);
+        FragmentTransactionExtended fragmentTransactionExtended = new FragmentTransactionExtended(activity, fragmentTransaction, currentFragment, fragment, content,tag);
+        fragmentTransactionExtended.addTransition(7);
+        fragmentTransactionExtended.commit();
 
-        fragmentTransaction.addToBackStack(tag);
-
-        fragmentTransaction.commit();
 
     }
+
+    public  static void addFragmentToBackStack(Activity activity, int content,Fragment currentFragment, Fragment fragment, String tag,int animation)
+    {
+        if (activity==null)return;
+        FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
+
+        FragmentTransactionExtended fragmentTransactionExtended = new FragmentTransactionExtended(activity, fragmentTransaction, currentFragment, fragment, content,tag);
+        fragmentTransactionExtended.addTransition(animation);
+        fragmentTransactionExtended.commit();
+
+    }
+
+
 
     public  static void addFirstFragmentToBackStack(Activity activity, int content, Fragment fragment, String tag)
     {
@@ -60,6 +82,18 @@ public class FragmentHelper {
         activity.getFragmentManager().popBackStack();
     }
 
+    public  static void pop(Fragment fragment)
+    {
+        if (fragment==null)return;
+        fragment.getFragmentManager().popBackStack();
+    }
+
+    public  static void pop(Fragment fragment,String tag,int flags)
+    {
+       fragment.getFragmentManager().popBackStack(tag,flags);
+    }
+
+
     public static void popRootFragment(Activity activity)
     {
         if (activity==null)return;
@@ -71,8 +105,8 @@ public class FragmentHelper {
             if (count==1)return;
 
         }
-
     }
+
 
     public static void clearBackStack(Activity activity)
     {

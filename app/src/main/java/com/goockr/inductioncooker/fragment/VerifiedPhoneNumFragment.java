@@ -3,8 +3,10 @@ package com.goockr.inductioncooker.fragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.INotificationSideChannel;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,11 +33,16 @@ import butterknife.OnClick;
 public class VerifiedPhoneNumFragment extends Fragment {
 
 
+    private  final int STATE_REGIST = 0;
+
+    private  final int STATE_FORGET = 1;
+
     View contentView;
 
-
-
     private HudHelper hudHelper;
+
+    private int state=0;
+
 
     @BindView(R.id.navbar_title_tv)
     TextView title_tv;
@@ -48,7 +55,6 @@ public class VerifiedPhoneNumFragment extends Fragment {
 
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -58,6 +64,8 @@ public class VerifiedPhoneNumFragment extends Fragment {
 
         ButterKnife.bind(this, contentView);
 
+        getData();
+
         initData();
 
         initUI();
@@ -66,6 +74,12 @@ public class VerifiedPhoneNumFragment extends Fragment {
         initEvent();
 
         return contentView;
+    }
+
+    private void getData() {
+
+
+
     }
 
     private void initData() {

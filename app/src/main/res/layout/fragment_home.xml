@@ -26,104 +26,104 @@
 
     </LinearLayout>
 
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="13"-->
+        <!--android:orientation="horizontal"-->
+        <!--&gt;-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_height="match_parent">-->
+
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent">-->
+
+                <!--<com.goockr.inductioncooker.view.ImageTopButton-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:id="@+id/fragment_home_power_bt"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:layout_alignParentBottom="true"-->
+
+                    <!--&gt;-->
+
+                <!--</com.goockr.inductioncooker.view.ImageTopButton>-->
+
+            <!--</RelativeLayout>-->
+
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation="horizontal"-->
+            <!--&gt;-->
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="1"-->
+
+                <!--&gt;-->
+                <!--<RelativeLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent">-->
+
+                    <!--<com.goockr.inductioncooker.view.ImageTopButton-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:id="@+id/fragment_home_reservation_bt"-->
+                        <!--android:layout_centerHorizontal="true"-->
+                        <!--android:layout_alignParentBottom="true"-->
+
+                        <!--/>-->
+
+                <!--</RelativeLayout>-->
+
+
+
+            <!--</LinearLayout>-->
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="1"-->
+
+                <!--&gt;-->
+
+                <!--<RelativeLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent">-->
+
+                    <!--<com.goockr.inductioncooker.view.ImageTopButton-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:id="@+id/fragment_home_unreservation_bt"-->
+                        <!--android:layout_centerHorizontal="true"-->
+                        <!--android:layout_alignParentBottom="true"-->
+
+                        <!--/>-->
+
+                <!--</RelativeLayout>-->
+
+
+
+            <!--</LinearLayout>-->
+
+        <!--</LinearLayout>-->
+
+    <!--</LinearLayout>-->
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="13"
-        android:orientation="horizontal"
-        >
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <com.goockr.inductioncooker.view.ImageTopButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/fragment_home_power_bt"
-                    android:layout_centerHorizontal="true"
-                    android:layout_alignParentBottom="true"
-
-                    >
-
-                </com.goockr.inductioncooker.view.ImageTopButton>
-
-            </RelativeLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            >
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-
-                >
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <com.goockr.inductioncooker.view.ImageTopButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/fragment_home_reservation_bt"
-                        android:layout_centerHorizontal="true"
-                        android:layout_alignParentBottom="true"
-
-                        />
-
-                </RelativeLayout>
-
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-
-                >
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <com.goockr.inductioncooker.view.ImageTopButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/fragment_home_unreservation_bt"
-                        android:layout_centerHorizontal="true"
-                        android:layout_alignParentBottom="true"
-
-                        />
-
-                </RelativeLayout>
-
-
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="80"
+        android:layout_weight="93"
         android:orientation="horizontal"
 
         android:id="@+id/fragment_home_moden_ll"

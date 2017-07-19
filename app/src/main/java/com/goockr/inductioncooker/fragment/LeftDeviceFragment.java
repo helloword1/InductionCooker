@@ -1,12 +1,19 @@
 package com.goockr.inductioncooker.fragment;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.goockr.inductioncooker.R;
+import com.goockr.inductioncooker.activity.ReservationActivity;
+import com.goockr.inductioncooker.common.Common;
+import com.goockr.inductioncooker.utils.FragmentHelper;
 import com.goockr.inductioncooker.view.ImageTopButton;
 
 import java.util.ArrayList;
@@ -20,14 +27,24 @@ import butterknife.OnClick;
  * Created by CMQ on 2017/6/27.
  */
 
-public class LeftDeviceFragment extends Fragment implements View.OnClickListener, ImageTopButton.ImageTopButtonOnClickListener {
+public class LeftDeviceFragment extends Fragment implements  ImageTopButton.ImageTopButtonOnClickListener, AdjustFragment.AdjustFragmentCallback {
 
     View contentView;
 
     List<ImageTopButton> buttons;
 
+    FragmentManager fragmentManager;
+
+    private AdjustFragment adjustFragment;
+
     private LeftDeviceFragmentCallback callback;
 
+    @BindView(R.id.fragment_leftdevice_power_bt)
+    ImageTopButton power_bt;
+    @BindView(R.id.fragment_leftdevice_reservation_bt)
+    ImageTopButton reservation_bt;
+    @BindView(R.id.fragment_leftdevice_unreservation_bt)
+    ImageTopButton unreservation_bt;
     @BindView(R.id.fragment_leftdevice_bt0)
     ImageTopButton bt_0;
     @BindView(R.id.fragment_leftdevice_bt1)
@@ -44,6 +61,10 @@ public class LeftDeviceFragment extends Fragment implements View.OnClickListener
     ImageTopButton bt_6;
     @BindView(R.id.fragment_leftdevice_bt7)
     ImageTopButton bt_7;
+    @BindView(R.id.fragment_leftdevice_bottomview)
+    LinearLayout bottom_ll;
+
+    ImageTopButton select_bt;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,6 +86,8 @@ public class LeftDeviceFragment extends Fragment implements View.OnClickListener
 
     private void initData() {
 
+        fragmentManager= getFragmentManager();
+
         buttons=new ArrayList<ImageTopButton>();
 
         buttons.add(bt_0);
@@ -79,6 +102,28 @@ public class LeftDeviceFragment extends Fragment implements View.OnClickListener
     }
 
     private void initUI() {
+
+        power_bt.setNormImageId(R.mipmap.btn_openkey_normal);
+        power_bt.setHightLightImageId(R.mipmap.btn_openkey_pressed);
+        power_bt.setSelImageId(R.mipmap.btn_openkey_selected);
+        power_bt.setNormTextCoclor(R.color.colorBlack);
+        power_bt.setText("开关机");
+
+        reservation_bt.setNormImageId(R.mipmap.btn_reservation_normal);
+        reservation_bt.setHightLightImageId(R.mipmap.btn_reservation_pressed);
+        reservation_bt.setDisabledImageId(R.mipmap.btn_reservation_disabled);
+        reservation_bt.setNormTextCoclor(R.color.colorBlack);
+        reservation_bt.setText("预约");
+
+        unreservation_bt.setNormImageId(R.mipmap.btn_cancel_normal);
+        unreservation_bt.setHightLightImageId(R.mipmap.btn_cancel_pressed);
+        unreservation_bt.setDisabledImageId(R.mipmap.btn_cancel_disabled);
+        unreservation_bt.setNormTextCoclor(R.color.colorBlack);
+        unreservation_bt.setText("取消预约");
+
+        reservation_bt.buttonOnClickListener(this);
+        unreservation_bt.buttonOnClickListener(this);
+        power_bt.buttonOnClickListener(this);
 
         setButtonType(bt_0,R.mipmap.btn_soup_normal,R.mipmap.btn_soup_pressed,R.mipmap.btn_soup_disabled,R.color.colorGrayText,"煲粥");
         setButtonType(bt_1,R.mipmap.btn_porridge_normal,R.mipmap.btn_porridge_selected,R.mipmap.btn_porridge_disabled,R.color.colorGrayText,"煲汤");
@@ -108,9 +153,6 @@ public class LeftDeviceFragment extends Fragment implements View.OnClickListener
 
             bt.setClickable(true);
             bt.buttonOnClickListener(this);
-
-          //  bt.setOnClickListener();
-
         }
 
     }
@@ -120,48 +162,90 @@ public class LeftDeviceFragment extends Fragment implements View.OnClickListener
         this.callback=callback;
     }
 
-    @Override
-    public void onClick(View v) {
+    @OnClick({R.id.fragment_leftdevice_bottomview})
+    public void OnClick(View v)
+    {
+        switch (v.getId())
+        {
+            case (R.id.fragment_leftdevice_bottomview):
 
+                if (adjustFragment==null)
+                {
+                    adjustFragment=new AdjustFragment();
 
+                }
+                adjustFragment.setCallback(this);
+                FragmentHelper.addFragmentToBackStack(getActivity(),R.id.fragment_leftdevice_content,null,adjustFragment,Common.AdjustFragment,Common.FragmentAnimationBottom);
 
+                break;
+        }
     }
+
+
 
     @Override
     public void imageTopButtonOnClickListener(ImageTopButton button) {
 
-        button.setSelect(!button.isSelect());
-
-        if (this.callback!=null)
+        switch (button.getId())
         {
-            this.callback.leftDeviceFragmentButtonClick(button);
+            case (R.id.fragment_leftdevice_reservation_bt):
+
+                Intent intent=new Intent(getActivity(),ReservationActivity.class);
+                intent.putExtra(Common.HomeFragmentSelectIndexKey,0);
+                getActivity().startActivity(intent);
+                return;
+
+            case (R.id.fragment_leftdevice_unreservation_bt):
+                return;
+            case (R.id.fragment_leftdevice_power_bt):
+                break;
         }
 
+        if (select_bt!=null)select_bt.setSelect(false);
+        button.setSelect(true);
+        select_bt=button;
 
+
+        if (adjustFragment==null)
+        {
+            adjustFragment=new AdjustFragment();
+
+        }
+        adjustFragment.setCallback(this);
+        FragmentHelper.addFragmentToBackStack(getActivity(),R.id.fragment_leftdevice_content,null,adjustFragment,Common.AdjustFragment,Common.FragmentAnimationBottom);
+
+    }
+
+    @Override
+    public void removeAdjustFragment() {
+
+        adjustFragment=null;
 
     }
 
 
-//    public void onClick(View v) {
-//
-//        switch (v.getId()){
-//
-//            default:
-//
-//                ImageTopButton bt=(ImageTopButton)v;
-//                bt.setSelect(!bt.isSelect());
-//
-//                break;
-//
-//        }
-//
-//    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public interface LeftDeviceFragmentCallback{
 
          void leftDeviceFragmentButtonClick(ImageTopButton button);
 
     }
+
+
 
 
 

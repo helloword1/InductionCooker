@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -20,11 +21,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.goockr.inductioncooker.MyApplication;
 import com.goockr.inductioncooker.R;
+import com.goockr.inductioncooker.common.Common;
 import com.goockr.inductioncooker.fragment.HomeFragment;
 import com.goockr.inductioncooker.fragment.MoreFragment;
 import com.goockr.inductioncooker.fragment.NoticeFragment;
+import com.goockr.inductioncooker.utils.TcpSocket;
 import com.goockr.inductioncooker.view.Tabbar;
+import com.goockr.ui.view.helper.HudHelper;
+import com.goockr.ui.view.view.TipDialog;
 
 import java.util.ArrayList;
 
@@ -32,15 +38,27 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class HomeActivity extends FragmentActivity {
+public class HomeActivity extends FragmentActivity implements TcpSocket.TcpSocketCallBack {
+
+    private static final int MaxConnectCount = 10;
 
 
     @BindView(R.id.tabbar)
     Tabbar tabbar;
 
+    HudHelper hudHelper;
 
+    private int connectCount;
 
+    public HudHelper getHudHelper() {
 
+        if (hudHelper==null)
+        {
+            hudHelper=new HudHelper();
+        }
+
+        return hudHelper;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +70,29 @@ public class HomeActivity extends FragmentActivity {
 
         ButterKnife.bind(this);
 
+        initData();
+
         initUI();
 
         initListener();
+
+       // TcpSocket.getInstance().connect(Common.KIP, Common.KPORT, this);
+
+
+    }
+
+    private void initData() {
+
+        connectCount=0;
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+
+
 
 
     }
@@ -160,5 +198,70 @@ public class HomeActivity extends FragmentActivity {
         }
 
         return super.onKeyDown(keyCode, event);
+    }
+
+
+   /****************************TcpSocketCallBack*******************************************/
+    @Override
+    public void onConnect() {
+
+    }
+
+    @Override
+    public void onFailConnnect() {
+
+        if (connectCount<MaxConnectCount)
+        {
+            connectCount++;
+            TcpSocket.getInstance().connect(Common.KIP, Common.KPORT, this);
+        }else {
+
+            connectCount=0;
+
+            TipDialog tipDialog=new TipDialog(HomeActivity.this,getResources().getString(R.string.dialog_tip),getResources().getString(R.string.dialog_failconnect),false,false);
+            tipDialog.setActionButtonClick(new TipDialog.TipDialogCallBack() {
+                @Override
+                public void buttonClick(TipDialog dialog) {
+                    TcpSocket.getInstance().connect(Common.KIP,Common.KPORT,HomeActivity.this);
+                    dialog.dismiss();
+                }
+            });
+            tipDialog.show();
+
+        }
+
+
+
+    }
+
+    @Override
+    public void onDisconnect() {
+
+        if (connectCount<MaxConnectCount)
+        {
+            connectCount++;
+            TcpSocket.getInstance().connect(Common.KIP, Common.KPORT, this);
+        }else {
+
+            connectCount=0;
+
+            TipDialog tipDialog=new TipDialog(HomeActivity.this,getResources().getString(R.string.dialog_tip),getResources().getString(R.string.dialog_disconnect),false,false);
+            tipDialog.setActionButtonClick(new TipDialog.TipDialogCallBack() {
+                @Override
+                public void buttonClick(TipDialog dialog) {
+                    TcpSocket.getInstance().connect(Common.KIP,Common.KPORT,HomeActivity.this);
+                    dialog.dismiss();
+                }
+            });
+            tipDialog.show();
+
+        }
+
+
+    }
+
+    @Override
+    public void onRead(byte[] buffer, int length) {
+
     }
 }

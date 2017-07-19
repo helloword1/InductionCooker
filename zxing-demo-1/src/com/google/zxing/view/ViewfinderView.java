@@ -95,9 +95,13 @@ public final class ViewfinderView extends View {
 
     private CameraManager cameraManager;
 
+    Context mContext;
+
     // This constructor is used when the class is built from an XML resource.
     public ViewfinderView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        mContext=context;
 
         CORNER_PADDING = dip2px(context, 0.0F);
         MIDDLE_LINE_PADDING = dip2px(context, 20.0F);
@@ -128,6 +132,7 @@ public final class ViewfinderView extends View {
         if (frame == null) {
             return;
         }
+
 
         // 绘制遮掩层
         drawCover(canvas, frame);

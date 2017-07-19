@@ -63,6 +63,8 @@ public class SmsLoginFragment extends Fragment {
     Button sms_bt;
     @BindView(R.id.fragment_login_moden_bt)
     Button moden_bt;
+    @BindView(R.id.fragment_pwd_forget_bt)
+    Button forget_bt;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -144,7 +146,23 @@ public class SmsLoginFragment extends Fragment {
                 changeModen(moden);
 
                 break;
+
+            case (R.id.fragment_pwd_forget_bt):
+
+                forgetButtonClick();
+
+                break;
         }
+    }
+
+    private void forgetButtonClick() {
+
+        VerifiedPhoneNumFragment fragment=new VerifiedPhoneNumFragment();
+        Bundle bundle=new Bundle();
+        bundle.putInt("state",0);
+        fragment.setArguments(bundle);
+        FragmentHelper.addFragmentToBackStack(getActivity(),R.id.activity_login_content_fl,this,fragment,Common.VerifiedPhoneNumFragment);
+
     }
 
     private void registerButtonClick() {
@@ -171,7 +189,7 @@ public class SmsLoginFragment extends Fragment {
     private void  getSmsCode()
     {
         CountDownButtonHelper timer = new CountDownButtonHelper(sms_bt,
-                "获取验证码", "重新获取", 60, 1);
+                getResources().getString(R.string.sms_getCode), "重新获取", 60, 1);
         timer.setOnFinishListener(new CountDownButtonHelper.OnFinishListener(){
             @Override
             public void finish() {
@@ -192,14 +210,20 @@ public class SmsLoginFragment extends Fragment {
         if (moden==SmsModen)
         {
             title_tv.setText(R.string.login_sms_title);
-            sms_bt.setText(R.string.login_sms_getCode);
+           // sms_bt.setText(R.string.sms_getCode);
             moden_bt.setText(R.string.login_sms_moden);
+            forget_bt.setVisibility(View.INVISIBLE);
+            sms_bt.setVisibility(View.VISIBLE);
+
            // tAnim = new TranslateAnimation(0,-1*width, 0, 0);
 
         }else {
             title_tv.setText(R.string.login_pwd_title);
-            sms_bt.setText(R.string.login_pwd_forgetPwd);
+          //  sms_bt.setText(R.string.login_pwd_forgetPwd);
             moden_bt.setText(R.string.login_pwd_moden);
+            sms_bt.setVisibility(View.INVISIBLE);
+            forget_bt.setVisibility(View.VISIBLE);
+
            // tAnim = new TranslateAnimation(0,1*width, 0, 0);
 
         }

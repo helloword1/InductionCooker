@@ -6,14 +6,14 @@
     android:layout_height="match_parent"
     tools:context="com.goockr.inductioncooker.activity.LoginActivity">
 
-    <FrameLayout
+    <com.goockr.ui.view.SlidingRelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/activity_login_content_fl"
         >
 
 
-    </FrameLayout>
+    </com.goockr.ui.view.SlidingRelativeLayout>
 
 
 </RelativeLayout>
