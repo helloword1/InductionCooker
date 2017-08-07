@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.goockr.inductioncooker.R;
+import com.goockr.inductioncooker.common.Common;
 import com.goockr.inductioncooker.utils.FragmentHelper;
 import com.goockr.inductioncooker.view.MyEditText;
 
@@ -105,15 +106,22 @@ public class UpdatePwdFragment extends Fragment {
 
             case (R.id.fragment_update_pwd_forget_tv):
 
-
+                forgetButtonClick();
 
                 break;
         }
     }
 
+    private void forgetButtonClick() {
 
+        VerifiedPhoneNumFragment fragment=new VerifiedPhoneNumFragment();
+        Bundle bundle=new Bundle();
+        bundle.putInt("state",1);
+        bundle.putInt("content",R.id.activity_update_pwd);
+        fragment.setArguments(bundle);
+        FragmentHelper.addFragmentToBackStack(getActivity(),R.id.activity_update_pwd,this,fragment, Common.VerifiedPhoneNumFragment);
 
-
+    }
 
 
 }

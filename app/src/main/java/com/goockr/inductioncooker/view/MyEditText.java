@@ -66,6 +66,9 @@ public class MyEditText extends RelativeLayout implements TextWatcher, View.OnFo
 
         initEvent();
 
+       // contentView.setClickable(true);
+
+
     }
 
     private void initUI() {

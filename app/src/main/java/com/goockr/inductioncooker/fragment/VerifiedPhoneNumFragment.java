@@ -43,6 +43,7 @@ public class VerifiedPhoneNumFragment extends Fragment {
 
     private int state=0;
 
+    private int fragmentContent;
 
     @BindView(R.id.navbar_title_tv)
     TextView title_tv;
@@ -78,8 +79,9 @@ public class VerifiedPhoneNumFragment extends Fragment {
 
     private void getData() {
 
-
-
+        Bundle bundle=getArguments();
+        state=bundle.getInt("state");
+        fragmentContent=bundle.getInt("content");
     }
 
     private void initData() {
@@ -111,23 +113,10 @@ public class VerifiedPhoneNumFragment extends Fragment {
         SmsCodeFragment fragment=new SmsCodeFragment();
         Bundle bundle=new Bundle();
         bundle.putString(Common.VerifiedPhoneNumFragmentPhoneKey,phone_et.getText());
+        bundle.putInt("content",fragmentContent);
         fragment.setArguments(bundle);
+        FragmentHelper.addFragmentToBackStack(getActivity(),fragmentContent,this,fragment,Common.SmsCodeFragment);
 
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//
-//        fragmentTransaction.add(R.id.activity_login_content_fl,fragment, Common.SmsCodeFragment);
-//
-//
-//
-//        fragmentTransaction.hide(this);
-//
-//        fragmentTransaction.show(fragment);
-//
-//        fragmentTransaction.addToBackStack(Common.SmsCodeFragment);
-//
-//        fragmentTransaction.commit();
-
-        FragmentHelper.addFragmentToBackStack(getActivity(),R.id.activity_login_content_fl,this,fragment,Common.SmsCodeFragment);
     }
 
     @OnClick({R.id.navbar_left_bt,R.id.navbar_right_bt})

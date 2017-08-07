@@ -121,7 +121,7 @@ public class SmsLoginFragment extends Fragment {
     /**
      * @param v
      */
-    @OnClick({R.id.navbar_left_bt,R.id.navbar_right_bt,R.id.fragment_pwd_smscode_bt,R.id.fragment_login_moden_bt})
+    @OnClick({R.id.navbar_left_bt,R.id.navbar_right_bt,R.id.fragment_pwd_smscode_bt,R.id.fragment_login_moden_bt,R.id.fragment_pwd_forget_bt})
     public void OnClick(View v)
     {
         switch (v.getId())
@@ -159,7 +159,8 @@ public class SmsLoginFragment extends Fragment {
 
         VerifiedPhoneNumFragment fragment=new VerifiedPhoneNumFragment();
         Bundle bundle=new Bundle();
-        bundle.putInt("state",0);
+        bundle.putInt("state",1);
+        bundle.putInt("content",R.id.activity_login_content_fl);
         fragment.setArguments(bundle);
         FragmentHelper.addFragmentToBackStack(getActivity(),R.id.activity_login_content_fl,this,fragment,Common.VerifiedPhoneNumFragment);
 
@@ -168,19 +169,10 @@ public class SmsLoginFragment extends Fragment {
     private void registerButtonClick() {
 
         VerifiedPhoneNumFragment fragment=new VerifiedPhoneNumFragment();
-
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//
-//        fragmentTransaction.add(R.id.activity_login_content_fl,fragment, Common.VerifiedPhoneNumFragment);
-//
-//        fragmentTransaction.hide(this);
-//
-//        fragmentTransaction.show(fragment);
-//
-//        fragmentTransaction.addToBackStack(Common.VerifiedPhoneNumFragment);
-//
-//        fragmentTransaction.commit();
-
+        Bundle bundle=new Bundle();
+        bundle.putInt("state",0);
+        bundle.putInt("content",R.id.activity_login_content_fl);
+        fragment.setArguments(bundle);
         FragmentHelper.addFragmentToBackStack(getActivity(),R.id.activity_login_content_fl,this,fragment,Common.VerifiedPhoneNumFragment);
 
 
@@ -202,29 +194,21 @@ public class SmsLoginFragment extends Fragment {
     private void changeModen(int moden)
     {
 
-//        WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
-//
-//        int width = wm.getDefaultDisplay().getWidth();
-//        int height = wm.getDefaultDisplay().getHeight();
-//        TranslateAnimation tAnim;
+
         if (moden==SmsModen)
         {
             title_tv.setText(R.string.login_sms_title);
-           // sms_bt.setText(R.string.sms_getCode);
             moden_bt.setText(R.string.login_sms_moden);
             forget_bt.setVisibility(View.INVISIBLE);
             sms_bt.setVisibility(View.VISIBLE);
 
-           // tAnim = new TranslateAnimation(0,-1*width, 0, 0);
 
         }else {
             title_tv.setText(R.string.login_pwd_title);
-          //  sms_bt.setText(R.string.login_pwd_forgetPwd);
             moden_bt.setText(R.string.login_pwd_moden);
             sms_bt.setVisibility(View.INVISIBLE);
             forget_bt.setVisibility(View.VISIBLE);
 
-           // tAnim = new TranslateAnimation(0,1*width, 0, 0);
 
         }
 
@@ -240,16 +224,7 @@ public class SmsLoginFragment extends Fragment {
         scaleAnimation.setStartOffset(0);
         scaleAnimation.setInterpolator(getActivity(), android.R.anim.decelerate_interpolator);//设置动画插入器
 
-
-
-      //  animationSet.addAnimation(alphaAnimation);
-      //  animationSet.addAnimation(scaleAnimation);
-
         contentView.startAnimation(animationSet);
-
-//        tAnim.setDuration(2000);
-//        contentView.startAnimation(tAnim);
-
 
     }
 

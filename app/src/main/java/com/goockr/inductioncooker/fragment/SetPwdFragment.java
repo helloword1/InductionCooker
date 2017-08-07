@@ -64,6 +64,9 @@ public class SetPwdFragment extends Fragment {
     }
 
     private void initUI() {
+
+        title_tv.setText("设置密码");
+
     }
 
     private void initEvent() {

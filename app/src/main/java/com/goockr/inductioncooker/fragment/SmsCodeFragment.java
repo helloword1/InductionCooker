@@ -28,6 +28,7 @@ public class SmsCodeFragment extends Fragment {
 
     View contentView;
 
+    private int fragmentContent;
 
     @BindView(R.id.navbar_title_tv)
     TextView title_tv;
@@ -61,6 +62,17 @@ public class SmsCodeFragment extends Fragment {
 
     private void initData() {
 
+        Bundle bundle= getArguments();
+
+        if (bundle!=null)
+        {
+            String phone=bundle.getString(Common.VerifiedPhoneNumFragmentPhoneKey);
+            phone_tv.setText("手机号码"+phone);
+            fragmentContent=bundle.getInt("content");
+        }
+
+
+
 
 
     }
@@ -72,13 +84,7 @@ public class SmsCodeFragment extends Fragment {
         code_et.setHint("验证码");
         code_et.setBgImageVisibility(false);
 
-        Bundle bundle= getArguments();
 
-        if (bundle!=null)
-        {
-            String phone=bundle.getString(Common.VerifiedPhoneNumFragmentPhoneKey);
-            phone_tv.setText("手机号码"+phone);
-        }
 
 
     }
@@ -102,7 +108,7 @@ public class SmsCodeFragment extends Fragment {
 //
 //        fragmentTransaction.commit();
 
-        FragmentHelper.addFragmentToBackStack(getActivity(),R.id.activity_login_content_fl,this,fragment,Common.SetPwdFragment);
+        FragmentHelper.addFragmentToBackStack(getActivity(),fragmentContent,this,fragment,Common.SetPwdFragment);
 
     }
 
