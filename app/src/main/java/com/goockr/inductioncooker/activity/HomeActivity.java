@@ -1,33 +1,23 @@
 package com.goockr.inductioncooker.activity;
 
 import android.Manifest;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.KeyEvent;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.goockr.inductioncooker.MyApplication;
 import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.common.Common;
 import com.goockr.inductioncooker.fragment.HomeFragment;
 import com.goockr.inductioncooker.fragment.MoreFragment;
 import com.goockr.inductioncooker.fragment.NoticeFragment;
-import com.goockr.inductioncooker.utils.TcpSocket;
+import com.goockr.inductioncooker.lib.socket.TcpSocket;
+import com.goockr.inductioncooker.models.BaseProtocol;
 import com.goockr.inductioncooker.view.Tabbar;
 import com.goockr.ui.view.helper.HudHelper;
 import com.goockr.ui.view.view.TipDialog;
@@ -36,9 +26,8 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
-public class HomeActivity extends FragmentActivity implements TcpSocket.TcpSocketCallBack {
+public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCallBack {
 
     private static final int MaxConnectCount = 10;
 
@@ -49,12 +38,12 @@ public class HomeActivity extends FragmentActivity implements TcpSocket.TcpSocke
     HudHelper hudHelper;
 
     private int connectCount;
+    private HomeFragment fragment;
 
     public HudHelper getHudHelper() {
 
-        if (hudHelper==null)
-        {
-            hudHelper=new HudHelper();
+        if (hudHelper == null) {
+            hudHelper = new HudHelper();
         }
 
         return hudHelper;
@@ -76,50 +65,37 @@ public class HomeActivity extends FragmentActivity implements TcpSocket.TcpSocke
 
         initListener();
 
-       // TcpSocket.getInstance().connect(Common.KIP, Common.KPORT, this);
-
-
-    }
-
-    private void initData() {
-
-        connectCount=0;
-
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void handleMsg(BaseProtocol mProtocol) {
+        fragment.setMProtocol(mProtocol);
+    }
 
-
-
-
-
+    private void initData() {
+        connectCount = 0;
     }
 
     private void initListener() {
-
         tabbar.setSelectChangeListener(new Tabbar.TabbarCallback() {
             @Override
             public void tabbarItenChange(int selectIndex) {
-                FragmentManager fragmentManager= getFragmentManager();
+                FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
-
-                switch (selectIndex){
+                switch (selectIndex) {
                     case (0):
-
-                        fragmentTransaction.replace(R.id.maincontent,new HomeFragment(),"HomeFragment");
-
+                        if (fragment != null)
+                            fragmentTransaction.replace(R.id.maincontent, fragment, "HomeFragment");
+                        else
+                            fragmentTransaction.replace(R.id.maincontent, new HomeFragment(), "HomeFragment");
                         break;
                     case (1):
-                        fragmentTransaction.replace(R.id.maincontent,new NoticeFragment(),"HomeFragment");
-
+                        fragmentTransaction.replace(R.id.maincontent, new NoticeFragment(), "HomeFragment");
                         break;
                     case (2):
-                        fragmentTransaction.replace(R.id.maincontent,new MoreFragment(),"HomeFragment");
-
+                        fragmentTransaction.replace(R.id.maincontent, new MoreFragment(), "HomeFragment");
                         break;
                 }
 
@@ -130,17 +106,16 @@ public class HomeActivity extends FragmentActivity implements TcpSocket.TcpSocke
     }
 
     private void initUI() {
-        FragmentManager fragmentManager= getFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.maincontent,new HomeFragment(),"HomeFragment");
+        fragment = new HomeFragment();
+        fragmentTransaction.replace(R.id.maincontent, fragment, "HomeFragment");
         fragmentTransaction.commit();
-
-
-
     }
 
 
     final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
+
     //初始化权限
     private void initPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -172,27 +147,25 @@ public class HomeActivity extends FragmentActivity implements TcpSocket.TcpSocke
     }
 
 
-    private  int backCount=0;
+    private int backCount = 0;
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        if (keyCode==KeyEvent.KEYCODE_BACK)
-        {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             backCount++;
 
-            if (backCount<2)
-            {
+            if (backCount < 2) {
                 Toast.makeText(this, "5秒内按返回键退出应用", Toast.LENGTH_SHORT).show();
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        backCount=0;
+                        backCount = 0;
                     }
-                },5000);
+                }, 5000);
                 return false;
             }
-
 
 
         }
@@ -200,8 +173,7 @@ public class HomeActivity extends FragmentActivity implements TcpSocket.TcpSocke
         return super.onKeyDown(keyCode, event);
     }
 
-
-   /****************************TcpSocketCallBack*******************************************/
+    /****************************TcpSocketCallBack*******************************************/
     @Override
     public void onConnect() {
 
@@ -209,27 +181,22 @@ public class HomeActivity extends FragmentActivity implements TcpSocket.TcpSocke
 
     @Override
     public void onFailConnnect() {
-
-        if (connectCount<MaxConnectCount)
-        {
+        if (connectCount < MaxConnectCount) {
             connectCount++;
             TcpSocket.getInstance().connect(Common.KIP, Common.KPORT, this);
-        }else {
-
-            connectCount=0;
-
-            TipDialog tipDialog=new TipDialog(HomeActivity.this,getResources().getString(R.string.dialog_tip),getResources().getString(R.string.dialog_failconnect),false,false);
+        } else {
+            connectCount = 0;
+            TipDialog tipDialog = new TipDialog(HomeActivity.this, getResources().getString(R.string.dialog_tip), getResources().getString(R.string.dialog_failconnect), false, false);
             tipDialog.setActionButtonClick(new TipDialog.TipDialogCallBack() {
                 @Override
                 public void buttonClick(TipDialog dialog) {
-                    TcpSocket.getInstance().connect(Common.KIP,Common.KPORT,HomeActivity.this);
+                    TcpSocket.getInstance().connect(Common.KIP, Common.KPORT, HomeActivity.this);
                     dialog.dismiss();
                 }
             });
             tipDialog.show();
 
         }
-
 
 
     }
@@ -237,19 +204,18 @@ public class HomeActivity extends FragmentActivity implements TcpSocket.TcpSocke
     @Override
     public void onDisconnect() {
 
-        if (connectCount<MaxConnectCount)
-        {
+        if (connectCount < MaxConnectCount) {
             connectCount++;
             TcpSocket.getInstance().connect(Common.KIP, Common.KPORT, this);
-        }else {
+        } else {
 
-            connectCount=0;
+            connectCount = 0;
 
-            TipDialog tipDialog=new TipDialog(HomeActivity.this,getResources().getString(R.string.dialog_tip),getResources().getString(R.string.dialog_disconnect),false,false);
+            TipDialog tipDialog = new TipDialog(HomeActivity.this, getResources().getString(R.string.dialog_tip), getResources().getString(R.string.dialog_disconnect), false, false);
             tipDialog.setActionButtonClick(new TipDialog.TipDialogCallBack() {
                 @Override
                 public void buttonClick(TipDialog dialog) {
-                    TcpSocket.getInstance().connect(Common.KIP,Common.KPORT,HomeActivity.this);
+                    TcpSocket.getInstance().connect(Common.KIP, Common.KPORT, HomeActivity.this);
                     dialog.dismiss();
                 }
             });
@@ -259,9 +225,8 @@ public class HomeActivity extends FragmentActivity implements TcpSocket.TcpSocke
 
 
     }
-
     @Override
-    public void onRead(byte[] buffer, int length) {
+    public void onRead(String read) {
 
     }
 }

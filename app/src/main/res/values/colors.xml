@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#ff8212</color>
+    <color name="colorPrimaryDark">#ff8212</color>
     <color name="colorAccent">#FF4081</color>
 
     <color name="white">#FFFFFF</color>
@@ -21,6 +21,7 @@
     <color name="colorOrange1">#ff8212</color>
     <color name="colorNavbarBg">#f2f2f2</color>
     <color name="colorLineBg">#d9d9d9</color>
+    <color name="colorallwhite">#00fdfcfc</color>
 
 
 

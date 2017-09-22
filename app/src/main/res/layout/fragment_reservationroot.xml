@@ -14,7 +14,7 @@
         android:background="@color/colorbg"
         >
 
-        <include layout="@layout/navbar"></include>
+        <include layout="@layout/navbar"/>
 
         <com.goockr.inductioncooker.view.BarProgress
             android:layout_width="match_parent"
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="210dp"
             android:id="@+id/fragment_reservationroot_date_fl"
-            ></FrameLayout>
+            />
 
 
     </LinearLayout>

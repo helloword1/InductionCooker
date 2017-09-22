@@ -11,8 +11,18 @@ import android.widget.TextView;
 
 import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.common.Common;
+import com.goockr.inductioncooker.lib.http.HttpError;
+import com.goockr.inductioncooker.lib.http.HttpHelper;
+import com.goockr.inductioncooker.lib.http.OKHttp;
+import com.goockr.inductioncooker.models.User;
 import com.goockr.inductioncooker.utils.FragmentHelper;
 import com.goockr.inductioncooker.view.MyEditText;
+import com.goockr.ui.view.helper.HudHelper;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,6 +35,8 @@ import butterknife.OnClick;
 public class UpdatePwdFragment extends Fragment {
 
     View contentView;
+
+    HudHelper hud=new HudHelper();
 
     @BindView(R.id.navbar_title_tv)
     TextView title_tv;
@@ -97,11 +109,13 @@ public class UpdatePwdFragment extends Fragment {
         {
             case (R.id.navbar_right_bt):
 
+                updatePwd();
+
                 break;
 
             case (R.id.navbar_left_bt):
              //   FragmentHelper.clearBackStack(getActivity());
-                getActivity().finish();
+
                 break;
 
             case (R.id.fragment_update_pwd_forget_tv):
@@ -110,6 +124,52 @@ public class UpdatePwdFragment extends Fragment {
 
                 break;
         }
+    }
+
+    private void updatePwd() {
+
+        if (oldpwd_et.getText().length()==0||newpwd_et.getText().length()==0||againpwd_et.getText().length()==0)
+        {
+            hud.hudShowTip(getActivity(),getResources().getString(R.string.update_pwd_null),Common.KHUDTIPSHORTTIME);
+            return;
+        }
+
+        if (! (newpwd_et.getText().toString().equals(againpwd_et.getText().toString())))
+        {
+            hud.hudShowTip(getActivity(),getResources().getString(R.string.pwd_againpwd_unequal),Common.KHUDTIPSHORTTIME);
+            return;
+        }
+
+        hud.hudShow(getActivity(),getResources().getString(R.string.chage_pwd_tip));
+
+        Map<String,Object> map=new HashMap<>();
+//functype=ch&mobile=13763085121&token=64f62f5341b6455981ed456bdb95eb80&old=123&new=456
+        map.put("functype","ch");
+        map.put("mobile", User.getInstance().mobile);
+        map.put("token",User.getInstance().token);
+        map.put("old",oldpwd_et.getText().toString());
+        map.put("new",newpwd_et.getText().toString());
+        HttpHelper.updatePwd(map, new OKHttp.HttpCallback() {
+            @Override
+            public void onFailure(HttpError error) {
+
+                hud.hudUpdateAndHid(error.msg,Common.KHUDFINISHTIME);
+
+            }
+
+            @Override
+            public void onSuccess(JSONObject jsonObject) {
+
+                hud.hudUpdateAndHid(getResources().getString(R.string.chage_pwd_success), Common.KHUDFINISHTIME, new HudHelper.SuccessCallBack() {
+                    @Override
+                    public void success() {
+                        getActivity().finish();
+                    }
+                });
+
+            }
+        });
+
     }
 
     private void forgetButtonClick() {

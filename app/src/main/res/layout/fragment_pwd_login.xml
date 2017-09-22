@@ -5,99 +5,203 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     >
-    <LinearLayout
-
+    <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include layout="@layout/navbar"></include>
+        <include layout="@layout/navbar" android:id="@+id/fragment_pwd_navbar"></include>
 
-        <com.goockr.inductioncooker.view.MyEditText
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:id="@+id/fragment_pwd_phone_et"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="60dp"
+            android:layout_height="match_parent"
+            android:id="@+id/fragment_login_pwd_ll"
+            android:orientation="vertical"
+            android:layout_below="@+id/fragment_pwd_navbar"
+            android:background="@color/white"
+            android:visibility="invisible"
             >
-        </com.goockr.inductioncooker.view.MyEditText>
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
-            android:background="@mipmap/inputbox_1"
-            >
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/fragment_pwd_forget_bt"
-                android:text="@string/login_pwd_forgetPwd"
-                android:paddingRight="5dp"
-                android:textColor="@color/colorOrange1"
-                android:background="@color/transparent"
-                android:layout_alignParentRight="true"
-                android:visibility="invisible"
-                />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/fragment_pwd_smscode_bt"
-                android:text="@string/sms_getCode"
-                android:paddingRight="5dp"
-                android:textColor="@color/colorOrange1"
-                android:background="@color/transparent"
-                android:layout_alignParentRight="true"
-                />
-
-
 
             <com.goockr.inductioncooker.view.MyEditText
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/fragment_pwd_sms_et"
-                android:layout_toLeftOf="@+id/fragment_pwd_smscode_bt"
+                android:layout_height="50dp"
+                android:id="@+id/fragment_pwd_phone_et"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="60dp"
+                >
+            </com.goockr.inductioncooker.view.MyEditText>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@mipmap/inputbox_1"
+                >
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fragment_pwd_forget_bt"
+                    android:text="@string/login_pwd_forgetPwd"
+                    android:paddingRight="5dp"
+                    android:textColor="@color/colorOrange1"
+                    android:background="@color/transparent"
+                    android:layout_alignParentRight="true"
+                    />
+
+                <!--<Button-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/fragment_pwd_smscode_bt"-->
+                <!--android:text="@string/sms_getCode"-->
+                <!--android:paddingRight="5dp"-->
+                <!--android:textColor="@color/colorOrange1"-->
+                <!--android:background="@color/transparent"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--/>-->
+
+
+
+                <com.goockr.inductioncooker.view.MyEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/fragment_login_pwd_et"
+                    android:layout_toLeftOf="@+id/fragment_pwd_forget_bt"
+                    />
+
+            </RelativeLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/fragment_login_pwd_bt"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/btn_big"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:text="登录"
                 />
 
-        </RelativeLayout>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/fragment_login_smsmoden_bt"
+                android:layout_marginRight="20dp"
+                android:layout_gravity="center_vertical|right"
+                android:text="快捷登录"
+                android:layout_marginTop="5dp"
+                android:padding="0dp"
+                android:gravity="right|center_vertical"
+                android:background="@color/transparent"
+                android:textColor="@color/colorOrange1"
+                />
 
-        <Button
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/btn_big"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:text="登录"
-            />
+            android:layout_height="match_parent"
+            android:id="@+id/fragment_login_sms_ll"
+            android:orientation="vertical"
+            android:layout_below="@+id/fragment_pwd_navbar"
+            android:background="@color/white"
+            android:visibility="visible"
+            >
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/fragment_login_moden_bt"
-            android:layout_marginRight="20dp"
-            android:layout_gravity="center_vertical|right"
-            android:text="账号登录"
-            android:layout_marginTop="5dp"
-            android:padding="0dp"
-            android:gravity="right|center_vertical"
-            android:background="@color/transparent"
-            android:textColor="@color/colorOrange1"
-            />
+            <com.goockr.inductioncooker.view.MyEditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/fragment_sms_phone_et"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="60dp"
+                >
+            </com.goockr.inductioncooker.view.MyEditText>
 
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@mipmap/inputbox_1"
+                >
+
+                <!--<Button-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:id="@+id/fragment_pwd_forget_bt"-->
+                    <!--android:text="@string/login_pwd_forgetPwd"-->
+                    <!--android:paddingRight="5dp"-->
+                    <!--android:textColor="@color/colorOrange1"-->
+                    <!--android:background="@color/transparent"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:visibility="invisible"-->
+                    <!--/>-->
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fragment_pwd_smscode_bt"
+                    android:text="@string/sms_getCode"
+                    android:paddingRight="5dp"
+                    android:textColor="@color/colorOrange1"
+                    android:background="@color/transparent"
+                    android:layout_alignParentRight="true"
+                    />
 
 
 
+                <com.goockr.inductioncooker.view.MyEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/fragment_login_sms_et"
+                    android:layout_toLeftOf="@+id/fragment_pwd_smscode_bt"
+                    />
 
-    </LinearLayout>
+            </RelativeLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/fragment_smslogin_bt"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/btn_big"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:text="登录"
+                />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/fragment_login_moden_bt"
+                android:layout_marginRight="20dp"
+                android:layout_gravity="center_vertical|right"
+                android:text="账号登录"
+                android:layout_marginTop="5dp"
+                android:padding="0dp"
+                android:gravity="right|center_vertical"
+                android:background="@color/transparent"
+                android:textColor="@color/colorOrange1"
+                />
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
+
 
 </com.goockr.ui.view.SlidingRelativeLayout>

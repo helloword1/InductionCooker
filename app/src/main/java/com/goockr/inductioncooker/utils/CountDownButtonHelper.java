@@ -33,6 +33,7 @@ public class CountDownButtonHelper {
                                  int max, int interval) {
 
         this.button = button;
+
         // 由于CountDownTimer并不是准确计时，在onTick方法调用的时候，time会有1-10ms左右的误差，这会导致最后一秒不会调用onTick()
         // 因此，设置间隔的时候，默认减去了10ms，从而减去误差。
         // 经过以上的微调，最后一秒的显示时间会由于10ms延迟的积累，导致显示时间比1s长max*10ms的时间，其他时间的显示正常,总时间正常

@@ -84,7 +84,6 @@ public class BadgeView extends TextView {
     public void setBackground(int dipRadius, int badgeColor) {
         int radius = dip2Px(dipRadius);
         float[] radiusArray = new float[] { radius, radius, radius, radius, radius, radius, radius, radius };
-
         RoundRectShape roundRect = new RoundRectShape(radiusArray, null, null);
         ShapeDrawable bgDrawable = new ShapeDrawable(roundRect);
         bgDrawable.getPaint().setColor(badgeColor);

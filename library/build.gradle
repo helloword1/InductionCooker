@@ -29,7 +29,7 @@ task sourcesJar(type: Jar) {
 }
 
 task javadoc(type: Javadoc) {
-    failOnError  false
+    failOnError false
     source = android.sourceSets.main.java.sourceFiles
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     classpath += configurations.compile
@@ -47,7 +47,6 @@ artifacts {
 }
 
 dependencies {
-
     compile fileTree(include: ['*.jar'], dir: 'libs')
     provided 'com.android.support:recyclerview-v7:25.2.0'
 }

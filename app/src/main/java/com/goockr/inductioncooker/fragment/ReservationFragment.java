@@ -1,14 +1,11 @@
 package com.goockr.inductioncooker.fragment;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -33,9 +30,9 @@ import butterknife.OnClick;
 
 public class ReservationFragment extends Fragment implements ImageTopButton.ImageTopButtonOnClickListener {
 
-    View  contentView;
+    View contentView;
 
- //   private FragmentManager fragmentManager;
+    //   private FragmentManager fragmentManager;
 
     List<ImageTopButton> buttons;
 
@@ -54,7 +51,7 @@ public class ReservationFragment extends Fragment implements ImageTopButton.Imag
     @BindView(R.id.fragment_reservation_soup_ib)
     ImageTopButton soup_ib;
     @BindView(R.id.fragment_reservation_porridge_ib)
-    ImageTopButton  porridge_ib;
+    ImageTopButton porridge_ib;
     @BindView(R.id.fragment_reservation_rich_ib)
     ImageTopButton rich_ib;
     @BindView(R.id.fragment_reservation_water_ib)
@@ -65,7 +62,7 @@ public class ReservationFragment extends Fragment implements ImageTopButton.Imag
     ImageTopButton stew_ib;
     @BindView(R.id.fragment_reservation_temperature_ib)
     ImageTopButton temperature_ib;
-   @BindView(R.id.fragment_reservation_bar_pv)
+    @BindView(R.id.fragment_reservation_bar_pv)
     BarProgress bar_pv;
 
     ImageTopButton select_bt;
@@ -84,20 +81,18 @@ public class ReservationFragment extends Fragment implements ImageTopButton.Imag
 
         initUI();
 
-        initEvent();
-
         return contentView;
     }
 
     private void initData() {
 
-        buttons=new ArrayList<ImageTopButton>();
+        buttons = new ArrayList<>();
 
     }
 
     private void initUI() {
 
-        List<String> tips=new ArrayList<String>();
+        List<String> tips = new ArrayList<String>();
         tips.add("1.选择功能模式");
         tips.add("2.预约开机时间");
         // tips.add("3.预约定时时间");
@@ -105,58 +100,44 @@ public class ReservationFragment extends Fragment implements ImageTopButton.Imag
         bar_pv.setMaxCount(2);
         bar_pv.setProgress(1);
 
-     //   fragmentManager= getFragmentManager();
+        //   fragmentManager= getFragmentManager();
 
-        Bundle bundle= getArguments();
-        int moden= bundle.getInt(ReservationActivity.KModenKey);
+        Bundle bundle = getArguments();
+        int moden = bundle.getInt(ReservationActivity.KModenKey);
 
-        if (moden==0)
-        {
+        if (moden == 0) {
             left_ll.setVisibility(View.VISIBLE);
             buttons.add(soup_ib);
             buttons.add(porridge_ib);
             buttons.add(rich_ib);
             buttons.add(water_ib);
 
-        }else {
+        } else {
             right_ll.setVisibility(View.VISIBLE);
             buttons.add(baked_ib);
             buttons.add(stew_ib);
             buttons.add(temperature_ib);
         }
 
-        select_bt=buttons.get(0);
+        select_bt = buttons.get(0);
         select_bt.setSelect(true);
 
-        for (ImageTopButton button : buttons)
-        {
+        for (ImageTopButton button : buttons) {
             button.buttonOnClickListener(this);
         }
 
 
     }
 
-    private void initEvent() {
-
-    }
-
-
-
-    @OnClick({R.id.navbar_left_bt,R.id.navbar_right_bt})
-    public void  onClick(View v)
-    {
-        switch (v.getId())
-        {
+    @OnClick({R.id.navbar_left_bt, R.id.navbar_right_bt})
+    public void onClick(View v) {
+        switch (v.getId()) {
             case (R.id.navbar_left_bt):
-
-               // fragmentManager.popBackStack();
                 FragmentHelper.pop(getActivity());
                 getActivity().finish();
-
                 break;
-            case (R.id.navbar_right_bt):
-
-               rightButtonClick();
+            case (R.id.navbar_right_bt)://下一步
+                rightButtonClick();
                 break;
         }
 
@@ -164,9 +145,7 @@ public class ReservationFragment extends Fragment implements ImageTopButton.Imag
 
     private void rightButtonClick() {
 
-        ReservationBootFragment fragment=new ReservationBootFragment();
-
-
+        ReservationBootFragment fragment = ReservationBootFragment.newInstance(select_bt.getText());
 //        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 //
 //        fragmentTransaction.add(R.id.activity_reservation,fragment, Common.TimeReservationFragment);
@@ -179,7 +158,7 @@ public class ReservationFragment extends Fragment implements ImageTopButton.Imag
 //
 //        fragmentTransaction.commit();
 
-        FragmentHelper.addFragmentToBackStack(getActivity(),R.id.activity_reservation,this,fragment, Common.ReservationBootFragment);
+        FragmentHelper.addFragmentToBackStack(getActivity(), R.id.activity_reservation, this, fragment, Common.ReservationBootFragment);
 
     }
 
@@ -187,12 +166,10 @@ public class ReservationFragment extends Fragment implements ImageTopButton.Imag
     @Override
     public void imageTopButtonOnClickListener(ImageTopButton button) {
 
-        if (select_bt==button)return;
-
+        if (select_bt == button) return;
         select_bt.setSelect(!select_bt.isSelect());
         button.setSelect(!button.isSelect());
-        select_bt=button;
-
+        select_bt = button;
     }
 
 

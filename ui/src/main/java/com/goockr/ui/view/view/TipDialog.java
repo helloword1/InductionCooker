@@ -117,12 +117,12 @@ public class TipDialog extends Dialog implements View.OnClickListener {
         /*
          * 将对话框的大小按屏幕大小的百分比设置
          */
-//        WindowManager m = getWindow().getWindowManager();
-//        Display d = m.getDefaultDisplay(); // 获取屏幕宽、高用
-//        WindowManager.LayoutParams p =getWindow().getAttributes(); // 获取对话框当前的参数值
-//        p.height = (int) (d.getHeight() * 0.4); // 高度设置为屏幕的0.6
-//        p.width = (int) (d.getWidth() * 0.8); // 宽度设置为屏幕的0.65
-//        getWindow().setAttributes(p);
+        WindowManager m = getWindow().getWindowManager();
+        Display d = m.getDefaultDisplay(); // 获取屏幕宽、高用
+        WindowManager.LayoutParams p =getWindow().getAttributes(); // 获取对话框当前的参数值
+       // p.height = (int) (d.getHeight() * 0.4); // 高度设置为屏幕的0.6
+        p.width = (int) (d.getWidth() * 0.8); // 宽度设置为屏幕的0.65
+        getWindow().setAttributes(p);
 
         getWindow().setBackgroundDrawable(new ColorDrawable(0));
 
@@ -153,6 +153,11 @@ public class TipDialog extends Dialog implements View.OnClickListener {
     public interface TipDialogCallBack
     {
         void buttonClick(TipDialog dialog);
+    }
+
+    public void  dialogShow()
+    {
+
     }
 
 

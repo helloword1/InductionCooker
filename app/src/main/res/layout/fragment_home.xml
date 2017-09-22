@@ -2,7 +2,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorbg"
@@ -20,10 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/fragment_home_segment"
-            >
-
-        </com.goockr.inductioncooker.view.SegmentController>
-
+            />
     </LinearLayout>
 
     <!--<LinearLayout-->
@@ -125,7 +121,6 @@
         android:layout_height="0dp"
         android:layout_weight="93"
         android:orientation="horizontal"
-
         android:id="@+id/fragment_home_moden_ll"
         >
 

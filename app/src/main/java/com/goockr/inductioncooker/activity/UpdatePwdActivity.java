@@ -14,7 +14,7 @@ import com.goockr.inductioncooker.fragment.ReservationFragment;
 import com.goockr.inductioncooker.fragment.UpdatePwdFragment;
 import com.goockr.inductioncooker.utils.FragmentHelper;
 
-public class UpdatePwdActivity extends FragmentActivity {
+public class UpdatePwdActivity extends BaseActivity {
 
     FragmentManager fragmentManager;
 

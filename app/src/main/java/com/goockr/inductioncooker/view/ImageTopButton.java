@@ -7,15 +7,12 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.goockr.inductioncooker.MyApplication;
 import com.goockr.inductioncooker.R;
+import com.goockr.inductioncooker.models.Moden;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,6 +28,8 @@ public class ImageTopButton extends LinearLayout implements View.OnTouchListener
 
     private ImageTopButtonOnClickListener callback;
 
+    public Moden moden;
+
     @BindView(R.id.imagetop_button_title_tv)
     TextView title_tv;
     @BindView(R.id.imagetop_button_top_iv)
@@ -42,7 +41,7 @@ public class ImageTopButton extends LinearLayout implements View.OnTouchListener
 
     private int selImageId;
 
-    private int hightLightImageId=0;
+    private int hightLightImageId = 0;
 
     private int disabledImageId;
 
@@ -111,7 +110,7 @@ public class ImageTopButton extends LinearLayout implements View.OnTouchListener
 
     public void setNormTextCoclor(int normTextCoclor) {
         this.normTextCoclor = normTextCoclor;
-         title_tv.setTextColor(getResources().getColor(normTextCoclor));
+        title_tv.setTextColor(getResources().getColor(normTextCoclor));
 
         // title_tv.setTextColor(R.color.colorRed);
 
@@ -139,7 +138,6 @@ public class ImageTopButton extends LinearLayout implements View.OnTouchListener
         } else {
             top_iv.setImageResource(disabledImageId);
         }
-
     }
 
     public int getDisabledImageId() {
@@ -157,32 +155,23 @@ public class ImageTopButton extends LinearLayout implements View.OnTouchListener
     }
 
 
-
     public ImageTopButton(Context context, AttributeSet attrs) {
         super(context, attrs);
 
 
-        contentView= LayoutInflater.from(context).inflate(R.layout.imagetop_button, this, true);
+        contentView = LayoutInflater.from(context).inflate(R.layout.imagetop_button, this, true);
 
         TypedArray mTypedArray = context.obtainStyledAttributes(attrs, R.styleable.ImageTopButton);
 
         ButterKnife.bind(this);
 
-
-
-
-        if (mTypedArray!=null)
-        {
-            setNormImageId(mTypedArray.getResourceId(R.styleable.ImageTopButton_normImage,0));
-            selImageId=mTypedArray.getResourceId(R.styleable.ImageTopButton_selImage,0);
-            disabledImageId=mTypedArray.getResourceId(R.styleable.ImageTopButton_displayImage,0);
-
-
-
-            int a= mTypedArray.getColor(R.styleable.ImageTopButton_textColor,Color.RED);
-
+        if (mTypedArray != null) {
+            setNormImageId(mTypedArray.getResourceId(R.styleable.ImageTopButton_normImage, 0));
+            selImageId = mTypedArray.getResourceId(R.styleable.ImageTopButton_selImage, 0);
+            disabledImageId = mTypedArray.getResourceId(R.styleable.ImageTopButton_displayImage, 0);
+            int a = mTypedArray.getColor(R.styleable.ImageTopButton_textColor, Color.RED);
             title_tv.setTextColor(a);
-           // setNormTextCoclor(mTypedArray.getColor(R.styleable.ImageTopButton_textColor,Color.RED));
+            // setNormTextCoclor(mTypedArray.getColor(R.styleable.ImageTopButton_textColor,Color.RED));
             setText(mTypedArray.getString(R.styleable.ImageTopButton_text));
             mTypedArray.recycle();
         }
@@ -190,39 +179,30 @@ public class ImageTopButton extends LinearLayout implements View.OnTouchListener
         m_ll.setClickable(true);
         m_ll.setOnClickListener(this);
         m_ll.setOnTouchListener(this);
-       // m_ll.setBackgroundColor(Color.YELLOW);
+        // m_ll.setBackgroundColor(Color.YELLOW);
 
     }
 
 
-
-    public void  buttonOnClickListener(ImageTopButtonOnClickListener callback)
-    {
-        this.callback=callback;
+    public void buttonOnClickListener(ImageTopButtonOnClickListener callback) {
+        this.callback = callback;
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 
-        if(event.getAction()==MotionEvent.ACTION_DOWN)
-        {
-           // m_ll.setBackgroundColor(Color.rgb(127,127,127));
-            if (hightLightImageId!=0)
-            {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            // m_ll.setBackgroundColor(Color.rgb(127,127,127));
+            if (hightLightImageId != 0) {
                 top_iv.setImageResource(hightLightImageId);
             }
 
-        }
-        else if(event.getAction()==MotionEvent.ACTION_UP)
-        {
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
             //m_ll.setBackgroundColor(Color.TRANSPARENT);
 
-            if (isSelect())
-            {
+            if (isSelect()) {
                 top_iv.setImageResource(selImageId);
-            }else {
-
-
+            } else {
 
                 top_iv.setImageResource(normImageId);
             }
@@ -236,19 +216,16 @@ public class ImageTopButton extends LinearLayout implements View.OnTouchListener
     @Override
     public void onClick(View v) {
 
-       // Toast.makeText(MyApplication.getContext(),"onClick",Toast.LENGTH_SHORT);
+        // Toast.makeText(MyApplication.getContext(),"onClick",Toast.LENGTH_SHORT);
 
-        if (this.callback!=null)
-        {
+        if (this.callback != null) {
             this.callback.imageTopButtonOnClickListener(this);
         }
 
-
     }
 
-    public interface  ImageTopButtonOnClickListener
-    {
-        public void  imageTopButtonOnClickListener(ImageTopButton button);
+    public interface ImageTopButtonOnClickListener {
+        public void imageTopButtonOnClickListener(ImageTopButton button);
     }
 
 }

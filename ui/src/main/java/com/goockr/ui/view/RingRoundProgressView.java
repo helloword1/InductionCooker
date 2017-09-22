@@ -29,7 +29,7 @@ public class RingRoundProgressView extends View {
     //float startAngle, float sweepAngle
     public int startAngle;
 
-    public  int sweepAngle;
+    public int sweepAngle;
 
     public int getProgress() {
         return progress;
@@ -48,29 +48,25 @@ public class RingRoundProgressView extends View {
         this.sweepAngle = sweepAngle;
     }
 
-    public void reload()
-    {
+    public void reload() {
         invalidate();
     }
 
     public void setProgress(int progress) {
         this.progress = progress;
 
-        if (progress>maxCount)
-        {
-            this.progress=maxCount;
+        if (progress > maxCount) {
+            this.progress = maxCount;
             return;
-        }else if (progress<0){
+        } else if (progress < 0) {
 
-            this.progress=0;
+            this.progress = 0;
             return;
         }
 
         invalidate();
 
     }
-
-
 
 
     public RingRoundProgressView(Context context) {
@@ -82,34 +78,33 @@ public class RingRoundProgressView extends View {
 
         TypedArray mTypedArray = context.obtainStyledAttributes(attrs, R.styleable.RingRoundProgressView);
 
-        if (mTypedArray!=null)
-        {
-            progress=mTypedArray.getInt(R.styleable.RingRoundProgressView_progress,0);
-            maxCount=mTypedArray.getInt(R.styleable.RingRoundProgressView_maxCount,10);
-            startAngle=mTypedArray.getInt(R.styleable.RingRoundProgressView_startAngle,0);
-            sweepAngle=mTypedArray.getInt(R.styleable.RingRoundProgressView_sweepAngle,360);
+        if (mTypedArray != null) {
+            progress = mTypedArray.getInt(R.styleable.RingRoundProgressView_progress, 0);
+            maxCount = mTypedArray.getInt(R.styleable.RingRoundProgressView_maxCount, 10);
+            startAngle = mTypedArray.getInt(R.styleable.RingRoundProgressView_startAngle, 0);
+            sweepAngle = mTypedArray.getInt(R.styleable.RingRoundProgressView_sweepAngle, 360);
             mTypedArray.recycle();
         }
 
         init();
 
     }
+
     Paint paint1;
     Paint p;
 
     float w;
+
     private void init() {
-
-        w=40;
-
-        paint1=new Paint();
+        w = 40;
+        paint1 = new Paint();
         paint1.setAntiAlias(true);
         paint1.setStrokeWidth((float) w);
         paint1.setStyle(Paint.Style.STROKE);
         paint1.setStrokeCap(Paint.Cap.ROUND);
         paint1.setColor(0x80ebeef3);
 
-        p= new Paint();
+        p = new Paint();
         p.setAntiAlias(true);// 设置画笔的锯齿效果。 true是去除，大家一看效果就明白了
 
     }
@@ -128,16 +123,13 @@ public class RingRoundProgressView extends View {
 //        colors[2] = mTypedArray.getColor(R.styleable.CircularRing_circleColor3, 0xff3cdf5f);
 //        initView();
 
-        if (mTypedArray!=null)
-        {
-            progress=mTypedArray.getInt(R.styleable.RingRoundProgressView_progress,0);
-            maxCount=mTypedArray.getInt(R.styleable.RingRoundProgressView_maxCount,10);
-            startAngle=mTypedArray.getInt(R.styleable.RingRoundProgressView_startAngle,0);
-            sweepAngle=mTypedArray.getInt(R.styleable.RingRoundProgressView_sweepAngle,360);
+        if (mTypedArray != null) {
+            progress = mTypedArray.getInt(R.styleable.RingRoundProgressView_progress, 0);
+            maxCount = mTypedArray.getInt(R.styleable.RingRoundProgressView_maxCount, 10);
+            startAngle = mTypedArray.getInt(R.styleable.RingRoundProgressView_startAngle, 0);
+            sweepAngle = mTypedArray.getInt(R.styleable.RingRoundProgressView_sweepAngle, 360);
             mTypedArray.recycle();
         }
-
-
 
 
     }
@@ -160,19 +152,19 @@ public class RingRoundProgressView extends View {
 //        paint.setColor(Color.GREEN);
 
 
-        RectF oval = new RectF(0,0,getWidth(),getHeight());
+        RectF oval = new RectF(0, 0, getWidth(), getHeight());
         //canvas.drawRect(oval,paint);
-        oval.left=oval.left+w/2;
-        oval.top=oval.top+w/2;
-        oval.right =  oval.right-w/2;
-        oval.bottom =  oval.bottom -w/2;
-        canvas.drawArc(oval, 0,  360, false, paint1);//背景圆
+        oval.left = oval.left + w / 2;
+        oval.top = oval.top + w / 2;
+        oval.right = oval.right - w / 2;
+        oval.bottom = oval.bottom - w / 2;
+        canvas.drawArc(oval, 0, 360, false, paint1);//背景圆
 //        paint.setColor(Color.BLUE);
 //        canvas.drawRect(oval,paint);
 
-       // canvas.drawCircle(getWidth()/2, w/2, w/2, p);// 小圆
+        // canvas.drawCircle(getWidth()/2, w/2, w/2, p);// 小圆
 
-       // canvas.drawCircle(100, 100, 100, p);// 大圆
+        // canvas.drawCircle(100, 100, 100, p);// 大圆
 
 
 //        Paint paint2 = new Paint();
@@ -183,7 +175,7 @@ public class RingRoundProgressView extends View {
 //        rectF.top = 190;
 //        rectF.right = 120;
 //        rectF.bottom = 280;
-   //     canvas.drawRect(rectF, paint2);
+        //     canvas.drawRect(rectF, paint2);
 
 //        rectF.left =160;
 //        rectF.top = 190;
@@ -202,10 +194,10 @@ public class RingRoundProgressView extends View {
 //        paint2.setStrokeCap(Paint.Cap.ROUND);
 //        paint2.setColor(Color.BLACK);
 
-      //  canvas.drawArc(rectF, 0, 360, true, paint2);
-        float argAngle=sweepAngle/(maxCount-1);
-        double bgRoundRedius=getWidth()/2;
-     //   canvas.drawCircle(300, w/2, w/2, p);// 小圆
+        //  canvas.drawArc(rectF, 0, 360, true, paint2);
+        float argAngle = sweepAngle / (maxCount - 1);
+        double bgRoundRedius = getWidth() / 2;
+        //   canvas.drawCircle(300, w/2, w/2, p);// 小圆
 
 //        float degrees=startAngle+argAngle*0;
 //        double angle =PI * (degrees)/ 180;
@@ -220,34 +212,27 @@ public class RingRoundProgressView extends View {
 //        canvas.drawCircle((float)x, (float) y, w/2, p);// 小圆
 
         //Log.v("RingRoundProgressView","angle:"+angle+"                X:"+x+"             Y:"+y);
-        for (int i=0;i<maxCount;i++)
-        {
-            float degrees=startAngle+argAngle*i;
-            double angle =PI * (degrees)/ 180;
+        for (int i = 0; i < maxCount; i++) {
+            float degrees = startAngle + argAngle * i;
+            double angle = PI * (degrees) / 180;
 
-            int green=201-((110/maxCount-1)*i);
+            int green = 201 - ((110 / maxCount - 1) * i);
 
-            int blue=51-((51/maxCount-1)*i);
+            int blue = 51 - ((51 / maxCount - 1) * i);
 
-            p.setColor(Color.rgb(255,green,blue));
-          //  p.setColor(Color.YELLOW);
-            double x = bgRoundRedius * cos(angle) + bgRoundRedius-w/2*cos(angle);
-            double y = bgRoundRedius * sin(angle) + bgRoundRedius-w/2*sin(angle);
-            canvas.drawCircle((float)x, (float) y, w/2, p);// 小圆
+            p.setColor(Color.rgb(255, green, blue));
+            //  p.setColor(Color.YELLOW);
+            double x = bgRoundRedius * cos(angle) + bgRoundRedius - w / 2 * cos(angle);
+            double y = bgRoundRedius * sin(angle) + bgRoundRedius - w / 2 * sin(angle);
+            canvas.drawCircle((float) x, (float) y, w / 2, p);// 小圆
 
-            if (i>=progress)
-            {
-              //  p.setColor(Color.GREEN);
+            if (i >= progress) {
+                //  p.setColor(Color.GREEN);
                 p.setColor(0xFFCCCCCC);
-                canvas.drawCircle((float)x, (float) y, w/2, p);// 小圆
+                canvas.drawCircle((float) x, (float) y, w / 2, p);// 小圆
             }
 
         }
-
-
-
     }
-
-
 
 }

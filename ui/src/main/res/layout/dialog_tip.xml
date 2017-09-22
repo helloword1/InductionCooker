@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/dialog_tip_text_tv"
         android:layout_gravity="center_horizontal"
-        android:text="过法鲨口就是个卡刷公交卡监控工具卡洛斯更健康老顾客啦江苏高考拉开了嘎健康噶"
+        android:text=""
         android:textColor="@color/ui_colorBlack"
         android:layout_marginTop="10dp"
         android:textSize="18sp"

@@ -28,10 +28,7 @@
     <com.goockr.inductioncooker.view.Tabbar
         android:id="@+id/tabbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </com.goockr.inductioncooker.view.Tabbar>
-
+        android:layout_height="wrap_content"/>
     <!--<include layout="@layout/activity_bottom" />-->
 
 </LinearLayout>

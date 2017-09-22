@@ -1,10 +1,5 @@
 package com.goockr.inductioncooker.common;
 
-import android.content.Context;
-import android.view.WindowManager;
-
-import com.goockr.inductioncooker.MyApplication;
-
 /**
  * Created by CMQ on 2017/6/30.
  */
@@ -31,23 +26,23 @@ public class Common {
 
     public static final String SetPwdFragment  = "SetPwdFragment";
 
-
-
-
-
-
     /************************************fragmnet切换动画****************************************************/
     public static final int FragmentAnimationBottom  = 6;
-
-
 
     /***********************************WIFI相关参数*****************************************************/
     public static final String KWIFINameHead  = "abc";
 
 
     /***********************************Sokect参数*****************************************************/
-    public static final String KIP  = "192.168.43.1";
+//    public static final String KIP  = "192.168.1.190";
+//    public static final String KIP  = "192.168.1.187";
+    public static final String KIP  = "120.24.5.252";
 
-    public static final int KPORT = 1234;
+    public static final int KPORT = 9001;
+
+    /**********************************HUD相关***************************************************************/
+    public static final int KHUDTIPSHORTTIME = 1500;
+
+    public static final double KHUDFINISHTIME = 1.5;
 
 }

@@ -3,11 +3,8 @@ package com.goockr.inductioncooker.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.WindowManager;
-
-import com.goockr.inductioncooker.MainActivity;
 import com.goockr.inductioncooker.R;
 
 public class LauncherActivity extends Activity {

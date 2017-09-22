@@ -2,6 +2,7 @@ package com.goockr.ui.view.helper;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Handler;
 import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
@@ -31,8 +32,6 @@ public class HudHelper {
         hud = KProgressHUD.create(context)
                 .setCustomView(tv_Reset)
                 .show();
-
-
         if (tipTimer != null) {
             tipTimer.cancel();
             tipTimer = null;
@@ -41,8 +40,6 @@ public class HudHelper {
             tipTask.cancel();
             tipTask = null;
         }
-
-
         tipTask = new TimerTask(){
             public void run(){
                 if (hud!=null)
@@ -54,6 +51,53 @@ public class HudHelper {
         };
         tipTimer = new Timer();
         tipTimer.schedule(tipTask, delay);
+
+
+    }
+
+
+    public void hudShow(Context context,String tip)
+    {
+        if (hud!=null)
+        {
+            return;
+        }
+        hud = KProgressHUD.create(context)
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setLabel(tip)
+                .setCancellable(false);
+
+        hud.show();
+    }
+
+    public void hudUpdate(String tip)
+    {
+        hud.setLabel(tip);
+    }
+
+    public void hudUpdateAndHid(String tip, double delay)
+    {
+        hud.setLabel(tip);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                hudHide();
+            }
+        }, (int)delay*1000);
+    }
+
+    public void hudUpdateAndHid(String tip, double delay, final SuccessCallBack callBack)
+    {
+        hud.setLabel(tip);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                hudHide();
+                callBack.success();
+            }
+        }, (int)delay*1000);
     }
 
     public  void hudHide()
@@ -65,4 +109,8 @@ public class HudHelper {
         }
     }
 
+   public interface SuccessCallBack
+    {
+        void success();
+    }
 }

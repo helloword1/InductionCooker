@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.common.Common;
 import com.goockr.inductioncooker.utils.FragmentHelper;
 import com.goockr.inductioncooker.view.MyEditText;
+import com.goockr.ui.view.helper.HudHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,6 +32,10 @@ public class SmsCodeFragment extends Fragment {
 
     private int fragmentContent;
 
+    String phone;
+
+    int state;
+
     @BindView(R.id.navbar_title_tv)
     TextView title_tv;
     @BindView(R.id.navbar_left_bt)
@@ -40,6 +46,8 @@ public class SmsCodeFragment extends Fragment {
     MyEditText code_et;
     @BindView(R.id.fragment_sms_code_tv)
     TextView phone_tv;
+
+    HudHelper hud=new HudHelper();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,9 +74,10 @@ public class SmsCodeFragment extends Fragment {
 
         if (bundle!=null)
         {
-            String phone=bundle.getString(Common.VerifiedPhoneNumFragmentPhoneKey);
+            phone=bundle.getString(Common.VerifiedPhoneNumFragmentPhoneKey);
             phone_tv.setText("手机号码"+phone);
             fragmentContent=bundle.getInt("content");
+            state=bundle.getInt("state");
         }
 
 
@@ -83,7 +92,7 @@ public class SmsCodeFragment extends Fragment {
 
         code_et.setHint("验证码");
         code_et.setBgImageVisibility(false);
-
+        code_et.setInputType(InputType.TYPE_CLASS_PHONE);
 
 
 
@@ -94,6 +103,12 @@ public class SmsCodeFragment extends Fragment {
 
     private void nextStep()
     {
+        if (code_et.getText().length()==0)
+        {
+            hud.hudShowTip(getActivity(),getResources().getString(R.string.sms_code_null),Common.KHUDTIPSHORTTIME);
+            return;
+        }
+
         SetPwdFragment fragment=new SetPwdFragment();
 
 //        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -108,6 +123,12 @@ public class SmsCodeFragment extends Fragment {
 //
 //        fragmentTransaction.commit();
 
+        Bundle bundle=new Bundle();
+        bundle.putInt("content",fragmentContent);
+        bundle.putString("phoneNumber",phone);
+        bundle.putInt("state",state);
+        bundle.putString("smsCode",code_et.getText().toString());
+        fragment.setArguments(bundle);
         FragmentHelper.addFragmentToBackStack(getActivity(),fragmentContent,this,fragment,Common.SetPwdFragment);
 
     }

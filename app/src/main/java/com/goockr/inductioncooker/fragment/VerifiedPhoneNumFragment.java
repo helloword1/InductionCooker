@@ -18,9 +18,17 @@ import android.widget.Toast;
 import com.goockr.inductioncooker.MyApplication;
 import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.common.Common;
+import com.goockr.inductioncooker.lib.http.HttpError;
+import com.goockr.inductioncooker.lib.http.HttpHelper;
+import com.goockr.inductioncooker.lib.http.OKHttp;
 import com.goockr.inductioncooker.utils.FragmentHelper;
 import com.goockr.inductioncooker.view.MyEditText;
 import com.goockr.ui.view.helper.HudHelper;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -109,13 +117,39 @@ public class VerifiedPhoneNumFragment extends Fragment {
     private void nextStep()
     {
 
+        if (phone_et.getText().length()==0)
+        {
+            hudHelper.hudShowTip(getActivity(),getResources().getString(R.string.phone_null),Common.KHUDTIPSHORTTIME);
+            return;
+        }
+//functype=vc&mobile=13763085121
+        Map<String,Object> map=new HashMap<>();
+        map.put("functype","vc");
+        map.put("mobile",phone_et.getText().toString());
 
-        SmsCodeFragment fragment=new SmsCodeFragment();
-        Bundle bundle=new Bundle();
-        bundle.putString(Common.VerifiedPhoneNumFragmentPhoneKey,phone_et.getText());
-        bundle.putInt("content",fragmentContent);
-        fragment.setArguments(bundle);
-        FragmentHelper.addFragmentToBackStack(getActivity(),fragmentContent,this,fragment,Common.SmsCodeFragment);
+        hudHelper.hudShow(getActivity(),getResources().getString(R.string.get_sms_code));
+
+        HttpHelper.getForgetSmmCode(map, new OKHttp.HttpCallback() {
+            @Override
+            public void onFailure(HttpError error) {
+                hudHelper.hudUpdateAndHid(error.msg,Common.KHUDFINISHTIME);
+            }
+
+            @Override
+            public void onSuccess(JSONObject jsonObject) {
+
+                hudHelper.hudHide();
+                SmsCodeFragment fragment=new SmsCodeFragment();
+                Bundle bundle=new Bundle();
+                bundle.putString(Common.VerifiedPhoneNumFragmentPhoneKey,phone_et.getText());
+                bundle.putInt("content",fragmentContent);
+                bundle.putInt("state",state);
+                fragment.setArguments(bundle);
+                FragmentHelper.addFragmentToBackStack(getActivity(),fragmentContent,VerifiedPhoneNumFragment.this,fragment,Common.SmsCodeFragment);
+            }
+        });
+
+
 
     }
 

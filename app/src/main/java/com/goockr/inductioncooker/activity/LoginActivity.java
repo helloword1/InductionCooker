@@ -1,34 +1,23 @@
 package com.goockr.inductioncooker.activity;
 
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.graphics.Rect;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 
 import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.common.Common;
-import com.goockr.inductioncooker.fragment.PwdLoginFragment;
-import com.goockr.inductioncooker.fragment.ReservationFragment;
 import com.goockr.inductioncooker.fragment.SmsLoginFragment;
 import com.goockr.inductioncooker.utils.FragmentHelper;
-import com.goockr.inductioncooker.view.MyEditText;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class LoginActivity extends FragmentActivity {
+public class LoginActivity extends BaseActivity {
 
     FragmentManager fragmentManager;
 
@@ -110,9 +99,6 @@ public class LoginActivity extends FragmentActivity {
             int top = leftTop[1];
             int bottom = top + v.getHeight();
             int right = left + v.getWidth();
-
-
-
           //  Log.v("isShouldHideInput","top:"+top+"\neventy:"+event.getY()+"\nbottom:"+bottom+"\nleft:"+left+"\neventx:"+event.getX()+"\nright:"+right);
 
             if (event.getX() > left && event.getX() < right && event.getY() > top && event.getY() < bottom) {

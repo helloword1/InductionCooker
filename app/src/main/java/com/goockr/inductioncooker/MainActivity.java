@@ -1,6 +1,4 @@
 package com.goockr.inductioncooker;
-
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.goockr.inductioncooker.activity.BaseActivity;

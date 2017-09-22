@@ -29,7 +29,9 @@
         <activity android:name=".activity.HomeActivity" />
         <activity android:name=".activity.ReservationActivity" />
         <activity android:name=".activity.LoginActivity" />
-        <activity android:name=".activity.UpdatePwdActivity"></activity>
+        <activity android:name=".activity.UpdatePwdActivity"/>
+        <activity android:name=".activity.ChoiceCookTimeActivity"/>
+        <activity android:name=".activity.OrderTimeActivity"/>
     </application>
 
 </manifest>

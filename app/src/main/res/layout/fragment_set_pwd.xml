@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/fragment_set_pwd_newpwd_tv"
                 android:layout_centerVertical="true"
-                android:text="新 密 码:"
+                android:text="新  密  码:"
                 android:textColor="@color/colorblack"
                 android:layout_marginLeft="10dp"
                 android:textSize="16sp"

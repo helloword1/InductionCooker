@@ -57,6 +57,12 @@ public class MyEditText extends RelativeLayout implements TextWatcher, View.OnFo
         return editText.getText().toString();
     }
 
+    public void  setText(String text)
+    {
+        editText.setText(text);
+    }
+
+
     public MyEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
 

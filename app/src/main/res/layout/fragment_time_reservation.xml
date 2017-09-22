@@ -9,16 +9,18 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <include layout="@layout/navbar">
-
-        </include>
-
+        <include layout="@layout/navbar"/>
         <com.goockr.inductioncooker.view.BarProgress
             android:layout_width="match_parent"
             android:id="@+id/fragment_timereservation_bar_pv"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_height="60dp" />
+
+        <FrameLayout
+            android:id="@+id/fl_date"
+            android:layout_width="match_parent"
+            android:layout_height="210dp" />
 
     </LinearLayout>
 

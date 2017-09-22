@@ -1,10 +1,13 @@
 package com.goockr.inductioncooker.fragment;
 
+import android.annotation.TargetApi;
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +16,15 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bigkoo.pickerview.TimePickerView;
 import com.bigkoo.pickerview.listener.CustomListener;
 import com.goockr.inductioncooker.R;
+import com.goockr.inductioncooker.activity.OrderTimeActivity;
 import com.goockr.inductioncooker.common.Common;
 import com.goockr.inductioncooker.utils.FragmentHelper;
 import com.goockr.inductioncooker.view.BarProgress;
+import com.goockr.inductioncooker.view.TimePickerView0;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,17 +34,20 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.chad.library.adapter.base.listener.SimpleClickListener.TAG;
+
 /**
  * Created by CMQ on 2017/7/3.
+ * 设置开机时间
  */
 
 public class ReservationBootFragment extends Fragment {
 
-    View  contentView;
+    View contentView;
 
     //private FragmentManager fragmentManager;
 
-    private TimePickerView pvCustomTime;
+    private TimePickerView0 pvCustomTime;
 
     @BindView(R.id.navbar_title_tv)
     TextView title_tv;
@@ -51,6 +59,23 @@ public class ReservationBootFragment extends Fragment {
     BarProgress bar_pv;
     @BindView(R.id.fragment_reservationroot_date_fl)
     FrameLayout date_fl;
+    private String mode;
+    private Date time;
+
+    public static final ReservationBootFragment newInstance(String mode) {
+        ReservationBootFragment fragment = new ReservationBootFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("MODE", mode);
+//        bundle.putString("message", message);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mode = getArguments().getString("MODE");
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,25 +85,15 @@ public class ReservationBootFragment extends Fragment {
         contentView = inflater.inflate(R.layout.fragment_reservationroot, container, false);
 
         ButterKnife.bind(this, contentView);
-
-        initData();
-
         initUI();
 
         initEvent();
 
         return contentView;
     }
-
-    private void initData() {
-
-       // fragmentManager= getFragmentManager();
-
-    }
-
     private void initUI() {
 
-        List<String> tips=new ArrayList<String>();
+        List<String> tips = new ArrayList<String>();
         tips.add("1.选择功能模式");
         tips.add("2.预约开机时间");
         tips.add("3.预约定时时间");
@@ -91,7 +106,6 @@ public class ReservationBootFragment extends Fragment {
     }
 
     private void initDatePickerView() {
-
         /**
          * @description
          *
@@ -102,19 +116,24 @@ public class ReservationBootFragment extends Fragment {
          * setRangDate方法控制起始终止时间(如果不设置范围，则使用默认时间1900-2100年，此段代码可注释)
          */
         Calendar selectedDate = Calendar.getInstance();//系统当前时间
+        int hours = selectedDate.getTime().getHours();
+        Log.d(TAG, "onTimeSelect: "+ hours);
         Calendar startDate = Calendar.getInstance();
         startDate.set(2014, 1, 23);
         Calendar endDate = Calendar.getInstance();
         endDate.set(2027, 2, 28);
 
         //时间选择器 ，自定义布局
-        pvCustomTime = new TimePickerView.Builder(getActivity(), new TimePickerView.OnTimeSelectListener() {
+        pvCustomTime = new TimePickerView0.Builder(getActivity(), new TimePickerView0.OnTimeSelectListener() {
+            @TargetApi(Build.VERSION_CODES.N)
             @Override
             public void onTimeSelect(Date date, View v) {//选中事件回调
                 // 这里回调过来的v,就是show()方法里面所添加的 View 参数，如果show的时候没有添加参数，v则为null
                 /*btn_Time.setText(getTime(date));*/
-
-
+                time = date;
+                SimpleDateFormat format0 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String time1 = format0.format(time.getTime());
+                Log.d(TAG, "onTimeSelect: "+time1);
 
             }
         })
@@ -144,15 +163,13 @@ public class ReservationBootFragment extends Fragment {
                 .setDividerColor(Color.DKGRAY)
                 .setContentSize(20)
                 .setDate(selectedDate)
-                .setRangDate(startDate,selectedDate)
+                .setRangDate(startDate, selectedDate)
                 .setDecorView(date_fl)//非dialog模式下,设置ViewGroup, pickerView将会添加到这个ViewGroup中
                 .setBackgroundId(0x00000000)
                 .setOutSideCancelable(false)
                 .isCenterLabel(false)
                 .build();
-
-
-        pvCustomTime.show(null,false);
+        pvCustomTime.show(null, false);
         pvCustomTime.setKeyBackCancelable(false);//系统返回键监听屏蔽掉
     }
 
@@ -160,11 +177,9 @@ public class ReservationBootFragment extends Fragment {
 
     }
 
-    @OnClick({R.id.navbar_right_bt,R.id.navbar_left_bt})
-    public void OnClick(View v)
-    {
-        switch (v.getId())
-        {
+    @OnClick({R.id.navbar_right_bt, R.id.navbar_left_bt})
+    public void OnClick(View v) {
+        switch (v.getId()) {
             case (R.id.navbar_left_bt):
                 //fragmentManager.popBackStack();
                 FragmentHelper.pop(getActivity());
@@ -175,29 +190,18 @@ public class ReservationBootFragment extends Fragment {
         }
 
     }
-
-
     private void rightButtonClick() {
-
-        TimeReservationFragment fragment=new TimeReservationFragment();
-
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//
-//        fragmentTransaction.add(R.id.activity_reservation,fragment, Common.ReservationBootFragment);
-//
-//        fragmentTransaction.hide(this);
-//
-//        fragmentTransaction.show(fragment);
-//
-//        fragmentTransaction.addToBackStack(Common.ReservationBootFragment);
-//
-//        fragmentTransaction.commit();
-
-        FragmentHelper.addFragmentToBackStack(getActivity(),R.id.activity_reservation,this,fragment,Common.TimeReservationFragment);
-
+        pvCustomTime.getData();
+        if ("煮饭".equals(mode) ||"焖烧".equals(mode)) {//不可定时
+            Intent intent = new Intent(getActivity(), OrderTimeActivity.class);
+            intent.putExtra("BEGIN_TIME", time);
+            intent.putExtra("MODE", mode);
+            startActivity(intent);
+            FragmentHelper.clearBackStack(getActivity());
+            getActivity().finish();
+        } else {
+            TimeReservationFragment fragment = TimeReservationFragment.newinstance(time, mode);
+            FragmentHelper.addFragmentToBackStack(getActivity(), R.id.activity_reservation, this, fragment, Common.TimeReservationFragment);
+        }
     }
-
-
-
-
 }
