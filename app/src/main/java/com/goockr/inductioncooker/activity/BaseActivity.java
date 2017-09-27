@@ -5,27 +5,20 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.common.Common;
 import com.goockr.inductioncooker.lib.socket.TcpSocket;
-import com.goockr.inductioncooker.models.BaseProtocol;
-import com.goockr.inductioncooker.utils.NotNull;
 import com.goockr.ui.view.helper.HudHelper;
 import com.goockr.ui.view.view.TipDialog;
-import com.google.gson.Gson;
-
-import org.json.JSONObject;
 
 public class BaseActivity extends Activity {
     private static final String TAG = "BaseActivity";
     private static final int ConnetContOut = 5;
     private final int READ_COUNT = 1001;
     private final String READ_TAG = "MSG";
-    public static String effectStr0="";
-    private static String effectStr1="";
+
     HudHelper bsaeHudHelper = new HudHelper();
     protected Handler baseHandler = new Handler() {
         @Override
@@ -34,7 +27,8 @@ public class BaseActivity extends Activity {
 
                 case READ_COUNT:
                     Bundle data = msg.getData();
-                    BaseProtocol mProtocol = (BaseProtocol) data.getSerializable(READ_TAG);
+//                    BaseProtocol mProtocol = (BaseProtocol) data.getSerializable(READ_TAG);
+                    String mProtocol = data.getString(READ_TAG);
                     handleMsg(mProtocol);
                     break;
             }
@@ -63,7 +57,7 @@ public class BaseActivity extends Activity {
 
     }
 
-    protected void handleMsg(BaseProtocol mProtocol) {
+    protected void handleMsg(String mProtocol) {
 
     }
 
@@ -124,48 +118,14 @@ public class BaseActivity extends Activity {
 
             @Override
             public void onRead(String read) {
-                Log.d(TAG, "onRead: 收到---》 " + read);
-                try {
-                    JSONObject object = new JSONObject(read);
-                    JSONObject order = object.getJSONObject("order");
-                    BaseProtocol mProtocol=null;
-                    if (NotNull.isNotNull(order)) {
-                        mProtocol = new Gson().fromJson(read, BaseProtocol.class);
-                        mProtocol.setOrder(order);
+                Log.d(TAG, "onRead: 收到---> " + read);
+                Message message = baseHandler.obtainMessage();
+                Bundle data = new Bundle();
+                data.putString(READ_TAG, read);
+                message.setData(data);
+                message.what = READ_COUNT;
+                baseHandler.sendMessage(message);
 
-                        if (order.getInt("code")==-1){
-                            Log.d(TAG, "onRead: "+order.getString("msg"));
-                            return;
-                        }
-                        String deviceId = order.getString("deviceId");
-                        //过滤重复字符串
-                        if (NotNull.isNotNull(deviceId)&& TextUtils.equals(deviceId,"0")){
-                          if (TextUtils.equals(effectStr0,read)){
-                              return;
-                          }
-                            effectStr0=read;
-
-                        }else if (NotNull.isNotNull(deviceId)&&TextUtils.equals(deviceId,"1")){
-                            if (TextUtils.equals(effectStr1,read)){
-                                return;
-                            }
-                            effectStr1=read;
-
-                        }
-                    }
-                    if (mProtocol==null){
-                        return;
-                    }
-
-                    Message message = baseHandler.obtainMessage();
-                    Bundle data = new Bundle();
-                    data.putSerializable(READ_TAG, mProtocol);
-                    message.setData(data);
-                    message.what = READ_COUNT;
-                    baseHandler.sendMessage(message);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
         });
 

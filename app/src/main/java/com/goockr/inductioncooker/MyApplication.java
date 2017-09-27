@@ -17,24 +17,16 @@ import org.json.JSONObject;
 public class MyApplication extends Application {
 
     static Context context;
-
     private int activityCount;//activity的count数
-
     TipDialog tipDialog;
-
 
     @Override
     public void onCreate() {
         super.onCreate();
-
         //初始化ontext
         context = getApplicationContext();
         instances = this;
-
         autoLogin();
-
-
-
 
     }
 

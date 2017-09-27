@@ -42,7 +42,7 @@
         android:id="@+id/tv_order_complete_info"
         android:textSize="16sp"
         android:lineSpacingExtra="4dp"
-        android:text="选择功能模式:  煲汤\n开机时间：下午01：20\n定时：20分钟" />
+        android:text="选择功能模式:  \n开机时间：\n定时：" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

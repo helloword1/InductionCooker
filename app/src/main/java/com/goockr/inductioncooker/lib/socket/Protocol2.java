@@ -12,9 +12,10 @@ import org.json.JSONObject;
 public class Protocol2 {
     private static final String TAG = "Protocol2";
     private static final String targetId = "123456789";//消息接收方ID(多个用逗号分隔);
+    //    private static final String targetId = "12450";//消息接收方ID(多个用逗号分隔);
     private static final String Phone = "17620830220";
-//    private static final String Phone = "13763085121";
-    public static  int deviceId = 0;
+    //        private static final String Phone = "13763085121";
+    public static int deviceId = 0;
 
     //心跳
     public static byte[] Heartbeat(int deviceId) {
@@ -55,9 +56,10 @@ public class Protocol2 {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.d(TAG, "statusCheck: "+jsonObjec.toString());
+        Log.d(TAG, "statusCheck: " + jsonObjec.toString());
         return jsonObjec.toString().getBytes();
     }
+
     /**
      * 查询状态或指令回复
      *
@@ -198,6 +200,7 @@ public class Protocol2 {
      */
     public static byte[] setReservation(int deviceId, int mode, int setting, long time, long appointment) {
         JSONObject jsonObjec = textAppending();
+//        JSONObject jsonObjec = textAppending();
         JSONObject order;
         try {
             order = jsonObjec.getJSONObject("order");
@@ -206,11 +209,11 @@ public class Protocol2 {
             order.put("deviceId", deviceId);
             order.put("moden", mode);
             order.put("bootTime", time);
-            order.put("Appointment", appointment);
+            order.put("appointment", appointment);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.d(TAG, "setReservation: "+jsonObjec.toString());
+        Log.d(TAG, "setReservation: " + jsonObjec.toString());
         return jsonObjec.toString().getBytes();
     }
 
@@ -230,7 +233,7 @@ public class Protocol2 {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.d(TAG, "getReservationStatus: "+jsonObjec.toString());
+        Log.d(TAG, "getReservationStatus: " + jsonObjec.toString());
         return jsonObjec.toString().getBytes();
     }
 
@@ -248,6 +251,28 @@ public class Protocol2 {
             json.put("msgtype", 1);//表示指令
             json.put("rectype", 1);//接收方类型 发给设备
             json.put("target", targetId);//接收放ID
+            json.put("order", order);//指令内容
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
+    /**
+     * 发送指令 测试
+     *
+     * @return 指令头
+     */
+    private static JSONObject textAppending1() {
+        JSONObject json = new JSONObject();
+        JSONObject order = new JSONObject();
+        try {
+            json.put("type", 2);//表示app
+            json.put("id", "13763085121");
+            json.put("msgtype", 1);//表示指令
+            json.put("rectype", 1);//接收方类型 发给设备
+            json.put("target", "12450");//接收放ID
             json.put("order", order);//指令内容
 
         } catch (JSONException e) {

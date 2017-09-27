@@ -180,7 +180,6 @@ public class ImageTopButton extends LinearLayout implements View.OnTouchListener
         m_ll.setOnClickListener(this);
         m_ll.setOnTouchListener(this);
         // m_ll.setBackgroundColor(Color.YELLOW);
-
     }
 
 
@@ -192,14 +191,15 @@ public class ImageTopButton extends LinearLayout implements View.OnTouchListener
     public boolean onTouch(View v, MotionEvent event) {
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            // m_ll.setBackgroundColor(Color.rgb(127,127,127));
-            if (hightLightImageId != 0) {
-                top_iv.setImageResource(hightLightImageId);
-            }
+
+//            // m_ll.setBackgroundColor(Color.rgb(127,127,127));
+//            if (hightLightImageId != 0) {
+//                top_iv.setImageResource(hightLightImageId);
+//            }
+            top_iv.setImageResource(selImageId);
 
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
             //m_ll.setBackgroundColor(Color.TRANSPARENT);
-
             if (isSelect()) {
                 top_iv.setImageResource(selImageId);
             } else {

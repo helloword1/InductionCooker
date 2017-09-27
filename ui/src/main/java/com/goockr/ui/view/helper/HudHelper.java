@@ -3,6 +3,7 @@ package com.goockr.ui.view.helper;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
@@ -16,19 +17,18 @@ import java.util.TimerTask;
 
 public class HudHelper {
 
-     KProgressHUD hud;
+    KProgressHUD hud;
 
     private Timer tipTimer;
 
     TimerTask tipTask;
 
-    public void hudShowTip(Context context,String tip,int delay)
-    {
+    public void hudShowTip(Context context, String tip, int delay) {
         final TextView tv_Reset = new TextView(context);
         tv_Reset.setTextColor(Color.WHITE);
         tv_Reset.setTextSize(13);
         tv_Reset.setText(tip);
-        tv_Reset.setPadding(0,0,0,0);
+        tv_Reset.setPadding(0, 0, 0, 0);
         hud = KProgressHUD.create(context)
                 .setCustomView(tv_Reset)
                 .show();
@@ -40,12 +40,11 @@ public class HudHelper {
             tipTask.cancel();
             tipTask = null;
         }
-        tipTask = new TimerTask(){
-            public void run(){
-                if (hud!=null)
-                {
+        tipTask = new TimerTask() {
+            public void run() {
+                if (hud != null) {
                     hud.dismiss();
-                    hud=null;
+                    hud = null;
                 }
             }
         };
@@ -56,10 +55,8 @@ public class HudHelper {
     }
 
 
-    public void hudShow(Context context,String tip)
-    {
-        if (hud!=null)
-        {
+    public void hudShow(final Context context, String tip) {
+        if (hud != null) {
             return;
         }
         hud = KProgressHUD.create(context)
@@ -68,15 +65,57 @@ public class HudHelper {
                 .setCancellable(false);
 
         hud.show();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 5; i++) {
+                    SystemClock.sleep(1000);
+
+                }
+                Handler handler = new Handler(context.getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (hud != null)
+                            hud.dismiss();
+                    }
+                });
+            }
+        }).start();
     }
 
-    public void hudUpdate(String tip)
-    {
+    public void hudShowNoText(final Context context) {
+        if (hud != null) {
+            return;
+        }
+        hud = KProgressHUD.create(context)
+                .setStyle(KProgressHUD.Style.ANNULAR_DETERMINATE)
+                .setCancellable(false);
+        hud.show();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 5; i++) {
+                    SystemClock.sleep(1000);
+
+                }
+                Handler handler = new Handler(context.getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (hud != null)
+                            hud.dismiss();
+                    }
+                });
+            }
+        }).start();
+    }
+
+    public void hudUpdate(String tip) {
         hud.setLabel(tip);
     }
 
-    public void hudUpdateAndHid(String tip, double delay)
-    {
+    public void hudUpdateAndHid(String tip, double delay) {
         hud.setLabel(tip);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -84,11 +123,10 @@ public class HudHelper {
             public void run() {
                 hudHide();
             }
-        }, (int)delay*1000);
+        }, (int) delay * 1000);
     }
 
-    public void hudUpdateAndHid(String tip, double delay, final SuccessCallBack callBack)
-    {
+    public void hudUpdateAndHid(String tip, double delay, final SuccessCallBack callBack) {
         hud.setLabel(tip);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -97,20 +135,17 @@ public class HudHelper {
                 hudHide();
                 callBack.success();
             }
-        }, (int)delay*1000);
+        }, (int) delay * 1000);
     }
 
-    public  void hudHide()
-    {
-        if (hud!=null)
-        {
+    public void hudHide() {
+        if (hud != null) {
             hud.dismiss();
-            hud=null;
+            hud = null;
         }
     }
 
-   public interface SuccessCallBack
-    {
+    public interface SuccessCallBack {
         void success();
     }
 }

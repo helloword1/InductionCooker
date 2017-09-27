@@ -13,11 +13,10 @@ import android.widget.Toast;
 
 import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.common.Common;
-import com.goockr.inductioncooker.fragment.HomeFragment;
+import com.goockr.inductioncooker.fragment.HomeFragment1;
 import com.goockr.inductioncooker.fragment.MoreFragment;
 import com.goockr.inductioncooker.fragment.NoticeFragment;
 import com.goockr.inductioncooker.lib.socket.TcpSocket;
-import com.goockr.inductioncooker.models.BaseProtocol;
 import com.goockr.inductioncooker.view.Tabbar;
 import com.goockr.ui.view.helper.HudHelper;
 import com.goockr.ui.view.view.TipDialog;
@@ -38,8 +37,9 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
     HudHelper hudHelper;
 
     private int connectCount;
-    private HomeFragment fragment;
-
+    private HomeFragment1 fragment;
+    private NoticeFragment notifragment;
+    private MoreFragment morefragment;
     public HudHelper getHudHelper() {
 
         if (hudHelper == null) {
@@ -68,7 +68,7 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
     }
 
     @Override
-    protected void handleMsg(BaseProtocol mProtocol) {
+    protected void handleMsg(String mProtocol) {
         fragment.setMProtocol(mProtocol);
     }
 
@@ -78,6 +78,8 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
 
     private void initListener() {
         tabbar.setSelectChangeListener(new Tabbar.TabbarCallback() {
+
+
             @Override
             public void tabbarItenChange(int selectIndex) {
                 FragmentManager fragmentManager = getFragmentManager();
@@ -86,16 +88,14 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
 
                 switch (selectIndex) {
                     case (0):
-                        if (fragment != null)
-                            fragmentTransaction.replace(R.id.maincontent, fragment, "HomeFragment");
-                        else
-                            fragmentTransaction.replace(R.id.maincontent, new HomeFragment(), "HomeFragment");
+                        fragmentTransaction.show(fragment).hide(notifragment).hide(morefragment);
                         break;
                     case (1):
-                        fragmentTransaction.replace(R.id.maincontent, new NoticeFragment(), "HomeFragment");
+
+                        fragmentTransaction.show(notifragment).hide(fragment).hide(morefragment);
                         break;
                     case (2):
-                        fragmentTransaction.replace(R.id.maincontent, new MoreFragment(), "HomeFragment");
+                        fragmentTransaction.show(morefragment).hide(fragment).hide(notifragment);
                         break;
                 }
 
@@ -108,8 +108,13 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
     private void initUI() {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragment = new HomeFragment();
-        fragmentTransaction.replace(R.id.maincontent, fragment, "HomeFragment");
+        fragment = new HomeFragment1();
+        notifragment = new NoticeFragment();
+        morefragment = new MoreFragment();
+        fragmentTransaction.add(R.id.maincontent, fragment, "HomeFragment");
+        fragmentTransaction.add(R.id.maincontent, notifragment, "HomeFragment");
+        fragmentTransaction.add(R.id.maincontent, morefragment, "HomeFragment");
+        fragmentTransaction.show(fragment).hide(notifragment).hide(morefragment);
         fragmentTransaction.commit();
     }
 

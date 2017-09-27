@@ -3,6 +3,9 @@ package com.goockr.inductioncooker.fragment;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.activity.OrderTimeActivity;
@@ -20,6 +24,7 @@ import com.goockr.inductioncooker.lib.socket.TcpSocket;
 import com.goockr.inductioncooker.utils.FragmentHelper;
 import com.goockr.inductioncooker.view.BarProgress;
 import com.goockr.inductioncooker.view.OptionsPickView0;
+import com.goockr.ui.view.helper.HudHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,7 +64,10 @@ public class TimeReservationFragment extends Fragment {
     private String mode;
     private int mMode;
     private int deviceId;
-    private final String[] modeStr = {"煲粥", "煲汤", "煮饭", "烧水", "火锅", "煎炒", "烤炸", "保温", "煎焗", "闷烧", "保温", "爆炒", "油炸", "文火"};
+    private final String[] modeStr = {"煲粥", "煲汤", "煮饭", "烧水", "火锅", "煎炒", "烤炸", "保温", "煎焗", "闷烧", "爆炒", "油炸", "文火"};
+    private HudHelper bsaeHudHelper;
+    private Thread thread;
+    private long time1;
 
     public static final TimeReservationFragment newinstance(Date data, String mode) {
         TimeReservationFragment fragment = new TimeReservationFragment();
@@ -77,9 +85,9 @@ public class TimeReservationFragment extends Fragment {
         time = (Date) arguments.getSerializable("TIME");
         mode = arguments.getString("MODE");
         for (int i = 0; i < modeStr.length; i++) {
-            if (TextUtils.equals(mode,modeStr[i])){
-                mMode=i;
-                deviceId=i>7?1:0;
+            if (TextUtils.equals(mode, modeStr[i])) {
+                mMode = i;
+                deviceId = i > 7 ? 1 : 0;
             }
         }
     }
@@ -168,24 +176,52 @@ public class TimeReservationFragment extends Fragment {
         right_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                bsaeHudHelper = new HudHelper();
                 pvNoLinkOptions.getData();
-                long time = TimeReservationFragment.this.time.getTime();
+                time1 = TimeReservationFragment.this.time.getTime();
 
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-                String format = df.format(new Date(time));// new Date()为获取当前系统时间
+                String format = df.format(new Date(time1));// new Date()为获取当前系统时间
+                Log.d(TAG, "onClick: " + format);
+                bsaeHudHelper.hudShow(getActivity(), "正在加载...");
+                if (thread == null) {
+                    thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            while (!Thread.currentThread().isInterrupted()) {
+                                SystemClock.sleep(500);
+                                TcpSocket.getInstance().write(Protocol2.setReservation(deviceId, mMode, 1, time1, (hour * 3600 + second * 60) * 1000));
+                                if (HomeFragment1.code1 == 6) {
+                                    thread.interrupt();
+                                    SystemClock.sleep(500);
+                                    bsaeHudHelper.hudHide();
+                                    if (HomeFragment1.error == 0) {
+                                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Intent intent = new Intent(getActivity(), OrderTimeActivity.class);
+                                                intent.putExtra("moden", mMode);
+                                                intent.putExtra("bootTime", time1);
+                                                intent.putExtra("LRIndex", deviceId);
+                                                intent.putExtra("appointment", (hour * 3600 + second * 60) * 1000);
+                                                startActivity(intent);
+                                                getActivity().setResult(11, new Intent().putExtra("MODE", mMode));
+                                                FragmentHelper.clearBackStack(getActivity());
+                                                getActivity().finish();
+                                            }
+                                        });
+                                    } else {
+                                        Toast.makeText(getActivity(), "设置失败", Toast.LENGTH_SHORT).show();
+                                    }
 
-                Log.d(TAG, "onClick: "+format);
 
-                TcpSocket.getInstance().write(Protocol2.setReservation(deviceId,mMode ,1, time,(hour*3600+second*60)*1000));
-                Intent intent = new Intent(getActivity(), OrderTimeActivity.class);
-                intent.putExtra("HOUR", hour);
-                intent.putExtra("MINUTE", second);
-                intent.putExtra("BEGIN_TIME", TimeReservationFragment.this.time);
-                intent.putExtra("MODE", mode);
-                startActivity(intent);
-                getActivity().setResult(11,new Intent().putExtra("MODE",mMode));
-                FragmentHelper.clearBackStack(getActivity());
-                getActivity().finish();
+                                }
+                            }
+                        }
+                    });
+                    thread.start();
+                }
+
 
             }
         });

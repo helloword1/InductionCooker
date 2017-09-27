@@ -3,27 +3,25 @@ package com.goockr.inductioncooker.activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.SystemClock;
 import android.support.annotation.RequiresApi;
-import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.goockr.inductioncooker.R;
+import com.goockr.inductioncooker.fragment.HomeFragment1;
 import com.goockr.inductioncooker.lib.socket.Protocol2;
 import com.goockr.inductioncooker.lib.socket.TcpSocket;
-import com.goockr.inductioncooker.models.BaseProtocol;
-import com.goockr.inductioncooker.utils.NotNull;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.goockr.ui.view.helper.HudHelper;
 
 import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static android.R.attr.mode;
 
 /**
  * Created by LJN on 2017/8/30.
@@ -39,8 +37,9 @@ public class OrderTimeActivity extends BaseActivity {
     TextView tvCancelOrder;
     private int mMode;
     private int deviceId;
-    private final String[] modeStr = {"煲粥", "煲汤", "煮饭", "烧水", "火锅", "煎炒", "烤炸", "保温", "煎焗", "闷烧", "保温", "爆炒", "油炸", "文火"};
-    private Intent intent;
+    private final String[] modeStr = {"煲粥", "煲汤", "煮饭", "烧水", "火锅", "煎炒", "烤炸", "保温", "煎焗", "闷烧", "爆炒", "油炸", "文火"};
+    private int lrIndex;
+    private Thread thread;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -48,9 +47,40 @@ public class OrderTimeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_time);
         ButterKnife.bind(this);
-        intent = getIntent();
-        if (NotNull.isNotNull(intent))
-            initData();
+        HandlerMSG();
+    }
+
+    private void HandlerMSG() {
+        Intent intent = getIntent();
+        //查询预约返回
+        mMode = intent.getIntExtra("moden", -1);
+        lrIndex = intent.getIntExtra("LRIndex", -1);
+        long bootTime = intent.getLongExtra("bootTime", 0L);//开机时间
+        long appointment = intent.getLongExtra("appointment", 0L);//工作时间
+        if (bootTime != 0) {
+            Date mBeginTime = new Date(bootTime);
+            int hours = mBeginTime.getHours();
+            int minutes = mBeginTime.getMinutes();
+            String minutesStr = "" + minutes;
+            if (minutes < 10) {
+                minutesStr = "0" + minutes;
+            }
+            String time = hours + ":" + minutesStr;
+            if (appointment != 0) {
+                long aHour = appointment / 3600000;
+                long aMutes = (appointment % 3600000) / 60000;
+                if (aHour != 0)
+                    tvOrderCompleteInfo.setText(String.format("模式:  %1$s\n开机时间：%2$s\n工作时长：%3$s小时%4$s分钟", modeStr[mMode], time, String.valueOf(aHour), aMutes));
+                else if (aMutes == 0) {
+                    tvOrderCompleteInfo.setText(String.format("模式:  %1$s\n开机时间：%2$s\n工作时长：自动", modeStr[mMode], time));
+                } else {
+                    tvOrderCompleteInfo.setText(String.format("模式:  %1$s\n开机时间：%2$s\n工作时长：%3$s分钟", modeStr[mMode], time, aMutes));
+                }
+
+            } else {
+                tvOrderCompleteInfo.setText(String.format("模式:  %1$s\n开机时间：%2$s\n工作时长：自动", modeStr[mMode], time));
+            }
+        }
     }
 
     @OnClick((R.id.order_title_back_iv))
@@ -58,78 +88,44 @@ public class OrderTimeActivity extends BaseActivity {
         finish();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void initData() {
-        int hour = intent.getIntExtra("HOUR", 0);
-        int minute = intent.getIntExtra("MINUTE", 0);
-        String mode = intent.getStringExtra("MODE");
-        Date beginTime = (Date) intent.getSerializableExtra("BEGIN_TIME");
-        int hours = beginTime.getHours();
-        int minutes = beginTime.getMinutes();
-        String time = hours + ":" + minutes;
-        if (minute != 0) {
-            if (hour != 0)
-                tvOrderCompleteInfo.setText(String.format("选择功能模式:  %1$s\n开机时间：%2$s\n定时：%3$s小时%4$s分钟", mode, time, String.valueOf(hour), minute));
-            else
-                tvOrderCompleteInfo.setText(String.format("选择功能模式:  %1$s\n开机时间：%2$s\n定时：%3$s分钟", mode, time, minute));
-        } else {
-            tvOrderCompleteInfo.setText(String.format("选择功能模式:  %1$s\n开机时间：%2$s", mode, time));
-        }
-        for (int i = 0; i < modeStr.length; i++) {
-            if (TextUtils.equals(mode, modeStr[i])) {
-                mMode = i;
-                deviceId = i > 7 ? 1 : 0;
-            }
-        }
-    }
-
     //取消预约
     @OnClick(R.id.tv_cancel_order)//
     public void onclick() {
-        TcpSocket.getInstance().write(Protocol2.setReservation(deviceId, mMode, 0, 0, 0));
-    }
-
-    @Override
-    protected void handleMsg(BaseProtocol mProtocol) {
-        if (NotNull.isNotNull(mProtocol)) {
-            JSONObject orderObject = mProtocol.getOrder();
-            try {
-                int code = Integer.valueOf(orderObject.getString("code"));
-                if (code == 7) {
-                    //查询预约返回
-                    String moden = orderObject.getString("moden");
-                    mMode = Integer.valueOf(moden);
-
-                    String bootTime = orderObject.getString("bootTime");//开机时间
-                    String appointment = orderObject.getString("appointment");//工作时间
-                    Long aBootTime = Long.valueOf(bootTime);
-                    Long aAppointment = Long.valueOf(appointment);
-
-                    if (aBootTime != 0) {
-                        Date beginTime = new Date(aAppointment);
-                        int hours = beginTime.getHours();
-                        int minutes = beginTime.getMinutes();
-                        String time = hours + ":" + minutes;
-                        if (minutes != 0) {
-                            if (hours != 0)
-                                tvOrderCompleteInfo.setText(String.format("选择功能模式:  %1$s\n开机时间：%2$s\n定时：%3$s小时%4$s分钟", mode, time, String.valueOf(hours), minutes));
-                            else
-                                tvOrderCompleteInfo.setText(String.format("选择功能模式:  %1$s\n开机时间：%2$s\n定时：%3$s分钟", mode, time, minutes));
-                        } else {
-                            tvOrderCompleteInfo.setText(String.format("选择功能模式:  %1$s\n开机时间：%2$s", mode, time));
+        if (lrIndex == -1) return;
+        if (bsaeHudHelper == null)
+            bsaeHudHelper = new HudHelper();
+        bsaeHudHelper.hudShow(this, "正在加载...");
+        if (thread == null) {
+            thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    final Handler handler = new Handler(Looper.getMainLooper());
+                    while (!thread.isInterrupted()) {
+                        SystemClock.sleep(500);
+                        TcpSocket.getInstance().write(Protocol2.setReservation(lrIndex, mMode, 0, 0, 0));
+                        if (HomeFragment1.code1 == 6) {
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    thread.interrupt();
+                                    SystemClock.sleep(500);
+                                    bsaeHudHelper.hudHide();
+                                    if (HomeFragment1.success == 1) {
+                                        Toast.makeText(OrderTimeActivity.this, "已取消预约", Toast.LENGTH_SHORT).show();
+                                        handler.removeCallbacksAndMessages(null);
+                                        finish();
+                                    } else {
+                                        Toast.makeText(OrderTimeActivity.this, "取消失败", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                         }
-                        for (int i = 0; i < modeStr.length; i++) {
-                            if (TextUtils.equals(moden, modeStr[i])) {
-                                mMode = i;
-                                deviceId = i > 7 ? 1 : 0;
-                            }
-                        }
+
                     }
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
+            });
         }
+        if (!thread.isAlive())
+            thread.start();
     }
 }

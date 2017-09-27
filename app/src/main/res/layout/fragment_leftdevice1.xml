@@ -7,18 +7,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="7"
-        android:background="@color/colorGreen">
-
-        <com.goockr.inductioncooker.view.SegmentController
-            android:id="@+id/fragment_home_segment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
         android:layout_weight="13"
         android:orientation="horizontal">
 
@@ -36,7 +24,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"/>
+                    android:layout_centerHorizontal="true" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -59,13 +47,13 @@
                     android:layout_centerHorizontal="true" />
 
                 <ImageView
+                    android:id="@+id/reservationPon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/reservationPon"
-                    android:layout_alignTop="@id/fragment_leftdevice_reservation_bt"
                     android:layout_alignRight="@id/fragment_leftdevice_reservation_bt"
-                    android:visibility="gone"
-                    android:background="@drawable/red_ciricle" />
+                    android:layout_alignTop="@id/fragment_leftdevice_reservation_bt"
+                    android:background="@drawable/red_ciricle"
+                    android:visibility="gone" />
             </RelativeLayout>
 
             <LinearLayout

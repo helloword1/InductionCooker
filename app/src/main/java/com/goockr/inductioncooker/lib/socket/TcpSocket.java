@@ -3,6 +3,8 @@ package com.goockr.inductioncooker.lib.socket;
 import android.os.Handler;
 import android.util.Log;
 
+import com.goockr.inductioncooker.utils.NotNull;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,6 +26,7 @@ public class TcpSocket {
 
     private static TcpSocket instance;
     private Thread heartBeatRequestThread;
+    private getStringCallback McallBack;
 
     public static synchronized TcpSocket getInstance() {
 
@@ -312,6 +315,8 @@ public class TcpSocket {
                     final int le = length;
                     String reciveStr = new String(bytes, 0, le);
                     callBack.onRead(reciveStr);
+                    if (NotNull.isNotNull(McallBack))
+                    McallBack.onRead(reciveStr);
                 }
             }
         } catch (IOException e) {
@@ -366,6 +371,13 @@ public class TcpSocket {
 
         void onRead(String s);
 
+    }public interface getStringCallback {
+        void onRead(String s);
+
+    }
+
+    public void setTcpSocketCallBack(getStringCallback callBack) {
+        this.McallBack = callBack;
     }
 
     public void disConnect() {

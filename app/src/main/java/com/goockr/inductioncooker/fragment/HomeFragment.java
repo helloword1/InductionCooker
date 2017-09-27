@@ -81,8 +81,7 @@ public class HomeFragment extends Fragment implements ImageTopButton.ImageTopBut
     ImageTopButton bt_12;
     @BindView(R.id.fragment_rightdevice_bt5)
     ImageTopButton bt_13;
-    @BindView(R.id.fragment_rightdevice_bottomview)
-    LinearLayout bottom_ll1;
+
     private int mode = -1;
     @BindView(fragment_leftdevice_power_bt)
     ImageTopButton power_bt;
@@ -108,6 +107,8 @@ public class HomeFragment extends Fragment implements ImageTopButton.ImageTopBut
     ImageTopButton bt_7;
     @BindView(R.id.fragment_leftdevice_bottomview)
     LinearLayout bottom_ll;
+    @BindView(R.id.fragment_rightdevice_bottomview)
+    LinearLayout bottom_ll1;
     ImageTopButton select_bt;
     ImageTopButton select_bt_r;
     @BindView(R.id.fragment_home_segment)
@@ -285,8 +286,15 @@ public class HomeFragment extends Fragment implements ImageTopButton.ImageTopBut
         setButtonType(bt_11, R.mipmap.btn_quicyfry_normal, R.mipmap.btn_quicyfry_selected, R.mipmap.btn_quicyfry_disabled, R.color.colorGrayText, "爆炒");
         setButtonType(bt_12, R.mipmap.btn_fried_normal, R.mipmap.btn_fried_selected, R.mipmap.btn_fried_disabled, R.color.colorGrayText, "油炸");
         setButtonType(bt_13, R.mipmap.btn_slowfire_normal, R.mipmap.btn_slowfire_selected, R.mipmap.btn_slowfire_disabled, R.color.colorGrayText, "文火");
-        View adjustView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_adjust, null);
 
+        flAdjust.addView(getAdView());
+
+        bottom_ll.setVisibility(View.INVISIBLE);
+        bottom_ll1.setVisibility(View.INVISIBLE);
+    }
+
+    private View getAdView() {
+        View adjustView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_adjust, null);
         plus_ib = (ImageView) adjustView.findViewById(R.id.fragment_adjust_plus_ib);
         reduce_ib = (ImageView) adjustView.findViewById(R.id.fragment_adjust_reduce_ib);
         ring_pv = (RingRoundProgressView) adjustView.findViewById(R.id.fragment_adjust_round_pv);
@@ -305,9 +313,7 @@ public class HomeFragment extends Fragment implements ImageTopButton.ImageTopBut
         lower_ib.setOnClickListener(this);
         reduce_ib.setOnClickListener(this);
         plus_ib.setOnClickListener(this);
-        flAdjust.addView(adjustView);
-        bottom_ll.setVisibility(View.INVISIBLE);
-        bottom_ll1.setVisibility(View.INVISIBLE);
+        return adjustView;
     }
 
     private void adjustLeftData() {
@@ -990,6 +996,7 @@ public class HomeFragment extends Fragment implements ImageTopButton.ImageTopBut
                 }
 
                 int LRID = Integer.valueOf(orderObject.getString("deviceId"));//左右炉
+                LRindex = LRID;
                 String moden = null;
 
                 if (leftPowerOnOff || RightPowerOnOff) {//表示打开电磁炉
@@ -1020,7 +1027,6 @@ public class HomeFragment extends Fragment implements ImageTopButton.ImageTopBut
                                     flAdjust.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.adujst_open));
                                     flAdjust.setVisibility(View.VISIBLE);
                                 }
-                                LRindex = LRID;
                                 moden = orderObject.getString("moden");
                                 mode = Integer.valueOf(moden);
                                 stall = Integer.valueOf(orderObject.getString("stall"));
@@ -1067,7 +1073,7 @@ public class HomeFragment extends Fragment implements ImageTopButton.ImageTopBut
                                 RightPowerOnOff = true;
                                 power_bt.setSelect(true);
                                 bottom_ll1.setVisibility(View.VISIBLE);
-                                LRindex = LRID;
+
                                 if (flAdjust.getVisibility() != View.VISIBLE) {
                                     flAdjust.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.adujst_open));
                                     flAdjust.setVisibility(View.VISIBLE);
@@ -1076,8 +1082,7 @@ public class HomeFragment extends Fragment implements ImageTopButton.ImageTopBut
                                 moden = orderObject.getString("moden");
                                 mode = Integer.valueOf(moden);
                                 stall = Integer.valueOf(orderObject.getString("stall"));
-
-                                ring_pv.setProgress(stall + 1);
+                                ring_pv.setProgress(stall+1);
 
                                 if (mode == 8) {//煎焗
                                     tvPower.setText(CommonBean.JIANJU[stall]);
@@ -1178,8 +1183,8 @@ public class HomeFragment extends Fragment implements ImageTopButton.ImageTopBut
                         stall = Integer.valueOf(orderObject.getString("stall"));
                         mode = Integer.valueOf(moden);
 
-                        if (stall < 1) {
-                            ring_pv.setProgress(1);
+                        if (stall < 0) {
+                            ring_pv.setProgress(stall);
                         } else {
                             ring_pv.setProgress(stall + 1);
                         }
@@ -1333,10 +1338,10 @@ public class HomeFragment extends Fragment implements ImageTopButton.ImageTopBut
                     String mStall = orderObject.getString("stall");
                     if (NotNull.isNotNull(mStall)) {
                         int progress = Integer.valueOf(mStall);
-                        if (progress <= 1) {
-                            ring_pv.setProgress(1);//当前档位
+                        if (progress <0) {
+                            ring_pv.setProgress(0);//当前档位
                         } else {
-                            ring_pv.setProgress(progress);//当前档位
+                            ring_pv.setProgress(progress+1);//当前档位
                         }
                         tvPower.setText(CommonBean.HOTPOTSTRS[progress]);
                     }
@@ -1349,7 +1354,7 @@ public class HomeFragment extends Fragment implements ImageTopButton.ImageTopBut
                     if (NotNull.isNotNull(stall5)) {
                         ring_pv.setProgress(Integer.valueOf(stall5));//当前档位
                         int progress = Integer.valueOf(stall5);
-                        if (progress != 0)
+                        if (progress >=  0)
                             tvPower.setText(CommonBean.FRYOIlSTRS1[progress]);
                         tvTemperature.setText(CommonBean.FRYOIlSTRS2[progress]);
                     }
@@ -1361,7 +1366,7 @@ public class HomeFragment extends Fragment implements ImageTopButton.ImageTopBut
                     if (NotNull.isNotNull(stall6)) {
                         ring_pv.setProgress(Integer.valueOf(stall6));//当前档位
                         int progress = Integer.valueOf(stall6);
-                        if (progress != 0)
+                        if (progress >= 0)
                             tvPower.setText(CommonBean.KAOZA1[progress]);
                         tvTemperature.setText(CommonBean.KAOZA2[progress]);
                     }

@@ -6,7 +6,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,16 +19,19 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bigkoo.pickerview.listener.CustomListener;
 import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.activity.OrderTimeActivity;
 import com.goockr.inductioncooker.common.Common;
+import com.goockr.inductioncooker.lib.socket.Protocol2;
+import com.goockr.inductioncooker.lib.socket.TcpSocket;
 import com.goockr.inductioncooker.utils.FragmentHelper;
 import com.goockr.inductioncooker.view.BarProgress;
 import com.goockr.inductioncooker.view.TimePickerView0;
+import com.goockr.ui.view.helper.HudHelper;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -61,6 +68,11 @@ public class ReservationBootFragment extends Fragment {
     FrameLayout date_fl;
     private String mode;
     private Date time;
+    private int mMode;
+    private int deviceId;
+    private final String[] modeStr = {"煲粥", "煲汤", "煮饭", "烧水", "火锅", "煎炒", "烤炸", "保温", "煎焗", "闷烧", "爆炒", "油炸", "文火"};
+    private Thread thread;
+    private HudHelper bsaeHudHelper;
 
     public static final ReservationBootFragment newInstance(String mode) {
         ReservationBootFragment fragment = new ReservationBootFragment();
@@ -75,6 +87,12 @@ public class ReservationBootFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mode = getArguments().getString("MODE");
+        for (int i = 0; i < modeStr.length; i++) {
+            if (TextUtils.equals(mode, modeStr[i])) {
+                mMode = i;
+                deviceId = i > 7 ? 1 : 0;
+            }
+        }
     }
 
     @Override
@@ -86,11 +104,9 @@ public class ReservationBootFragment extends Fragment {
 
         ButterKnife.bind(this, contentView);
         initUI();
-
-        initEvent();
-
         return contentView;
     }
+
     private void initUI() {
 
         List<String> tips = new ArrayList<String>();
@@ -100,9 +116,7 @@ public class ReservationBootFragment extends Fragment {
         bar_pv.setTips(tips);
         bar_pv.setMaxCount(3);
         bar_pv.setProgress(2);
-
         initDatePickerView();
-
     }
 
     private void initDatePickerView() {
@@ -117,7 +131,7 @@ public class ReservationBootFragment extends Fragment {
          */
         Calendar selectedDate = Calendar.getInstance();//系统当前时间
         int hours = selectedDate.getTime().getHours();
-        Log.d(TAG, "onTimeSelect: "+ hours);
+        Log.d(TAG, "onTimeSelect: " + hours);
         Calendar startDate = Calendar.getInstance();
         startDate.set(2014, 1, 23);
         Calendar endDate = Calendar.getInstance();
@@ -131,10 +145,6 @@ public class ReservationBootFragment extends Fragment {
                 // 这里回调过来的v,就是show()方法里面所添加的 View 参数，如果show的时候没有添加参数，v则为null
                 /*btn_Time.setText(getTime(date));*/
                 time = date;
-                SimpleDateFormat format0 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                String time1 = format0.format(time.getTime());
-                Log.d(TAG, "onTimeSelect: "+time1);
-
             }
         })
                 .setLayoutRes(R.layout.pickerview_custom_time, new CustomListener() {
@@ -173,10 +183,6 @@ public class ReservationBootFragment extends Fragment {
         pvCustomTime.setKeyBackCancelable(false);//系统返回键监听屏蔽掉
     }
 
-    private void initEvent() {
-
-    }
-
     @OnClick({R.id.navbar_right_bt, R.id.navbar_left_bt})
     public void OnClick(View v) {
         switch (v.getId()) {
@@ -190,17 +196,58 @@ public class ReservationBootFragment extends Fragment {
         }
 
     }
+
     private void rightButtonClick() {
         pvCustomTime.getData();
-        if ("煮饭".equals(mode) ||"焖烧".equals(mode)) {//不可定时
-            Intent intent = new Intent(getActivity(), OrderTimeActivity.class);
-            intent.putExtra("BEGIN_TIME", time);
-            intent.putExtra("MODE", mode);
-            startActivity(intent);
-            FragmentHelper.clearBackStack(getActivity());
-            getActivity().finish();
+        long currentTimeMillis = System.currentTimeMillis();
+        long time = this.time.getTime();
+        long l = time - currentTimeMillis;
+        if (l < 60000) {
+            Toast.makeText(getActivity(), "开机时间要大于等于一分钟", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        bsaeHudHelper = new HudHelper();
+        if ("煮饭".equals(mode) || "焖烧".equals(mode)) {//不可定时
+            bsaeHudHelper.hudShow(getActivity(), "正在连接...");
+            if (thread == null) {
+                thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (!Thread.currentThread().isInterrupted()) {
+                            SystemClock.sleep(500);
+                            TcpSocket.getInstance().write(Protocol2.setReservation(deviceId, mMode, 1, ReservationBootFragment.this.time.getTime(), 0L));
+                            if (HomeFragment1.code1 == 6) {
+                                thread.interrupt();
+                                SystemClock.sleep(500);
+                                bsaeHudHelper.hudHide();
+                                if (HomeFragment1.error == 0) {
+                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Intent intent = new Intent(getActivity(), OrderTimeActivity.class);
+                                            intent.putExtra("moden", mMode);
+                                            intent.putExtra("LRIndex", deviceId);
+                                            intent.putExtra("bootTime", ReservationBootFragment.this.time.getTime());
+                                            intent.putExtra("appointment", 0);
+                                            startActivity(intent);
+                                            FragmentHelper.clearBackStack(getActivity());
+                                            getActivity().finish();
+                                        }
+                                    });
+                                } else {
+                                    Toast.makeText(getActivity(), "设置失败", Toast.LENGTH_SHORT).show();
+                                }
+
+                            }
+
+
+                        }
+                    }
+                });
+                thread.start();
+            }
         } else {
-            TimeReservationFragment fragment = TimeReservationFragment.newinstance(time, mode);
+            TimeReservationFragment fragment = TimeReservationFragment.newinstance(this.time, mode);
             FragmentHelper.addFragmentToBackStack(getActivity(), R.id.activity_reservation, this, fragment, Common.TimeReservationFragment);
         }
     }

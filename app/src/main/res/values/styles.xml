@@ -27,7 +27,9 @@
         <item name="android:button">@null</item>
         <item name="android:gravity">center</item>
     </style>
-
+    <style name="AlertDialog" parent="@android:style/Theme.Holo.Light.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
     <style name="RButton" parent="NoButtonRadioButton">
         <item name="android:background">@drawable/bottom_bar_selector</item>
         <item name="android:layout_width">0dp</item>

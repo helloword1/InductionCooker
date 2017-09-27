@@ -1,7 +1,6 @@
 package com.goockr.inductioncooker.adapter;
 
 
-
 import com.chad.library.adapter.base.BaseSectionQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.goockr.inductioncooker.R;
@@ -30,19 +29,14 @@ public class MoreAdapter extends BaseSectionQuickAdapter<MySection, BaseViewHold
 
     @Override
     protected void convertHead(BaseViewHolder helper, final MySection item) {
-
-        if (item.header.equals("Section 1"))
-        {
+        if (item.header.equals("Section 1")) {
             helper.setVisible(R.id.card_view, false);
-            helper.setHeight(R.id.card_view,1);
-        }else {
+            helper.setHeight(R.id.card_view, 1);
+        } else {
             //helper.setVisible(R.id.card_view, true);
             helper.setVisible(R.id.card_view, false);
-            helper.setHeight(R.id.card_view,64);
+            helper.setHeight(R.id.card_view, 64);
         }
-
-
-
     }
 
 
@@ -61,12 +55,11 @@ public class MoreAdapter extends BaseSectionQuickAdapter<MySection, BaseViewHold
 //        }
 //        helper.setText(R.id.tv, video.getName());
 
-        helper.setText(R.id.item_section_content_title_tv,model.title);
+        helper.setText(R.id.item_section_content_title_tv, model.title);
 
-        helper.setText(R.id.item_section_content_des_tv,model.des);
+        helper.setText(R.id.item_section_content_des_tv, model.des);
 
-        helper.setVisible(R.id.item_section_content_go_iv,model.isGo);
-
+        helper.setVisible(R.id.item_section_content_go_iv, model.isGo);
 
 
     }
