@@ -18,8 +18,7 @@ import java.io.InputStreamReader;
 
 public class ReadAdssetsJson {
 
-    public  static JSONObject readJson(String fileName)
-    {
+    public  static JSONObject readJson(String fileName) {
         String str = "";
         AssetManager assetManager = MyApplication.getContext().getAssets();
         try {

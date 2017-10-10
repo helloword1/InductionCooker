@@ -109,9 +109,7 @@ public final class CaptureActivityHandler extends Handler {
 	@Override
 	public void handleMessage(Message message) {
 
-
-		if (message.what==R.id.restart_preview)
-		{
+		if (message.what==R.id.restart_preview) {
 			Log.d(TAG, "Got restart preview message");
 			restartPreviewAndDecode();
 		}else if (message.what==R.id.decode_succeeded){
@@ -134,8 +132,7 @@ public final class CaptureActivityHandler extends Handler {
 				scaleFactor = bundle
 						.getFloat(DecodeThread.BARCODE_SCALED_FACTOR);
 			}
-			activity.handleDecode((Result) message.obj, barcode,
-					scaleFactor);
+			activity.handleDecode((Result) message.obj, barcode, scaleFactor);
 
 		}else if (message.what==R.id.decode_failed){
 

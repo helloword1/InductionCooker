@@ -27,6 +27,7 @@ public class TcpSocket {
     private static TcpSocket instance;
     private Thread heartBeatRequestThread;
     private getStringCallback McallBack;
+    private Thread mDeviceTimeThread;
 
     public static synchronized TcpSocket getInstance() {
 
@@ -65,6 +66,12 @@ public class TcpSocket {
 
     }
 
+    /**
+     *
+     * @param host  主机地址
+     * @param port  端口号
+     * @param callBack  回调
+     */
     public void connect(final String host, final int port, final TcpSocketCallBack callBack) {
         this.callBack = callBack;
 
@@ -107,17 +114,20 @@ public class TcpSocket {
                         callBack.onConnect();
                     }
                 });
+
                 heartBeatThread = new Thread(heartbeatRunnable);
                 heartBeatThread.start();
                 heartBeatRequestThread = new Thread(heartbeatRequestRunnable);
                 heartBeatRequestThread.start();
+
                 try {
                     // 获取读取流
                     reader = new DataInputStream(socket.getInputStream());
                     while (socket != null) {
-                        if (socket.isClosed()) break;
+                        if (socket.isClosed()) {
+                            break;
+                        }
                         byte[] buffer = new byte[MAX_IN_SIZE];
-                        System.out.println("*等待客户端输入*");
                         // 读取数据
                         int length = reader.read(buffer);
                         if (length == -1) {
@@ -127,7 +137,6 @@ public class TcpSocket {
                             final int le = length;
                             final String reciveStr = new String(bytes, 0, le);
                             if (reciveStr.contains("heartbeat")) {
-                                Log.v("", reciveStr);
                                 continue;
                             } else {
                                 JSONObject jsonObject = null;
@@ -207,7 +216,6 @@ public class TcpSocket {
                     reader = new DataInputStream(socket.getInputStream());
                     while (socket != null) {
                         if (socket.isClosed()) break;
-
                         byte[] buffer = new byte[MAX_IN_SIZE];
                         System.out.println("*等待客户端输入*");
                         // 读取数据
@@ -314,12 +322,13 @@ public class TcpSocket {
                     final byte[] bytes = buffer;
                     final int le = length;
                     String reciveStr = new String(bytes, 0, le);
+                    // 再读一次*/
                     callBack.onRead(reciveStr);
                     if (NotNull.isNotNull(McallBack))
                     McallBack.onRead(reciveStr);
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             isServerClose(socket);
             e.printStackTrace();
         }
@@ -448,6 +457,9 @@ public class TcpSocket {
             heartBeatThread = null;
         }
     };
+
+
+    //线程接收心跳包
     Runnable heartbeatRequestRunnable = new Runnable() {
         @Override
         public void run() {
@@ -463,4 +475,8 @@ public class TcpSocket {
             heartBeatRequestThread = null;
         }
     };
+
+    public Socket getSocket() {
+        return socket;
+    }
 }

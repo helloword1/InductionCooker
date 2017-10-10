@@ -45,5 +45,4 @@ dependencies {
     //PickerView依赖
     compile 'com.contrarywind:Android-PickerView:3.2.5'
     compile 'com.android.support:percent:25.3.1'
-
 }

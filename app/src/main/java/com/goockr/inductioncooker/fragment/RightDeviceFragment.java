@@ -59,7 +59,7 @@ import static com.goockr.inductioncooker.R.id.fragment_rightdevice_bt0;
  * Created by CMQ on 2017/6/27.
  */
 
-public class RightDeviceFragment extends Fragment implements ImageTopButton.ImageTopButtonOnClickListener, AdjustFragment.AdjustFragmentCallback, View.OnClickListener {
+public class RightDeviceFragment extends Fragment implements ImageTopButton.ImageTopButtonOnClickListener,View.OnClickListener {
     private static final int REVER_DEX = 123;
     FragmentManager fragmentManager;
     @BindView(R.id.flAdjust)
@@ -88,8 +88,6 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
     ImageTopButton bt_5;
     @BindView(R.id.fragment_rightdevice_bottomview)
     LinearLayout bottom_ll;
-
-    private AdjustFragment adjustFragment;
     private int rightTime;
     private final String[] modeStr = {"煲粥", "煲汤", "煮饭", "烧水", "火锅", "煎炒", "烤炸", "保温", "煎焗", "闷烧", "爆炒", "油炸", "文火"};
     private final int TIME_COOK = 1;
@@ -1051,13 +1049,6 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
 //            flAdjust.setVisibility(View.VISIBLE);
 //        }
     }
-
-    @Override
-    public void removeAdjustFragment() {
-        adjustFragment = null;
-    }
-
-
     public void setCode(int code) {
         this.code = code;
         if (code == -1) {

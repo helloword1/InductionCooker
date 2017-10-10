@@ -417,6 +417,7 @@
             </LinearLayout>
         </RelativeLayout>
 
+        <!--点击每个模式从底部弹出的设置界面-->
         <RelativeLayout
             android:id="@+id/flAdjust"
             android:layout_width="match_parent"

@@ -66,15 +66,16 @@
                     android:gravity="center"
                     android:text="00:00"
                     android:textColor="@color/colorBlack"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
 
                 <TextView
+                    android:id="@+id/unit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text=" 时: 分"
                     android:textColor="@color/colorGrayText"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"/>
 
                 <!--<ImageView-->
                 <!--android:layout_width="wrap_content"-->
@@ -90,9 +91,7 @@
                 android:id="@+id/fragment_adjust_pv"
                 android:layout_width="140dp"
                 android:layout_height="140dp"
-                android:layout_centerInParent="true"
-
-                />
+                android:layout_centerInParent="true"/>
 
             <ImageView
                 android:id="@+id/fragment_adjust_reservation_ib"
@@ -102,7 +101,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_toLeftOf="@+id/fragment_adjust_pv"
                 android:padding="10dp"
-                android:src="@drawable/btn_data_reservation" />
+                android:src="@drawable/btn_data_reservation"/>
 
             <ImageView
                 android:id="@+id/fragment_adjust_unreservation_ib"
@@ -112,7 +111,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_toRightOf="@+id/fragment_adjust_pv"
                 android:padding="10dp"
-                android:src="@drawable/btn_data_cancel" />
+                android:src="@drawable/btn_data_cancel"/>
 
 
         </RelativeLayout>
@@ -137,7 +136,7 @@
                     android:gravity="center"
                     android:text="160W"
                     android:textColor="@color/colorBlack"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
 
                 <ImageView
                     android:id="@+id/fragment_adjust_line_iv"
@@ -146,7 +145,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
                     android:background="@color/colorGrayText"
-                    android:visibility="gone" />
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/fragment_adjust_temperature_tv"
@@ -156,7 +155,7 @@
                     android:text="260 C"
                     android:textColor="@color/colorBlack"
                     android:textSize="16sp"
-                    android:visibility="gone" />
+                    android:visibility="gone"/>
 
                 <!--<ImageView-->
                 <!--android:layout_width="wrap_content"-->
@@ -176,7 +175,7 @@
                 app:maxCount="10"
                 app:progress="1"
                 app:startAngle="120"
-                app:sweepAngle="300" />
+                app:sweepAngle="300"/>
 
             <ImageView
                 android:id="@+id/fragment_adjust_reduce_ib"
@@ -188,7 +187,7 @@
                 android:layout_toLeftOf="@+id/fragment_adjust_round_pv"
                 android:layout_toStartOf="@+id/fragment_adjust_round_pv"
                 android:padding="10dp"
-                android:src="@drawable/btn_reduce" />
+                android:src="@drawable/btn_reduce"/>
 
             <ImageView
                 android:id="@+id/fragment_adjust_plus_ib"
@@ -198,7 +197,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_toRightOf="@+id/fragment_adjust_round_pv"
                 android:padding="10dp"
-                android:src="@drawable/btn_plus" />
+                android:src="@drawable/btn_plus"/>
 
         </RelativeLayout>
 

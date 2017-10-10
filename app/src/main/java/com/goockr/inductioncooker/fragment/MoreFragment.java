@@ -44,16 +44,14 @@ public class MoreFragment extends Fragment {
         super.onResume();
         initData();
     }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        // Inflate the layout for this fragment
-         view = inflater.inflate(R.layout.fragment_more, container, false);
-        mData=new ArrayList<>();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_more, container, false);
+        mData = new ArrayList<>();
 
 
-        mRecyclerView=(RecyclerView)view.findViewById(R.id.fragment_more_rv);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_more_rv);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         sectionAdapter = new MoreAdapter(R.layout.item_section_content, R.layout.def_section_head, mData);
         mRecyclerView.setAdapter(sectionAdapter);
@@ -61,17 +59,16 @@ public class MoreFragment extends Fragment {
         sectionAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                switch (position)
-                {
+                switch (position) {
                     case (1):
-                       // initPermissions();
-                        getActivity().startActivity(new Intent(getActivity(),CaptureActivity.class));
+                        // initPermissions();
+                        getActivity().startActivity(new Intent(getActivity(), CaptureActivity.class));
                         break;
                     case (3):
-                        getActivity().startActivity(new Intent(getActivity(),LoginActivity.class));
+                        getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
                         break;
                     case (4):
-                        getActivity().startActivity(new Intent(getActivity(),UpdatePwdActivity.class));
+                        getActivity().startActivity(new Intent(getActivity(), UpdatePwdActivity.class));
                         break;
                     case (5):
                         break;
@@ -98,21 +95,21 @@ public class MoreFragment extends Fragment {
     }
 
     private void initData() {
-        if (mData.size()!=0){
+        if (mData.size() != 0) {
             mData.clear();
         }
         List<MySection> list = new ArrayList<>();
         list.add(new MySection(true, "Section 1", false));
-        list.add(new MySection(new MoreAdapterModel("添加设备", "",true)));
+        list.add(new MySection(new MoreAdapterModel("添加设备", "", true)));
         list.add(new MySection(true, "Section 2", true));
         String userName = SharePreferencesUtils.getUserName();
-        if (!NotNull.isNotNull(userName)){
-            userName=SharePreferencesUtils.getMobile();
+        if (!NotNull.isNotNull(userName)) {
+            userName = SharePreferencesUtils.getMobile();
         }
-        list.add(new MySection(new MoreAdapterModel("用户名", userName,true)));
-        list.add(new MySection(new MoreAdapterModel("修改登录密码", "",true)));
-        list.add(new MySection(new MoreAdapterModel("版本", "V1.0",true)));
-        list.add(new MySection(new MoreAdapterModel("厂家信息", "",true)));
+        list.add(new MySection(new MoreAdapterModel("用户名", userName, true)));
+        list.add(new MySection(new MoreAdapterModel("修改登录密码", "", true)));
+        list.add(new MySection(new MoreAdapterModel("版本", "V1.0", true)));
+        list.add(new MySection(new MoreAdapterModel("厂家信息", "", true)));
         mData.addAll(list);
         sectionAdapter.notifyDataSetChanged();
     }

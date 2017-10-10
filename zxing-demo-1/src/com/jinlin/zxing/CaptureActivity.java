@@ -3,17 +3,14 @@ package com.jinlin.zxing;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -29,8 +26,6 @@ import com.google.zxing.DecodeHintType;
 import com.google.zxing.Result;
 import com.google.zxing.camera.CameraManager;
 import com.google.zxing.client.result.ResultParser;
-import com.google.zxing.common.BitmapUtils;
-import com.google.zxing.decode.BitmapDecoder;
 import com.google.zxing.decode.CaptureActivityHandler;
 import com.google.zxing.decode.FinishListener;
 import com.google.zxing.view.ViewfinderView;
@@ -56,8 +51,7 @@ import cn.jinlin.zxing.R;
  * @author dswitkin@google.com (Daniel Switkin)
  * @author Sean Owen
  */
-public final class CaptureActivity extends Activity implements
-        SurfaceHolder.Callback, View.OnClickListener {
+public final class CaptureActivity extends Activity implements SurfaceHolder.Callback, View.OnClickListener {
 
     private static final String TAG = CaptureActivity.class.getSimpleName();
 
@@ -146,8 +140,7 @@ public final class CaptureActivity extends Activity implements
 
             switch (msg.what) {
                 case PARSE_BARCODE_SUC: // 解析图片成功
-                    Toast.makeText(activityReference.get(),
-                            "解析成功，结果为：" + msg.obj, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activityReference.get(), "解析成功，结果为：" + msg.obj, Toast.LENGTH_SHORT).show();
                     break;
 
                 case PARSE_BARCODE_FAIL:// 解析图片失败
@@ -175,7 +168,7 @@ public final class CaptureActivity extends Activity implements
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.capture);
 
-        //initPermissions();
+//        initPermissions();
 
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this);
@@ -355,17 +348,15 @@ public final class CaptureActivity extends Activity implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 
-        if (resultCode == RESULT_OK) {
+       /* if (resultCode == RESULT_OK) {
             final ProgressDialog progressDialog;
             switch (requestCode) {
                 case REQUEST_CODE:
 
                     // 获取选中图片的路径
-                    Cursor cursor = getContentResolver().query(
-                            intent.getData(), null, null, null, null);
+                    Cursor cursor = getContentResolver().query(intent.getData(), null, null, null, null);
                     if (cursor.moveToFirst()) {
-                        photoPath = cursor.getString(cursor
-                                .getColumnIndex(MediaStore.Images.Media.DATA));
+                        photoPath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
                     }
                     cursor.close();
 
@@ -379,8 +370,7 @@ public final class CaptureActivity extends Activity implements
                         @Override
                         public void run() {
 
-                            Bitmap img = BitmapUtils
-                                    .getCompressedBitmap(photoPath);
+                            Bitmap img = BitmapUtils.getCompressedBitmap(photoPath);
 
                             BitmapDecoder decoder = new BitmapDecoder(
                                     CaptureActivity.this);
@@ -406,7 +396,7 @@ public final class CaptureActivity extends Activity implements
                     break;
 
             }
-        }
+        }*/
 
     }
 
@@ -445,18 +435,15 @@ public final class CaptureActivity extends Activity implements
 
         // 重新计时
         inactivityTimer.onActivity();
+        boolean flag = barcode != null;
+        if (flag) {
+            lastResult = rawResult;
+            // 把图片画到扫描框
+            viewfinderView.drawResultBitmap(barcode);
+            beepManager.playBeepSoundAndVibrate();
+            Toast.makeText(this, "识别结果:" + ResultParser.parseResult(rawResult).toString(), Toast.LENGTH_SHORT).show();
 
-        lastResult = rawResult;
-
-        // 把图片画到扫描框
-        viewfinderView.drawResultBitmap(barcode);
-
-        beepManager.playBeepSoundAndVibrate();
-
-        Toast.makeText(this,
-                "识别结果:" + ResultParser.parseResult(rawResult).toString(),
-                Toast.LENGTH_SHORT).show();
-
+        }
     }
 
     public void restartPreviewAfterDelay(long delayMS) {
@@ -555,8 +542,7 @@ public final class CaptureActivity extends Activity implements
         if (v.getId() == R.id.capture_scan_photo) {
             Intent innerIntent = new Intent(Intent.ACTION_GET_CONTENT); // "android.intent.action.GET_CONTENT"
             innerIntent.setType("image/*");
-            Intent wrapperIntent = Intent.createChooser(innerIntent,
-                    "选择二维码图片");
+            Intent wrapperIntent = Intent.createChooser(innerIntent, "选择二维码图片");
             this.startActivityForResult(wrapperIntent, REQUEST_CODE);
         } else if (v.getId() == R.id.capture_flashlight) {
             if (isFlashlightOpen) {

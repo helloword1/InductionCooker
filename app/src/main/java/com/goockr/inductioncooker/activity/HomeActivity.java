@@ -29,13 +29,9 @@ import butterknife.ButterKnife;
 public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCallBack {
 
     private static final int MaxConnectCount = 10;
-
-
     @BindView(R.id.tabbar)
     Tabbar tabbar;
-
     HudHelper hudHelper;
-
     private int connectCount;
     private HomeFragment1 fragment;
     private NoticeFragment notifragment;
@@ -76,9 +72,11 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
         connectCount = 0;
     }
 
+    /**
+     * fragment切换
+     */
     private void initListener() {
         tabbar.setSelectChangeListener(new Tabbar.TabbarCallback() {
-
 
             @Override
             public void tabbarItenChange(int selectIndex) {
@@ -111,9 +109,9 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
         fragment = new HomeFragment1();
         notifragment = new NoticeFragment();
         morefragment = new MoreFragment();
-        fragmentTransaction.add(R.id.maincontent, fragment, "HomeFragment");
-        fragmentTransaction.add(R.id.maincontent, notifragment, "HomeFragment");
-        fragmentTransaction.add(R.id.maincontent, morefragment, "HomeFragment");
+        fragmentTransaction.add(R.id.maincontent, fragment, "HomeFragment"); // 首页
+        fragmentTransaction.add(R.id.maincontent, notifragment, "HomeFragment");// 通知
+        fragmentTransaction.add(R.id.maincontent, morefragment, "HomeFragment");// 更多
         fragmentTransaction.show(fragment).hide(notifragment).hide(morefragment);
         fragmentTransaction.commit();
     }
@@ -154,6 +152,13 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
 
     private int backCount = 0;
 
+
+    /**
+     * 返回键退出
+     * @param keyCode
+     * @param event
+     * @return
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 

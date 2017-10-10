@@ -3,9 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
+    android:layout_height="60dp"
     android:layout_gravity="center"
     android:background="@color/white">
+
+    <View
+        android:id="@+id/lineTop"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorlightgray"
+        android:visibility="gone" />
 
     <View
         android:layout_width="match_parent"
@@ -20,9 +28,9 @@
         android:layout_centerVertical="true"
         android:text="fafdafafdagdaga"
         android:textSize="15sp"
-        app:layout_marginBottomPercent="5%"
+        app:layout_marginBottomPercent="6%"
         app:layout_marginLeftPercent="5%"
-        app:layout_marginTopPercent="5%" />
+        app:layout_marginTopPercent="6%" />
 
     <ImageView
         android:id="@+id/item_section_content_go_iv"

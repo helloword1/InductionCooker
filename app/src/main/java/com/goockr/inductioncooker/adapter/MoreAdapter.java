@@ -54,6 +54,11 @@ public class MoreAdapter extends BaseSectionQuickAdapter<MySection, BaseViewHold
 //
 //        }
 //        helper.setText(R.id.tv, video.getName());
+        if (helper.getLayoutPosition() == 3) {
+            helper.setVisible(R.id.lineTop, true);
+        } else {
+            helper.setVisible(R.id.lineTop, false);
+        }
 
         helper.setText(R.id.item_section_content_title_tv, model.title);
 

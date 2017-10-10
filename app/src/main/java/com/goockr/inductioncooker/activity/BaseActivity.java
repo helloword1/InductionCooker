@@ -72,7 +72,6 @@ public class BaseActivity extends Activity {
 
         TcpSocket.getInstance().connect(Common.KIP, Common.KPORT, new TcpSocket.TcpSocketCallBack() {
 
-
             @Override
             public void onConnect() {
                 bsaeHudHelper.hudUpdateAndHid(getResources().getString(R.string.dialog_connect), 1.5);
@@ -94,8 +93,7 @@ public class BaseActivity extends Activity {
                     }
 
                     ConnectSocket();
-                } else {
-
+                } else { // 如果上面递归连接失败，就弹出连接超时提示框
                     bsaeHudHelper.hudHide();
                     connetCount = 0;
                     TipDialog tipDialog = new TipDialog(BaseActivity.this, getResources().getString(R.string.dialog_tip), getResources().getString(R.string.dialog_failconnect), false, true);

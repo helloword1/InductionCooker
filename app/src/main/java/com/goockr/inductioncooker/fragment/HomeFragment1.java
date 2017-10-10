@@ -27,11 +27,10 @@ import butterknife.ButterKnife;
  * Created by CMQ on 2017/6/21.
  */
 
-public class HomeFragment1 extends Fragment implements SegmentController.SegmentControllerCallback, LeftDeviceFragment1.LeftDeviceFragmentCallback, AdjustFragment.AdjustFragmentCallback {
+public class HomeFragment1 extends Fragment implements SegmentController.SegmentControllerCallback, LeftDeviceFragment1.LeftDeviceFragmentCallback{
     View contentView;
     private LeftDeviceFragment1 leftFragment;
     private RightDeviceFragment rightFragment;
-    private AdjustFragment adjustFragment;
     private boolean isShowAdjustFragment = false;
     @BindView(R.id.fragment_home_moden_ll)
     LinearLayout moden_ll;
@@ -114,7 +113,6 @@ public class HomeFragment1 extends Fragment implements SegmentController.Segment
     @Override
     public void leftDeviceFragmentButtonClick(ImageTopButton button) {
 
-
 //        FragmentManager fragmentManager= getFragmentManager();
 //        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 //
@@ -148,18 +146,18 @@ public class HomeFragment1 extends Fragment implements SegmentController.Segment
                 order = object.getJSONObject("order");
                 if (NotNull.isNotNull(order)) {
                     int LRID = Integer.valueOf(order.getString("deviceId"));//左右炉
-                    code = Integer.valueOf(order.getString("code"));
+                    code = Integer.valueOf(order.getString("code"));// 指令码
                     code1 = code;
-                    if (code == 6) {
+                    if (code == 6) { // 设置/取消预约时间
                         error = Integer.valueOf(order.getString("error"));
                         success = Integer.valueOf(order.getString("success"));
                     }
-                    if (LRID == 0) {
+                    if (LRID == 0) { // 0是左炉
                         if (NotNull.isNotNull(leftFragment)) {
                             leftFragment.setCode(code);
-                            leftFragment.setMProtocol(read);
+                            leftFragment. setMProtocol(read);
                         }
-                    } else if (LRID == 1) {
+                    } else if (LRID == 1) { // 1是右炉
                         if (NotNull.isNotNull(rightFragment)) {
                             rightFragment.setCode(code);
                             rightFragment.setMProtocol(read);
@@ -185,23 +183,6 @@ public class HomeFragment1 extends Fragment implements SegmentController.Segment
             }
 
         }
-
-
     }
-
-    @Override
-    public void removeAdjustFragment() {
-
-        if (adjustFragment != null) {
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-            fragmentTransaction.remove(adjustFragment);
-            fragmentTransaction.commit();
-            adjustFragment = null;
-        }
-
-    }
-
 
 }

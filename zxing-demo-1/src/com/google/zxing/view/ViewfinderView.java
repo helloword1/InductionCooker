@@ -101,7 +101,7 @@ public final class ViewfinderView extends View {
     public ViewfinderView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        mContext=context;
+        mContext = context;
 
         CORNER_PADDING = dip2px(context, 0.0F);
         MIDDLE_LINE_PADDING = dip2px(context, 20.0F);
@@ -129,10 +129,12 @@ public final class ViewfinderView extends View {
             return; // not ready yet, early draw before done configuring
         }
         Rect frame = cameraManager.getFramingRect();
+
         if (frame == null) {
             return;
         }
-
+        frame.top = getBottom()/4;
+        frame.bottom = 3*getBottom()/4;
 
         // 绘制遮掩层
         drawCover(canvas, frame);
