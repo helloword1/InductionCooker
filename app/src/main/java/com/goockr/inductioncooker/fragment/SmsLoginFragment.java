@@ -253,8 +253,7 @@ public class SmsLoginFragment extends Fragment {
         });
     }
 
-    private void loginSuccess(JSONObject jsonObject)
-    {
+    private void loginSuccess(JSONObject jsonObject) {
 
         dataSave(jsonObject);
 

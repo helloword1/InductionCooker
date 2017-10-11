@@ -6,8 +6,8 @@ package com.goockr.inductioncooker.lib.http;
 
 public class HttpCommon {
 
-//    public static final String KHttpIp  = "http://120.24.5.252:8099";
-    public static final String KHttpIp  = "http://192.168.1.187:8080";
+    public static final String KHttpIp  = "http://120.24.5.252:8099";
+//    public static final String KHttpIp  = "http://192.168.1.187:8080";
 
     public static final String KHttpLoginSmsCode  = "/cooker/servlet/AppServlet";
 

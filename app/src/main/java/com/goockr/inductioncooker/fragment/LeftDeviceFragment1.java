@@ -98,7 +98,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
     LinearLayout bottom_ll;
 
     ImageTopButton select_bt;
-    private int leftTime;
+    private int leftTime = 3600 * 2;
     private HudHelper bsaeHudHelper;
     private final String[] modeStr = {"煲粥", "煲汤", "煮饭", "烧水", "火锅", "煎炒", "烤炸", "保温", "煎焗", "闷烧", "保温", "爆炒", "油炸", "文火"};
     private final int TIME_COOK = 1;
@@ -110,12 +110,17 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                 case TIME_COOK:
                     if (mode == 4 || mode == 5 ||mode == 6 ||mode == 7) {
                         tvData.setText(hourToTime(leftTime));
+                        if (leftSumTime != 0) {
+                            float currentCount = leftTime * 100 / leftSumTime ;
+                            progressView.setCurrentCount(currentCount);
+                        }else {
+                            progressView.setCurrentCount(0);
+                        }
+
+                    }else {
+                        progressView.setCurrentCount(100.0f);
                     }
-                    float currentCount = 0;
-                    if (leftSumTime != 0) {
-                        currentCount = leftTime * 100 / leftSumTime ;
-                    }
-                    progressView.setCurrentCount(currentCount);
+
                     break;
                 case TIME_OUT:
                     try {
@@ -165,12 +170,9 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
     private int touTime1 = 0;
     private DialongView dialongView;
     private double allTime = 0;
-    private double lastTime = 0;
-    private double percent = 1;
-    private boolean beginCountDown = false;
-    private Thread CountDownThread;
     private TextView tvUnit;
-
+    private JSONObject globalJson;
+    private int lastTime;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -545,9 +547,9 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                 cookMode5();
                 tvTemperature.setText("260℃");
                 tvPower.setText("1600W");
-                leftTime = 3600 + 20 * 60;
+//                leftTime = 3600 + 20 * 60;
                 tvData.setText(hourToTime(leftTime));
-                leftSumTime = leftTime;
+//                leftSumTime = leftTime;
                 break;
             case 6://烤炒
                 stall=3;
@@ -555,18 +557,18 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                 tvTemperature.setText("260℃");
                 tvRightTemperature.setText("80℃");
                 tvPower.setText("1600W");
-                leftTime = 3600 + 20 * 60;
+//                leftTime = 3600 + 20 * 60;
                 tvData.setText(hourToTime(leftTime));
-                leftSumTime = leftTime;
+//                leftSumTime = leftTime;
 
                 break;
             case 7://保温
                 cookMode7();
                 tvTemperature.setText("80℃");
                 tvPower.setText("100W");
-                leftTime = 2 * 3600;
+//                leftTime = 3600 * 2;
                 tvData.setText(hourToTime(leftTime));
-                leftSumTime = leftTime;
+//                leftSumTime = leftTime;
                 break;
         }
         if (!NotNull.isNotNull(leftThread) || !leftThread.isAlive()) {
@@ -655,15 +657,15 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         ring_pv.setProgress(stall+1);
         ring_pv.setMaxCount(12);
         tvPower.setText("1600w");
-        leftTime = 3600 + 20 * 60;
+//        leftTime = 3600 * 2;
         tvData.setText(hourToTime(leftTime));
-        leftSumTime = leftTime;
+//        leftSumTime = leftTime;
 
     }
 
     //烧水
     private void cookMode3() {
-        unreservation_ib.setVisibility(View.VISIBLE);
+        unreservation_ib.setVisibility(View.GONE);
         reduce_ib.setVisibility(View.GONE);
         plus_ib.setVisibility(View.GONE);
         reservation_btn.setVisibility(View.GONE);
@@ -673,16 +675,16 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         ring_pv.setProgress(9);
         ring_pv.setMaxCount(12);
         tvPower.setText("1600w");
-        leftTime = 3600 + 20 * 60;
+//        leftTime = 3600 + 20 * 60;
         tvData.setText("Auto");
         tvUnit.setVisibility(View.GONE);
-        leftSumTime = leftTime;
+//        leftSumTime = leftTime;
     }
 
 
     //煮饭
     private void cookMode2() {
-        unreservation_ib.setVisibility(View.VISIBLE);
+        unreservation_ib.setVisibility(View.GONE);
         reduce_ib.setVisibility(View.GONE);
         plus_ib.setVisibility(View.GONE);
         reservation_btn.setVisibility(View.GONE);
@@ -692,29 +694,28 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         ring_pv.setProgress(7);
         ring_pv.setMaxCount(12);
         tvPower.setText("1600w");
-        leftTime = 3600 + 20 * 60;
+//        leftTime = 3600 + 20 * 60;
         tvData.setText("Auto");
         tvUnit.setVisibility(View.GONE);
-        leftSumTime = leftTime;
+//        leftSumTime = leftTime;
     }
 
     //煲粥、煲汤
     private void cookMode1() {
-        unreservation_ib.setVisibility(View.VISIBLE);
+        unreservation_ib.setVisibility(View.GONE);
+        reservation_btn.setVisibility(View.GONE);
         reduce_ib.setVisibility(View.GONE);
         plus_ib.setVisibility(View.GONE);
         tvALine.setVisibility(View.GONE);
         tvTemperature.setVisibility(View.GONE);
-        reservation_btn.setVisibility(View.GONE);
         tvRightTemperature.setVisibility(View.GONE);
-        reservation_btn.setVisibility(View.VISIBLE);
         ring_pv.setProgress(7);
         ring_pv.setMaxCount(12);
         tvPower.setText("1200w");
-        leftTime = 3600 + 20 * 60;
+//        leftTime = 3600 + 20 * 60;
         tvData.setText("Auto");
         tvUnit.setVisibility(View.GONE);
-        leftSumTime = leftTime;
+//        leftSumTime = leftTime;
     }
 
     private void reducePower() {
@@ -878,6 +879,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                             tvPower.setText(CommonBean.KAOZA1[stall]);
                             tvTemperature.setText(CommonBean.KAOZA2[stall]);
                         }
+                        globalJson = orderObject;
                         changeLeftMode(moden, orderObject);
                     } else {
                         setButtonStatus(false);
@@ -974,10 +976,6 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     double stoptime = orderObject.getDouble("stoptime");
                     if (allTime != stoptime) {
                         allTime = stoptime;
-                        lastTime = allTime;
-                        beginCountDown = true;
-                    }else {
-                        beginCountDown = false;
                     }
 
                     break;
@@ -1006,7 +1004,8 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     String appointment = orderObject.getString("appointment");//工作时间
                     aBootTime = Long.valueOf(bootTime);
                     aAppointment = Long.valueOf(appointment);
-//                        changeLeftMode(moden, orderObject);
+//                    globalJson = orderObject;
+//                    changeLeftMode(moden, orderObject);
                     Intent intent = new Intent(getActivity(), OrderTimeActivity.class);
                     intent.putExtra("LRIndex", 0);
                     intent.putExtra("moden", mode);
@@ -1049,7 +1048,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
             TcpSocket.getInstance().write(Protocol2.timeStatus(0,currentMode));
         }
 
-        leftSumTime = (int) allTime / 1000;
+        leftSumTime = (int) allTime / 1000; // 毫秒转成秒
 
         if (NotNull.isNotNull(moden)) {
             mode = Integer.valueOf(moden);
@@ -1117,6 +1116,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     break;
             }
             int worktime = Integer.valueOf(orderObject.getString("worktime"));
+            lastTime = worktime;
             if (worktime != 0) {
                 leftTime = worktime / 1000;
                 if (!NotNull.isNotNull(leftThread) || !leftThread.isAlive()) {
