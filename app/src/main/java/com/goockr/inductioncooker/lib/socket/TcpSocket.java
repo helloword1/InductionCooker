@@ -300,7 +300,6 @@ public class TcpSocket {
             isServerClose(socket);
             e.printStackTrace();
         }
-
     }
 
     public void read() {

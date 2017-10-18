@@ -439,7 +439,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         if (flag) {
             lastResult = rawResult;
             // 把图片画到扫描框
-            viewfinderView.drawResultBitmap(barcode);
+//            viewfinderView.drawResultBitmap(barcode);
             beepManager.playBeepSoundAndVibrate();
             Toast.makeText(this, "识别结果:" + ResultParser.parseResult(rawResult).toString(), Toast.LENGTH_SHORT).show();
 

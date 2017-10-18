@@ -26,5 +26,5 @@ public class CommonBean {
     //油炸档位2对应温度
     public static String[] YOUZA2={"80℃","180℃", "240℃","260℃","300℃"};
     //文火对应温度
-    public static String[] WENHUO={"100W","200W", "400W","600W","1000W","1200W"};
+    public static String[] WENHUO={"200W","600W","1200W","1400W"};
 }

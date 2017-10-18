@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.goockr.inductioncooker.R;
+import com.goockr.inductioncooker.activity.DeviceManageActivity;
 import com.goockr.inductioncooker.activity.LoginActivity;
 import com.goockr.inductioncooker.activity.UpdatePwdActivity;
 import com.goockr.inductioncooker.adapter.MoreAdapter;
@@ -19,7 +20,6 @@ import com.goockr.inductioncooker.models.MySection;
 import com.goockr.inductioncooker.utils.NotNull;
 import com.goockr.inductioncooker.utils.SharePreferencesUtils;
 import com.goockr.ui.view.activity.CompanyIntroduceActivity;
-import com.jinlin.zxing.CaptureActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,9 +60,9 @@ public class MoreFragment extends Fragment {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 switch (position) {
-                    case (1):
+                    case (1): // 设备管理
                         // initPermissions();
-                        getActivity().startActivity(new Intent(getActivity(), CaptureActivity.class));
+                        getActivity().startActivity(new Intent(getActivity(), DeviceManageActivity.class));
                         break;
                     case (3):
                         getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
@@ -100,7 +100,7 @@ public class MoreFragment extends Fragment {
         }
         List<MySection> list = new ArrayList<>();
         list.add(new MySection(true, "Section 1", false));
-        list.add(new MySection(new MoreAdapterModel("添加设备", "", true)));
+        list.add(new MySection(new MoreAdapterModel("设备管理", "", true)));
         list.add(new MySection(true, "Section 2", true));
         String userName = SharePreferencesUtils.getUserName();
         if (!NotNull.isNotNull(userName)) {

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.goockr.inductioncooker">
+          package="com.goockr.inductioncooker">
 
     <!-- 用于访问网络，网络定位需要上网 -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
     <application
         android:name=".MyApplication"
@@ -15,23 +15,25 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" />
-        <activity android:name=".activity.BaseActivity" />
+        <activity android:name=".MainActivity"/>
+        <activity android:name=".activity.BaseActivity"/>
         <activity
             android:name=".activity.LauncherActivity"
             android:theme="@style/WelcomeTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.HomeActivity" />
-        <activity android:name=".activity.ReservationActivity" />
-        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.HomeActivity"/>
+        <activity android:name=".activity.ReservationActivity"/>
+        <activity android:name=".activity.LoginActivity"/>
         <activity android:name=".activity.UpdatePwdActivity"/>
         <activity android:name=".activity.ChoiceCookTimeActivity"/>
         <activity android:name=".activity.OrderTimeActivity"/>
+        <activity android:name=".activity.DeviceManageActivity">
+        </activity>
     </application>
 
 </manifest>

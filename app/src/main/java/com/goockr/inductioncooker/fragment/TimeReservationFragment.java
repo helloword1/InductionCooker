@@ -39,6 +39,7 @@ import static com.chad.library.adapter.base.listener.SimpleClickListener.TAG;
 
 /**
  * Created by CMQ on 2017/7/4.
+ * 设置预约工作长度
  */
 
 public class TimeReservationFragment extends Fragment {
@@ -190,7 +191,7 @@ public class TimeReservationFragment extends Fragment {
                         public void run() {
                             while (!Thread.currentThread().isInterrupted()) {
                                 SystemClock.sleep(500);
-                                TcpSocket.getInstance().write(Protocol2.setReservation(deviceId, mMode, 1, time1, (hour * 3600 + second * 60) * 1000));
+                                TcpSocket.getInstance().write(Protocol2.setReservation(deviceId, mMode, 1, time1 - System.currentTimeMillis(),(hour * 3600 + second * 60) * 1000));
                                 if (HomeFragment1.code1 == 6) {
                                     thread.interrupt();
                                     SystemClock.sleep(500);
@@ -203,7 +204,8 @@ public class TimeReservationFragment extends Fragment {
                                                 intent.putExtra("moden", mMode);
                                                 intent.putExtra("bootTime", time1);
                                                 intent.putExtra("LRIndex", deviceId);
-                                                intent.putExtra("appointment", (hour * 3600 + second * 60) * 1000);
+                                                long time = (hour * 3600 + second * 60) * 1000;
+                                                intent.putExtra("appointment", time);
                                                 startActivity(intent);
                                                 getActivity().setResult(11, new Intent().putExtra("MODE", mMode));
                                                 FragmentHelper.clearBackStack(getActivity());

@@ -13,7 +13,8 @@ public class Protocol2 {
     private static final String TAG = "Protocol2";
 
     private static final String targetId = "123456789";//消息接收方ID(多个用逗号分隔);
-    private static final String Phone = "13763065125";
+//    private static String Phone = "13763065125";
+    private static String Phone = "0";
 
 //    private static final String targetId = "8a1c66cb3190282919a";//消息接收方ID(多个用逗号分隔);
 //    private static final String Phone = "17620830220";
@@ -199,8 +200,8 @@ public class Protocol2 {
      *
      * @param deviceId    炉号 左炉 0 右炉 1
      * @param mode        当前模式
-     * @param time        预约时间
-     * @param appointment 预约工作时间
+     * @param time        开机时间
+     * @param appointment 工作长度
      * @param setting     是否取消预约
      * @return
      */
@@ -241,6 +242,32 @@ public class Protocol2 {
         }
         Log.d(TAG, "getReservationStatus: " + jsonObjec.toString());
         return jsonObjec.toString().getBytes();
+    }
+
+    /**
+     * 设置/取消定时时间
+     *
+     * @param setting 1是设置预约，0是取消预约
+     * @param deviceId 左右炉
+     * @param mode 模式
+     * @param worktime 时间长度
+     * @return
+     */
+    public static byte[] setCookTime(int setting,int deviceId,int mode,long worktime) {
+        JSONObject jsonObject = textAppending();
+        JSONObject order;
+        try {
+            order = jsonObject.getJSONObject("order");
+            order.put("code",8);
+            order.put("setting",setting);
+            order.put("deviceId",deviceId);
+            order.put("mode",mode);
+            order.put("worktime",worktime);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG, "setCookTime: " + jsonObject.toString());
+        return jsonObject.toString().getBytes();
     }
 
     /**
@@ -304,5 +331,9 @@ public class Protocol2 {
             e.printStackTrace();
         }
         return jsonObjec.toString().getBytes();
+    }
+
+    public static void setPhone(String num) {
+        Phone = num;
     }
 }

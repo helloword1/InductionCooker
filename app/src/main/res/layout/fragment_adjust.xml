@@ -73,7 +73,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text=" 时: 分"
+                    android:text=" 关机倒计时"
                     android:textColor="@color/colorGrayText"
                     android:textSize="12sp"/>
 

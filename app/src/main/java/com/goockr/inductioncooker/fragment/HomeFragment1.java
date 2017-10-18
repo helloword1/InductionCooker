@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
  * Created by CMQ on 2017/6/21.
  */
 
-public class HomeFragment1 extends Fragment implements SegmentController.SegmentControllerCallback, LeftDeviceFragment1.LeftDeviceFragmentCallback{
+public class HomeFragment1 extends Fragment implements SegmentController.SegmentControllerCallback, LeftDeviceFragment1.LeftDeviceFragmentCallback {
     View contentView;
     private LeftDeviceFragment1 leftFragment;
     private RightDeviceFragment rightFragment;
@@ -47,8 +47,7 @@ public class HomeFragment1 extends Fragment implements SegmentController.Segment
     private DialongView dialongView;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         contentView = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, contentView);
         initUI();
@@ -184,5 +183,4 @@ public class HomeFragment1 extends Fragment implements SegmentController.Segment
 
         }
     }
-
 }

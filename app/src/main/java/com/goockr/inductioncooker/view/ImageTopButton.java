@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,7 +20,7 @@ import butterknife.ButterKnife;
  * Created by CMQ on 2017/6/27.
  */
 
-public class ImageTopButton extends LinearLayout implements View.OnTouchListener, View.OnClickListener {
+public class ImageTopButton extends LinearLayout implements  View.OnClickListener {
 
 
     View contentView;
@@ -178,7 +177,7 @@ public class ImageTopButton extends LinearLayout implements View.OnTouchListener
 
         m_ll.setClickable(true);
         m_ll.setOnClickListener(this);
-        m_ll.setOnTouchListener(this);
+//        m_ll.setOnTouchListener(this);
         // m_ll.setBackgroundColor(Color.YELLOW);
     }
 
@@ -187,31 +186,27 @@ public class ImageTopButton extends LinearLayout implements View.OnTouchListener
         this.callback = callback;
     }
 
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-
-//            // m_ll.setBackgroundColor(Color.rgb(127,127,127));
-//            if (hightLightImageId != 0) {
-//                top_iv.setImageResource(hightLightImageId);
+//    @Override
+//    public boolean onTouch(View v, MotionEvent event) {
+//
+//        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//
+//            top_iv.setImageResource(selImageId);
+//
+//        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+//
+//            if (isSelect()) {
+//                top_iv.setImageResource(selImageId);
+//            } else {
+//
+//                top_iv.setImageResource(normImageId);
 //            }
-            top_iv.setImageResource(selImageId);
-
-        } else if (event.getAction() == MotionEvent.ACTION_UP) {
-            //m_ll.setBackgroundColor(Color.TRANSPARENT);
-            if (isSelect()) {
-                top_iv.setImageResource(selImageId);
-            } else {
-
-                top_iv.setImageResource(normImageId);
-            }
-
-
-        }
-
-        return false;
-    }
+//
+//
+//        }
+//
+//        return false;
+//    }
 
     @Override
     public void onClick(View v) {

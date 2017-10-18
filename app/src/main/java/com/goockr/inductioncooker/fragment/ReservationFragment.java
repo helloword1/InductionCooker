@@ -26,6 +26,7 @@ import butterknife.OnClick;
 
 /**
  * Created by CMQ on 2017/6/30.
+ * 设置预约模式
  */
 
 public class ReservationFragment extends Fragment implements ImageTopButton.ImageTopButtonOnClickListener {
@@ -66,6 +67,24 @@ public class ReservationFragment extends Fragment implements ImageTopButton.Imag
     BarProgress bar_pv;
 
     ImageTopButton select_bt;
+    @BindView(R.id.fragment_reservation_huoguo_ib)
+    ImageTopButton huoguo_ib;
+    @BindView(R.id.fragment_reservation_jianchao_ib)
+    ImageTopButton jianchao_ib;
+    @BindView(R.id.fragment_reservation_kaozha_ib)
+    ImageTopButton kaozha_ib;
+    @BindView(R.id.fragment_reservation_baowen_ib)
+    ImageTopButton baowen_ib;
+    @BindView(R.id.fragment_reservation_left1_ll)
+    LinearLayout left1_ll;
+    @BindView(R.id.fragment_reservation_baochao_ib)
+    ImageTopButton baochao_ib;
+    @BindView(R.id.fragment_reservation_youzha_ib)
+    ImageTopButton youzha_ib;
+    @BindView(R.id.fragment_reservation_wenhuo_ib)
+    ImageTopButton wenhuo_ib;
+    @BindView(R.id.fragment_reservation_right1_ll)
+    LinearLayout right1_ll;
 
 
     @Override
@@ -94,7 +113,7 @@ public class ReservationFragment extends Fragment implements ImageTopButton.Imag
 
         List<String> tips = new ArrayList<String>();
         tips.add("1.选择功能模式");
-        tips.add("2.预约开机时间");
+        tips.add("2.多久后启动");
         // tips.add("3.预约定时时间");
         bar_pv.setTips(tips);
         bar_pv.setMaxCount(2);
@@ -107,16 +126,25 @@ public class ReservationFragment extends Fragment implements ImageTopButton.Imag
 
         if (moden == 0) {
             left_ll.setVisibility(View.VISIBLE);
+            left1_ll.setVisibility(View.VISIBLE);
             buttons.add(soup_ib);
             buttons.add(porridge_ib);
             buttons.add(rich_ib);
             buttons.add(water_ib);
+            buttons.add(huoguo_ib);
+            buttons.add(jianchao_ib);
+            buttons.add(kaozha_ib);
+            buttons.add(baowen_ib);
 
         } else {
             right_ll.setVisibility(View.VISIBLE);
+            right1_ll.setVisibility(View.VISIBLE);
             buttons.add(baked_ib);
             buttons.add(stew_ib);
             buttons.add(temperature_ib);
+            buttons.add(baochao_ib);
+            buttons.add(youzha_ib);
+            buttons.add(wenhuo_ib);
         }
 
         select_bt = buttons.get(0);
@@ -171,6 +199,5 @@ public class ReservationFragment extends Fragment implements ImageTopButton.Imag
         button.setSelect(!button.isSelect());
         select_bt = button;
     }
-
 
 }

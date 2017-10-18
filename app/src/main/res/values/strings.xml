@@ -40,6 +40,6 @@
     <string name="registed">注册用户成功</string>
     <string name="update_pwd_null">请填写密码和确认密码</string>
     <string name="confir">确定</string>
-    <string name="onetime">定时时间</string>
+    <string name="onetime">工作时长</string>
 
 </resources>

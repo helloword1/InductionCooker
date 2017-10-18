@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,6 +58,7 @@ public class OrderTimeActivity extends BaseActivity {
         lrIndex = intent.getIntExtra("LRIndex", -1);
         long bootTime = intent.getLongExtra("bootTime", 0L);//开机时间
         long appointment = intent.getLongExtra("appointment", 0L);//工作时间
+        Log.d("copycat","日期：" + appointment);
         if (bootTime != 0) {
             Date mBeginTime = new Date(bootTime);
             int hours = mBeginTime.getHours();
@@ -66,19 +68,17 @@ public class OrderTimeActivity extends BaseActivity {
                 minutesStr = "0" + minutes;
             }
             String time = hours + ":" + minutesStr;
-            if (appointment != 0) {
-                long aHour = appointment / 3600000;
-                long aMutes = (appointment % 3600000) / 60000;
-                if (aHour != 0)
-                    tvOrderCompleteInfo.setText(String.format("模式:  %1$s\n开机时间：%2$s\n工作时长：%3$s小时%4$s分钟", modeStr[mMode], time, String.valueOf(aHour), aMutes));
-                else if (aMutes == 0) {
-                    tvOrderCompleteInfo.setText(String.format("模式:  %1$s\n开机时间：%2$s\n工作时长：自动", modeStr[mMode], time));
-                } else {
-                    tvOrderCompleteInfo.setText(String.format("模式:  %1$s\n开机时间：%2$s\n工作时长：%3$s分钟", modeStr[mMode], time, aMutes));
-                }
 
-            } else {
-                tvOrderCompleteInfo.setText(String.format("模式:  %1$s\n开机时间：%2$s\n工作时长：自动", modeStr[mMode], time));
+            if (appointment > 0) {
+                long aHour = appointment / 3600 / 1000;
+                long aMutes = (appointment % 3600000) / 60000;
+                if (aHour > 0 && aMutes > 0) { // 说明时分都有
+                    tvOrderCompleteInfo.setText(String.format("模式:  %1$s\n开机时间：%2$s\n工作时长：%3$s小时%4$s分钟", modeStr[mMode], time, String.valueOf(aHour), aMutes));
+                } else if (aHour <= 0 && aMutes > 0) { // 说明只有分
+                    tvOrderCompleteInfo.setText(String.format("模式:  %1$s\n开机时间：%2$s\n工作时长：%3$s分钟", modeStr[mMode], time, aMutes));
+                } else if (aHour <= 0 && aMutes <= 0) { // 说明啥都没有
+                    tvOrderCompleteInfo.setText(String.format("模式:  %1$s\n开机时间：%2$s\n工作时长：自动", modeStr[mMode], time));
+                }
             }
         }
     }

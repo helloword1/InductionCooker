@@ -25,8 +25,6 @@ import com.bigkoo.pickerview.listener.CustomListener;
 import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.activity.OrderTimeActivity;
 import com.goockr.inductioncooker.common.Common;
-import com.goockr.inductioncooker.lib.socket.Protocol2;
-import com.goockr.inductioncooker.lib.socket.TcpSocket;
 import com.goockr.inductioncooker.utils.FragmentHelper;
 import com.goockr.inductioncooker.view.BarProgress;
 import com.goockr.inductioncooker.view.TimePickerView0;
@@ -187,7 +185,6 @@ public class ReservationBootFragment extends Fragment {
     public void OnClick(View v) {
         switch (v.getId()) {
             case (R.id.navbar_left_bt):
-                //fragmentManager.popBackStack();
                 FragmentHelper.pop(getActivity());
                 break;
             case (R.id.navbar_right_bt):
@@ -215,7 +212,7 @@ public class ReservationBootFragment extends Fragment {
                     public void run() {
                         while (!Thread.currentThread().isInterrupted()) {
                             SystemClock.sleep(500);
-                            TcpSocket.getInstance().write(Protocol2.setReservation(deviceId, mMode, 1, ReservationBootFragment.this.time.getTime(), 0L));
+//                            TcpSocket.getInstance().write(Protocol2.setReservation(deviceId, mMode, 1, ReservationBootFragment.this.time.getTime(), 0L));
                             if (HomeFragment1.code1 == 6) {
                                 thread.interrupt();
                                 SystemClock.sleep(500);

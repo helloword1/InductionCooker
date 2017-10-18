@@ -123,7 +123,6 @@ public class BaseActivity extends Activity {
                 message.setData(data);
                 message.what = READ_COUNT;
                 baseHandler.sendMessage(message);
-
             }
         });
 

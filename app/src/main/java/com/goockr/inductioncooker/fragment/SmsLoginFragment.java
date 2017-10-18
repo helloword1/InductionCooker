@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.goockr.inductioncooker.common.Common;
 import com.goockr.inductioncooker.lib.http.HttpError;
 import com.goockr.inductioncooker.lib.http.HttpHelper;
 import com.goockr.inductioncooker.lib.http.OKHttp;
+import com.goockr.inductioncooker.lib.socket.Protocol2;
 import com.goockr.inductioncooker.models.User;
 import com.goockr.inductioncooker.utils.CountDownButtonHelper;
 import com.goockr.inductioncooker.utils.DensityUtil;
@@ -217,6 +219,17 @@ public class SmsLoginFragment extends Fragment {
 
             @Override
             public void onSuccess(JSONObject jsonObject) {
+                // 登陆成功就更新当前的手机号
+                Protocol2.setPhone(phone_et.getText().toString().trim());
+                // 获取token值，并保存到SP
+                try {
+                    JSONObject userInfo = jsonObject.getJSONObject("userInfo");
+                    String token = userInfo.getString("token");
+                    SharePreferencesUtils.setToken(token);
+                    Log.d("copycat","token:" + token);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 loginSuccess(jsonObject);
             }
         });
