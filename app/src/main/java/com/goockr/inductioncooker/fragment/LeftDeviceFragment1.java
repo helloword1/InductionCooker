@@ -30,6 +30,8 @@ import com.goockr.inductioncooker.activity.OrderTimeActivity;
 import com.goockr.inductioncooker.activity.ReservationActivity;
 import com.goockr.inductioncooker.common.Common;
 import com.goockr.inductioncooker.common.CommonBean;
+import com.goockr.inductioncooker.lib.observer.PowerObserver;
+import com.goockr.inductioncooker.lib.observer.PowerObserval;
 import com.goockr.inductioncooker.lib.socket.Protocol2;
 import com.goockr.inductioncooker.lib.socket.TcpSocket;
 import com.goockr.inductioncooker.models.BaseProtocol;
@@ -62,7 +64,7 @@ import static com.chad.library.adapter.base.listener.SimpleClickListener.TAG;
  * Created by CMQ on 2017/6/27.
  */
 
-public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.ImageTopButtonOnClickListener, View.OnClickListener {
+public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.ImageTopButtonOnClickListener, View.OnClickListener, PowerObserval {
     private static final int REVER_DEX = 123;
     View contentView;
     List<ImageTopButton> buttons;
@@ -197,6 +199,29 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
     private int globalPower;
     private int sumBack;
     private Thread timeThread;
+    private List<PowerObserver> observers = new ArrayList<>();
+
+    @Override
+    public void registerObserver(PowerObserver observer) {
+        if (NotNull.isNotNull(observer)) {
+            observers.add(observer);
+        }
+    }
+
+    @Override
+    public void removeObserver(PowerObserver observer) {
+        if (NotNull.isNotNull(observer) && observers.contains(observers)) {
+            observers.add(observer);
+        }
+    }
+
+    @Override
+    public void notifyObservers(String succeedStr) {
+        for (PowerObserver observer :
+                observers) {
+            observer.updateLeft(succeedStr);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -613,6 +638,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                 cookMode5();
                 tvTemperature.setText("260℃");
                 tvPower.setText("1600W");
+                notifyObservers("1600W");
                 tvData.setText(hourToTime(leftTime));
                 break;
             case 6://烤炒
@@ -621,12 +647,14 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                 tvTemperature.setText("260℃");
                 tvRightTemperature.setText("80℃");
                 tvPower.setText("1600W");
+                notifyObservers("1600W");
                 tvData.setText(hourToTime(leftTime));
                 break;
             case 7://保温
                 cookMode7();
                 tvTemperature.setText("80℃");
                 tvPower.setText("100W");
+                notifyObservers("100W");
                 tvData.setText(hourToTime(leftTime));
                 break;
         }
@@ -658,7 +686,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
             leftSumTime = leftTime;
             tvData.setText(hourToTime(leftTime));
             sumBack = 5;
-            if (timeThread==null||(timeThread!=null&&!timeThread.isAlive())){
+            if (timeThread == null || (timeThread != null && !timeThread.isAlive())) {
                 timeThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -728,7 +756,8 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         tvUnit.setVisibility(View.VISIBLE);
         ring_pv.setProgress(stall + 1);
         ring_pv.setMaxCount(12);
-        tvPower.setText("1600w");
+        tvPower.setText("1600W");
+        notifyObservers("1600W");
         tvData.setText(hourToTime(leftTime));
     }
 
@@ -744,6 +773,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         ring_pv.setProgress(9);
         ring_pv.setMaxCount(12);
         tvPower.setText("Auto");
+        notifyObservers("Auto");
         tvData.setText("Auto");
         tvUnit.setVisibility(View.GONE);
     }
@@ -761,6 +791,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         ring_pv.setProgress(7);
         ring_pv.setMaxCount(12);
         tvPower.setText("Auto");
+        notifyObservers("Auto");
         tvData.setText("Auto");
         tvUnit.setVisibility(View.GONE);
     }
@@ -806,7 +837,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                 break;
             case (R.id.fragment_adjust_unreservation_ib)://取消定时，关闭
                 leftTime = 0;
-                TcpSocket.getInstance().write(Protocol2.setCookTime(0,0,mMode,0));// 这里关闭定时
+                TcpSocket.getInstance().write(Protocol2.setCookTime(0, 0, mMode, 0));// 这里关闭定时
                 break;
             case (R.id.fragment_adjust_lower_ib):
                 flAdjust.setVisibility(View.INVISIBLE);
@@ -839,6 +870,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
             }
         }
     }
+
 
     public interface LeftDeviceFragmentCallback {
         void leftDeviceFragmentButtonClick(ImageTopButton button);
@@ -886,11 +918,14 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                         stall = Integer.valueOf(orderObject.getString("stall"));
                         if (mode == 4) {//火锅
                             tvPower.setText(CommonBean.HOTPOTSTRS[stall]);
+                            notifyObservers(CommonBean.HOTPOTSTRS[stall]);
                         } else if (mode == 5) {//煎炒
                             tvPower.setText(CommonBean.FRYOIlSTRS1[stall]);
+                            notifyObservers(CommonBean.FRYOIlSTRS1[stall]);
                             tvTemperature.setText(CommonBean.FRYOIlSTRS2[stall]);
                         } else if (mode == 6) {//烤炸
                             tvPower.setText(CommonBean.KAOZA1[stall]);
+                            notifyObservers(CommonBean.KAOZA1[stall]);
                             tvTemperature.setText(CommonBean.KAOZA2[stall]);
                         }
                         globalJson = orderObject;
@@ -899,6 +934,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                         setButtonStatus(false);
                         leftPowerOnOff = false;
                         power_bt.setSelect(false);
+                        notifyObservers("");
                         bottom_ll.setVisibility(View.INVISIBLE);
                         if (flAdjust.getVisibility() == View.VISIBLE) {
                             if (NotNull.isNotNull(select_bt))
@@ -936,6 +972,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                             Toast.makeText(getActivity(), "连接异常", Toast.LENGTH_SHORT).show();
                             return;
                         }
+                        notifyObservers("");
                         leftPowerOnOff = false;
                         power_bt.setSelect(false);
                         bottom_ll.setVisibility(View.INVISIBLE);
@@ -1024,7 +1061,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     String success8 = orderObject.getString("success");
                     if (TextUtils.equals("true", success8)) {
                         tvData.setText(hourToTime(leftTime));
-                        if (timeThread!=null){
+                        if (timeThread != null) {
                             timeThread.interrupt();
                         }
                     }
@@ -1123,6 +1160,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     if (NotNull.isNotNull(mStall)) {
                         int progress = Integer.valueOf(mStall);
                         tvPower.setText(CommonBean.HOTPOTSTRS[progress]);
+                        notifyObservers(CommonBean.HOTPOTSTRS[progress]);
                     }
 
                     break;
@@ -1134,6 +1172,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                         int progress = Integer.valueOf(stall5);
                         if (progress >= 0)
                             tvPower.setText(CommonBean.FRYOIlSTRS1[progress]);
+                        notifyObservers(CommonBean.FRYOIlSTRS1[progress]);
                         tvTemperature.setText(CommonBean.FRYOIlSTRS2[progress]);
                     }
                     break;
@@ -1145,6 +1184,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                         int progress = Integer.valueOf(stall6);
                         if (progress >= 0)
                             tvPower.setText(CommonBean.KAOZA1[progress]);
+                        notifyObservers(CommonBean.KAOZA1[progress]);
                         tvTemperature.setText(CommonBean.KAOZA2[progress]);
                     }
                     break;

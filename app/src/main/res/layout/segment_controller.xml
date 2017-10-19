@@ -3,49 +3,81 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorbg"
-    android:paddingTop="15dp"
     android:gravity="center"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:paddingTop="15dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/segment_controller_leftbg_ll"
         android:layout_width="wrap_content"
-        android:background="@mipmap/segment_controls_left_selected"
         android:layout_height="match_parent"
+        android:background="@mipmap/segment_controls_left_selected"
         android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:text="L"
-            android:gravity="center"
-            android:textSize="16sp" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:id="@+id/LTv1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="L"
+                android:textColor="@color/white"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/LTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_toRightOf="@id/LTv1"
+                android:layout_centerVertical="true"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center|right"
             android:src="@mipmap/home_icon_warning"
             android:visibility="gone" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/segment_controller_rightbg_ll"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="@mipmap/segment_controls_right_normal"
-        android:orientation="horizontal">
+        android:background="@mipmap/segment_controls_right_normal">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="R"
-            android:textSize="16sp" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:id="@+id/RTv1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="R"
+                android:textColor="@color/colorPrimary"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/RTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_toRightOf="@id/RTv1"
+                android:layout_centerVertical="true"
+                android:textColor="@color/colorPrimary"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
 
         <ImageView
             android:layout_width="wrap_content"
@@ -54,5 +86,5 @@
             android:layout_marginRight="5px"
             android:src="@mipmap/home_icon_warning"
             android:visibility="gone" />
-    </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

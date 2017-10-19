@@ -30,6 +30,8 @@ import com.goockr.inductioncooker.activity.OrderTimeActivity;
 import com.goockr.inductioncooker.activity.ReservationActivity;
 import com.goockr.inductioncooker.common.Common;
 import com.goockr.inductioncooker.common.CommonBean;
+import com.goockr.inductioncooker.lib.observer.PowerObserval;
+import com.goockr.inductioncooker.lib.observer.PowerObserver;
 import com.goockr.inductioncooker.lib.socket.Protocol2;
 import com.goockr.inductioncooker.lib.socket.TcpSocket;
 import com.goockr.inductioncooker.models.BaseProtocol;
@@ -63,7 +65,7 @@ import static com.goockr.inductioncooker.R.id.fragment_rightdevice_bt0;
  * Created by CMQ on 2017/6/27.
  */
 
-public class RightDeviceFragment extends Fragment implements ImageTopButton.ImageTopButtonOnClickListener, View.OnClickListener {
+public class RightDeviceFragment extends Fragment implements ImageTopButton.ImageTopButtonOnClickListener, View.OnClickListener, PowerObserval {
     private static final int REVER_DEX = 123;
     FragmentManager fragmentManager;
     @BindView(R.id.flAdjust)
@@ -117,10 +119,13 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                         int minute = rightTime / 60;
                         if (minute < 3) {
                             tvPower.setText("1400W");
+                            notifyObservers("1400W");
                         } else if (minute < 18) {
                             tvPower.setText("1200W");
+                            notifyObservers("1200W");
                         } else if (minute < 28) {
                             tvPower.setText("200W");
+                            notifyObservers("200W");
                         }
                     }
                     break;
@@ -193,7 +198,28 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
     private int globalPower;
     private int sumBack;
     private Thread timeThread;
+    private List<PowerObserver> observers = new ArrayList<>();
+    @Override
+    public void registerObserver(PowerObserver observer) {
+        if (NotNull.isNotNull(observer)) {
+            observers.add(observer);
+        }
+    }
 
+    @Override
+    public void removeObserver(PowerObserver observer) {
+        if (NotNull.isNotNull(observer) && observers.contains(observers)) {
+            observers.add(observer);
+        }
+    }
+
+    @Override
+    public void notifyObservers(String succeedStr) {
+        for (PowerObserver observer :
+                observers) {
+            observer.updateRight(succeedStr);
+        }
+    }
 
     private String hourToTime(int time) {
         String timeStr = null;
@@ -568,6 +594,7 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                 stall = 4;
                 cookMode8();
                 tvPower.setText("1000W");
+                notifyObservers("1000W");
 //                rightTime = 3600 * 2;
 //                tvData.setText(hourToTime(rightTime));
                 rightSumTime = rightTime;
@@ -583,6 +610,7 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                 cookMode10();
                 tvTemperature.setText("280℃");
                 tvPower.setText("2000W");
+                notifyObservers("2000W");
 //                rightTime = 3600 * 2;
                 tvData.setText(hourToTime(rightTime));
 //                rightSumTime = rightTime;
@@ -593,6 +621,7 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                 tvTemperature.setText("260℃");
                 tvRightTemperature.setText("80℃");
                 tvPower.setText("1800W");
+                notifyObservers("1800W");
 //                rightTime = 3600 + 20 * 60;
                 tvData.setText(hourToTime(rightTime));
 //                rightSumTime = rightTime;
@@ -601,6 +630,7 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                 stall = 5;
                 cookMode12();
                 tvPower.setText("1200W");
+                notifyObservers("1200W");
 //                rightTime = 3600 + 20 * 60;
                 tvData.setText(hourToTime(rightTime));
 //                rightSumTime = rightTime;
@@ -677,6 +707,7 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
         ring_pv.setMaxCount(2);
         tvTemperature.setText("80℃");
         tvPower.setText("100w");
+        notifyObservers("100W");
 //        rightTime = 2 * 3600;
         tvData.setText(hourToTime(rightTime));
 //        rightSumTime = rightTime;
@@ -695,6 +726,7 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
         ring_pv.setProgress(5);
         ring_pv.setMaxCount(6);
         tvPower.setText("1400w");
+        notifyObservers("1400W");
 //        rightTime = 28 * 60;
         tvData.setText("Auto");
         tvUnit.setVisibility(View.GONE);
@@ -829,20 +861,25 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
 
                             if (mode == 8) {//煎焗
                                 tvPower.setText(CommonBean.JIANJU[stall]);
+                                notifyObservers(CommonBean.JIANJU[stall]);
                             } else if (mode == 10) {//爆炒
                                 tvPower.setText(CommonBean.BAOCHAO1[stall]);
+                                notifyObservers(CommonBean.BAOCHAO1[stall]);
                                 tvTemperature.setText(CommonBean.BAOCHAO2[stall]);
                             } else if (mode == 11) {//油炸
                                 tvPower.setText(CommonBean.YOUZA1[stall]);
+                                notifyObservers(CommonBean.YOUZA1[stall]);
                                 tvTemperature.setText(CommonBean.YOUZA2[stall]);
                             } else if (mode == 12) {//文火
                                 tvPower.setText(CommonBean.WENHUO[stall]);
+                                notifyObservers(CommonBean.WENHUO[stall]);
                             }
                             changeRightMode(moden, orderObject);
 
                         } else {
                             RightPowerOnOff = false;
                             power_bt.setSelect(false);
+                            notifyObservers("");
                             setButtonStatus(false);//关机状态
                             bottom_ll.setVisibility(View.INVISIBLE);
                             if (NotNull.isNotNull(select_bt_r))
@@ -886,6 +923,7 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                             power_bt.setSelect(false);
                             bottom_ll.setVisibility(View.INVISIBLE);
                             select_bt_r.setEnabledStatus(false);
+                            notifyObservers("");
                             if (flAdjust.getVisibility() == View.INVISIBLE) {
                                 flAdjust.setVisibility(View.INVISIBLE);
                                 flAdjust.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.adujst_close));
@@ -1008,6 +1046,7 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                         int progress = Integer.valueOf(stall8);
                         if (progress != 0)
                             tvPower.setText(CommonBean.JIANJU[progress]);
+                        notifyObservers(CommonBean.JIANJU[progress]);
                     }
                     break;
                 case 9://闷烧
@@ -1026,6 +1065,7 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
 //                        ring_pv.setProgress(Integer.valueOf(stall + 1));//当前档位
                         int progress = Integer.valueOf(stall);
                         tvPower.setText(CommonBean.BAOCHAO1[progress]);
+                        notifyObservers(CommonBean.BAOCHAO1[progress]);
                         tvTemperature.setText(CommonBean.BAOCHAO2[progress]);
                     }
                     break;
@@ -1038,6 +1078,7 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                         int progress = Integer.valueOf(stall12);
                         if (progress != 0)
                             tvPower.setText(CommonBean.YOUZA1[progress]);
+                        notifyObservers(CommonBean.YOUZA1[progress]);
                         tvTemperature.setText(CommonBean.YOUZA2[progress]);
                     }
                     break;
@@ -1050,6 +1091,7 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                         int progress = Integer.valueOf(stall13);
                         if (progress != 0)
                             tvPower.setText(CommonBean.WENHUO[progress]);
+                        notifyObservers(CommonBean.WENHUO[progress]);
                     }
                     break;
             }
@@ -1184,4 +1226,6 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
             });
         }
     }
+
+
 }

@@ -89,7 +89,6 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
                         fragmentTransaction.show(fragment).hide(notifragment).hide(morefragment);
                         break;
                     case (1):
-
                         fragmentTransaction.show(notifragment).hide(fragment).hide(morefragment);
                         break;
                     case (2):

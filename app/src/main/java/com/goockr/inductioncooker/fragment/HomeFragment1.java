@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.goockr.inductioncooker.R;
+import com.goockr.inductioncooker.lib.observer.PowerObserver;
 import com.goockr.inductioncooker.utils.NotNull;
 import com.goockr.inductioncooker.view.DialongView;
 import com.goockr.inductioncooker.view.ImageTopButton;
@@ -27,7 +28,7 @@ import butterknife.ButterKnife;
  * Created by CMQ on 2017/6/21.
  */
 
-public class HomeFragment1 extends Fragment implements SegmentController.SegmentControllerCallback, LeftDeviceFragment1.LeftDeviceFragmentCallback {
+public class HomeFragment1 extends Fragment implements SegmentController.SegmentControllerCallback, LeftDeviceFragment1.LeftDeviceFragmentCallback, PowerObserver {
     View contentView;
     private LeftDeviceFragment1 leftFragment;
     private RightDeviceFragment rightFragment;
@@ -58,7 +59,6 @@ public class HomeFragment1 extends Fragment implements SegmentController.Segment
     private void initEvent() {
         segmentController.addListener(this);
         dialongView = new DialongView(getActivity());
-
     }
 
     private void showTurnOn() {
@@ -84,9 +84,11 @@ public class HomeFragment1 extends Fragment implements SegmentController.Segment
 
         if (leftFragment == null) {
             leftFragment = new LeftDeviceFragment1();
+            leftFragment.registerObserver(this);
         }
         if (rightFragment == null) {
             rightFragment = new RightDeviceFragment();
+            rightFragment.registerObserver(this);
         }
         fragmentTransaction.add(R.id.fragment_home_moden_ll, leftFragment, "LeftDeviceFragment");
         fragmentTransaction.add(R.id.fragment_home_moden_ll, rightFragment, "RightDeviceFragment");
@@ -112,27 +114,6 @@ public class HomeFragment1 extends Fragment implements SegmentController.Segment
     @Override
     public void leftDeviceFragmentButtonClick(ImageTopButton button) {
 
-//        FragmentManager fragmentManager= getFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//
-//
-//
-//
-//        if (adjustFragment==null)
-//        {
-//            adjustFragment=new AdjustFragment();
-//
-//        }
-//
-//        adjustFragment.setCallback(this);
-//
-//
-//        fragmentTransaction.add(R.id.fragment_home_moden_ll,adjustFragment,"AdjustFragment");
-//        hideFragment(fragmentTransaction);
-//        fragmentTransaction.show(adjustFragment);
-//        fragmentTransaction.commit();
-
-
     }
 
     public void setMProtocol(String read) {
@@ -154,7 +135,7 @@ public class HomeFragment1 extends Fragment implements SegmentController.Segment
                     if (LRID == 0) { // 0是左炉
                         if (NotNull.isNotNull(leftFragment)) {
                             leftFragment.setCode(code);
-                            leftFragment. setMProtocol(read);
+                            leftFragment.setMProtocol(read);
                         }
                     } else if (LRID == 1) { // 1是右炉
                         if (NotNull.isNotNull(rightFragment)) {
@@ -181,6 +162,20 @@ public class HomeFragment1 extends Fragment implements SegmentController.Segment
                 rightFragment.setCode(code);
             }
 
+        }
+    }
+
+    @Override
+    public void updateLeft(String succeedStr) {
+        if (NotNull.isNotNull(segmentController)) {
+            segmentController.setSelectLeft(succeedStr);
+        }
+    }
+
+    @Override
+    public void updateRight(String succeedStr) {
+        if (NotNull.isNotNull(segmentController)) {
+            segmentController.setSelectRight(succeedStr);
         }
     }
 }
