@@ -23,4 +23,6 @@ public class HttpCommon {
 
     public static final String KHttpUpdatePwd = "/cooker/servlet/AppServlet";
 
+    public static final String KHttpCheckDevices = "/cooker/a/comm/commDeviceRef/findAppRef";
+
 }

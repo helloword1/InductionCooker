@@ -65,7 +65,7 @@ public class TimeReservationFragment extends Fragment {
     private String mode;
     private int mMode;
     private int deviceId;
-    private final String[] modeStr = {"煲粥", "煲汤", "煮饭", "烧水", "火锅", "煎炒", "烤炸", "保温", "煎焗", "闷烧", "爆炒", "油炸", "文火"};
+    private final String[] modeStr = {"煲粥", "煲汤", "煮饭", "烧水", "火锅", "煎炒", "烤炸", "保温", "煎焗", "闷烧","保温", "爆炒", "油炸", "文火"};
     private HudHelper bsaeHudHelper;
     private Thread thread;
     private long time1;
@@ -89,6 +89,9 @@ public class TimeReservationFragment extends Fragment {
             if (TextUtils.equals(mode, modeStr[i])) {
                 mMode = i;
                 deviceId = i > 7 ? 1 : 0;
+                if (TextUtils.equals(mode,modeStr[7])){
+                    mMode=7;
+                }
             }
         }
     }
@@ -121,12 +124,9 @@ public class TimeReservationFragment extends Fragment {
         bar_pv.setTips(tips);
         bar_pv.setMaxCount(3);
         bar_pv.setProgress(3);
-
     }
 
     private void initEvent() {
-
-
     }
 
     @OnClick({R.id.navbar_left_bt, R.id.navbar_right_bt})

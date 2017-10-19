@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.goockr.inductioncooker.R;
+import com.goockr.inductioncooker.activity.ChangePowerActivity;
 import com.goockr.inductioncooker.activity.DeviceManageActivity;
 import com.goockr.inductioncooker.activity.LoginActivity;
 import com.goockr.inductioncooker.activity.UpdatePwdActivity;
@@ -32,6 +34,7 @@ import butterknife.BindView;
 
 public class MoreFragment extends Fragment {
 
+    private static final String TAG = "";
     View view;
     @BindView(R.id.fragment_more_rv)
     RecyclerView mRecyclerView;
@@ -59,23 +62,25 @@ public class MoreFragment extends Fragment {
         sectionAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                Log.d(TAG, "onItemClick: " + position);
                 switch (position) {
-                    case (1): // 设备管理
+                    case 1: // 设备管理
                         // initPermissions();
                         getActivity().startActivity(new Intent(getActivity(), DeviceManageActivity.class));
                         break;
-                    case (3):
+                    case 3://权限转移
+                        getActivity().startActivity(new Intent(getActivity(), ChangePowerActivity.class));
+                        break;
+                    case 4://用户名
                         getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
                         break;
-                    case (4):
+                    case 5://修改密码
                         getActivity().startActivity(new Intent(getActivity(), UpdatePwdActivity.class));
                         break;
-                    case (5):
+                    case 6://版本
                         break;
-                    case (6):
-
+                    case 7://厂家信息
                         getActivity().startActivity(new Intent(getActivity(), CompanyIntroduceActivity.class));
-
                         break;
 
 
@@ -106,6 +111,7 @@ public class MoreFragment extends Fragment {
         if (!NotNull.isNotNull(userName)) {
             userName = SharePreferencesUtils.getMobile();
         }
+        list.add(new MySection(new MoreAdapterModel("权限转移", "", true)));
         list.add(new MySection(new MoreAdapterModel("用户名", userName, true)));
         list.add(new MySection(new MoreAdapterModel("修改登录密码", "", true)));
         list.add(new MySection(new MoreAdapterModel("版本", "V1.0", true)));

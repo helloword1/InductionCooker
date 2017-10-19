@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,9 +47,9 @@ import butterknife.OnClick;
 
 public class SmsLoginFragment extends Fragment {
 
-    private static final int SmsModen  = 0;
+    private static final int SmsModen = 0;
 
-    private static final int PwdModen  = 1;
+    private static final int PwdModen = 1;
 
     View contentView;
 
@@ -90,8 +91,8 @@ public class SmsLoginFragment extends Fragment {
     Button smsmoden_bt;
 
 
-
-    public HudHelper hud=new HudHelper();
+    public HudHelper hud = new HudHelper();
+    private boolean isSMSLogin=true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -112,7 +113,7 @@ public class SmsLoginFragment extends Fragment {
 
     private void initData() {
 
-        moden=SmsModen;
+        moden = SmsModen;
 
     }
 
@@ -120,10 +121,10 @@ public class SmsLoginFragment extends Fragment {
 
         title_tv.setText(R.string.login_sms_title);
         left_bt.setText("");
-        Drawable drawable= getResources().getDrawable(R.drawable.title_back);
+        Drawable drawable = getResources().getDrawable(R.drawable.title_back);
         /// 这一步必须要做,否则不会显示.
-        drawable.setBounds(DensityUtil.px2dip(getActivity(),10), 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-        left_bt.setCompoundDrawables(drawable,null,null,null);
+        drawable.setBounds(DensityUtil.px2dip(getActivity(), 10), 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        left_bt.setCompoundDrawables(drawable, null, null, null);
 
         right_bt.setText("注册");
 
@@ -152,12 +153,10 @@ public class SmsLoginFragment extends Fragment {
     /**
      * @param v
      */
-    @OnClick({R.id.navbar_left_bt,R.id.navbar_right_bt,R.id.fragment_pwd_smscode_bt,R.id.fragment_login_moden_bt,R.id.fragment_pwd_forget_bt,
-    R.id.fragment_smslogin_bt,R.id.fragment_login_pwd_bt,R.id.fragment_login_smsmoden_bt})
-    public void OnClick(View v)
-    {
-        switch (v.getId())
-        {
+    @OnClick({R.id.navbar_left_bt, R.id.navbar_right_bt, R.id.fragment_pwd_smscode_bt, R.id.fragment_login_moden_bt, R.id.fragment_pwd_forget_bt,
+            R.id.fragment_smslogin_bt, R.id.fragment_login_pwd_bt, R.id.fragment_login_smsmoden_bt})
+    public void OnClick(View v) {
+        switch (v.getId()) {
             case (R.id.navbar_left_bt):
 
                 FragmentHelper.pop(getActivity());
@@ -173,7 +172,7 @@ public class SmsLoginFragment extends Fragment {
                 break;
 
             case (R.id.fragment_login_moden_bt)://转到密码登录页面
-
+                isSMSLogin =false;
                 pwdModen();
                 break;
 
@@ -182,6 +181,7 @@ public class SmsLoginFragment extends Fragment {
                 forgetButtonClick();
                 break;
             case (R.id.fragment_smslogin_bt)://验证码登录
+                isSMSLogin =true;
                 smsLogin();
                 break;
             case (R.id.fragment_login_smsmoden_bt)://转到验证码登录
@@ -199,22 +199,21 @@ public class SmsLoginFragment extends Fragment {
      */
     private void pwdLogin() {
 
-        if (moden==PwdModen&&(phone_et.getText().length()==0||pwd_et.getText().length()==0))
-        {
-            hud.hudShowTip(getActivity(),"请填写手机号码和密码",1500);
+        if (moden == PwdModen && (phone_et.getText().length() == 0 || pwd_et.getText().length() == 0)) {
+            hud.hudShowTip(getActivity(), "请填写手机号码和密码", 1500);
             return;
         }
-        hud.hudShow(getActivity(),getResources().getString(R.string.logining));
+        hud.hudShow(getActivity(), getResources().getString(R.string.logining));
         //functype=pl&mobile=13763085121&pwd=1234
-        Map<String,Object> map=new HashMap<>();
-        map.put("functype","pl");
-        map.put("mobile",phone_et.getText().toString());
-        map.put("pwd",pwd_et.getText().toString());
+        Map<String, Object> map = new HashMap<>();
+        map.put("functype", "pl");
+        map.put("mobile", phone_et.getText().toString());
+        map.put("pwd", pwd_et.getText().toString());
 
         HttpHelper.loginPwd(map, new OKHttp.HttpCallback() {
             @Override
             public void onFailure(HttpError error) {
-                hud.hudUpdateAndHid(error.msg,Common.KHUDFINISHTIME);
+                hud.hudUpdateAndHid(error.msg, Common.KHUDFINISHTIME);
             }
 
             @Override
@@ -226,7 +225,7 @@ public class SmsLoginFragment extends Fragment {
                     JSONObject userInfo = jsonObject.getJSONObject("userInfo");
                     String token = userInfo.getString("token");
                     SharePreferencesUtils.setToken(token);
-                    Log.d("copycat","token:" + token);
+                    Log.d("copycat", "token:" + token);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -239,29 +238,30 @@ public class SmsLoginFragment extends Fragment {
 
     private void smsLogin() {
 
-        if (moden == SmsModen &&(sms_phone_et.getText().length()==0||sms_et.getText().length()==0)) {
-            hud.hudShowTip(getActivity(),"请填写手机号码和验证码",1500);
+        if (moden == SmsModen && (sms_phone_et.getText().length() == 0 || sms_et.getText().length() == 0)) {
+            hud.hudShowTip(getActivity(), "请填写手机号码和验证码", 1500);
             return;
         }
 
         //functype=tl&mobile=13763085121&vcode=&token=64f62f5341b6455981ed456bdb95eb80&pwd=123
 
-        hud.hudShow(getActivity(),getResources().getString(R.string.logining));
-        Map<String,Object> map=new HashMap<>();
-        map.put("functype","tl");
-        map.put("mobile",sms_phone_et.getText().toString());
-        map.put("vcode",sms_et.getText().toString());
-        map.put("token","");
-        map.put("pwd","");
+        hud.hudShow(getActivity(), getResources().getString(R.string.logining));
+        Map<String, Object> map = new HashMap<>();
+        map.put("functype", "tl");
+        map.put("mobile", sms_phone_et.getText().toString());
+        map.put("vcode", sms_et.getText().toString());
+        map.put("token", "");
+        map.put("pwd", "");
         HttpHelper.loginSmmCode(map, new OKHttp.HttpCallback() {
             @Override
             public void onFailure(HttpError error) {
-                hud.hudUpdateAndHid(error.msg,Common.KHUDFINISHTIME);
+                hud.hudUpdateAndHid(error.msg, Common.KHUDFINISHTIME);
+                sms_bt.setClickable(true);
             }
 
             @Override
             public void onSuccess(JSONObject jsonObject) {
-              loginSuccess(jsonObject);
+                loginSuccess(jsonObject);
             }
         });
     }
@@ -280,22 +280,35 @@ public class SmsLoginFragment extends Fragment {
 
     private void dataSave(JSONObject json) {
 
-        JSONObject object=new JSONObject();
+        JSONObject object = new JSONObject();
 
-        String name="";
-        String token="";
-        String mobile="";
-        String userId="";
+        String name = "";
+        String token = "";
+        String mobile = "";
+        String userId = "";
 
         try {
-            object=json.getJSONObject("userInfo");
-            name=object.getString("name");
-            token=object.getString("token");
-            mobile=object.getString("mobile");
-            userId=object.getString("id");
+            object = json.getJSONObject("userInfo");
+            name = object.getString("name");
+            token = object.getString("token");
+            mobile = object.getString("mobile");
+            userId = object.getString("id");
 
         } catch (JSONException e) {
             e.printStackTrace();
+            try {
+                token = json.getString("userInfo");
+                if (isSMSLogin){
+                    mobile = sms_phone_et.getText().toString();
+                }else{
+                    mobile = phone_et.getText().toString();
+                }
+                SharePreferencesUtils.setMobile(mobile);
+                SharePreferencesUtils.setToken(token);
+                return;
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
         }
         User.getInstance().updateUserInfoWithdict(object);
         SharePreferencesUtils.setToken(token);
@@ -307,65 +320,57 @@ public class SmsLoginFragment extends Fragment {
 
 
     private void pwdModen() {
-        moden=PwdModen;
+        moden = PwdModen;
         title_tv.setText(R.string.login_pwd_title);
         sms_ll.setVisibility(View.INVISIBLE);
         pwd_ll.setVisibility(View.VISIBLE);
-
-
     }
 
-
     private void smsModen() {
-        moden=SmsModen;
+        moden = SmsModen;
         title_tv.setText(R.string.login_sms_title);
         pwd_ll.setVisibility(View.INVISIBLE);
         sms_ll.setVisibility(View.VISIBLE);
     }
 
-
     private void forgetButtonClick() {
-
-        VerifiedPhoneNumFragment fragment=new VerifiedPhoneNumFragment();
-        Bundle bundle=new Bundle();
-        bundle.putInt("state",1);
-        bundle.putInt("content",R.id.activity_login_content_fl);
+        VerifiedPhoneNumFragment fragment = new VerifiedPhoneNumFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("state", 1);
+        bundle.putInt("content", R.id.activity_login_content_fl);
         fragment.setArguments(bundle);
-        FragmentHelper.addFragmentToBackStack(getActivity(),R.id.activity_login_content_fl,this,fragment,Common.VerifiedPhoneNumFragment);
-
+        FragmentHelper.addFragmentToBackStack(getActivity(), R.id.activity_login_content_fl, this, fragment, Common.VerifiedPhoneNumFragment);
     }
 
     private void registerButtonClick() {
-
-        VerifiedPhoneNumFragment fragment=new VerifiedPhoneNumFragment();
-        Bundle bundle=new Bundle();
-        bundle.putInt("state",0);
-        bundle.putInt("content",R.id.activity_login_content_fl);
+        VerifiedPhoneNumFragment fragment = new VerifiedPhoneNumFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("state", 0);
+        bundle.putInt("content", R.id.activity_login_content_fl);
         fragment.setArguments(bundle);
-        FragmentHelper.addFragmentToBackStack(getActivity(),R.id.activity_login_content_fl,this,fragment,Common.VerifiedPhoneNumFragment);
-
-
+        FragmentHelper.addFragmentToBackStack(getActivity(), R.id.activity_login_content_fl, this, fragment, Common.VerifiedPhoneNumFragment);
     }
 
-    private void  getSmsCode()
-    {
-        if (sms_phone_et.getText().length()==0)
-        {
-            hud.hudShowTip(getActivity(),getResources().getString(R.string.phone_null),Common.KHUDTIPSHORTTIME);
+    private void getSmsCode() {
+        if (TextUtils.equals(sms_phone_et.getText().toString(),SharePreferencesUtils.getMobile())){
+            hud.hudShowTip(getActivity(), getResources().getString(R.string.had_login), Common.KHUDTIPSHORTTIME);
+            return;
+        }
+        if (sms_phone_et.getText().length() == 0) {
+            hud.hudShowTip(getActivity(), getResources().getString(R.string.phone_null), Common.KHUDTIPSHORTTIME);
             return;
         }
 
-
-        hud.hudShow(getActivity(),getResources().getString(R.string.get_sms_code));
-       // functype=vc&mobile=13763085121
-        Map<String,Object> map=new HashMap<>();
-        map.put("functype","vc");
-        map.put("mobile",sms_phone_et.getText().toString());
-
+        hud.hudShow(getActivity(), getResources().getString(R.string.get_sms_code));
+        Map<String, Object> map = new HashMap<>();
+        map.put("functype", "vc");
+        map.put("mobile", sms_phone_et.getText().toString());
+        sms_bt.setClickable(false);
         HttpHelper.getLoginSmmCode(map, new OKHttp.HttpCallback() {
             @Override
             public void onFailure(HttpError error) {
-               hud.hudUpdateAndHid(error.msg,Common.KHUDFINISHTIME);
+                hud.hudUpdateAndHid(error.msg, Common.KHUDFINISHTIME);
+                sms_bt.setClickable(true);
             }
 
             @Override
@@ -374,9 +379,11 @@ public class SmsLoginFragment extends Fragment {
                 hud.hudHide();
                 CountDownButtonHelper timer = new CountDownButtonHelper(sms_bt,
                         getResources().getString(R.string.sms_getCode), "重新获取", 60, 1);
-                timer.setOnFinishListener(new CountDownButtonHelper.OnFinishListener(){
+                timer.setOnFinishListener(new CountDownButtonHelper.OnFinishListener() {
                     @Override
                     public void finish() {
+                        sms_bt.setClickable(true);
+
                     }
                 });
                 timer.start();
@@ -386,19 +393,17 @@ public class SmsLoginFragment extends Fragment {
 
     }
 
-    private void changeModen(int moden)
-    {
+    private void changeModen(int moden) {
         sms_et.setText("");
-        if (moden==SmsModen)
-        {
+        if (moden == SmsModen) {
             title_tv.setText(R.string.login_sms_title);
-           // moden_bt.setText(R.string.login_sms_moden);
+            // moden_bt.setText(R.string.login_sms_moden);
             forget_bt.setVisibility(View.INVISIBLE);
             sms_bt.setVisibility(View.VISIBLE);
 
-        }else {
+        } else {
             title_tv.setText(R.string.login_pwd_title);
-          //  moden_bt.setText(R.string.login_pwd_moden);
+            //  moden_bt.setText(R.string.login_pwd_moden);
             sms_bt.setVisibility(View.INVISIBLE);
             forget_bt.setVisibility(View.VISIBLE);
         }

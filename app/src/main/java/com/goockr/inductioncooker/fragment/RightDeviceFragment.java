@@ -126,7 +126,7 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                     break;
                 case TIME_OUT:
                     try {
-                        Toast.makeText(getActivity(), "时间到", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(), "时间到", Toast.LENGTH_SHORT).show();
                     } catch (NullPointerException e) {
                     }
                     break;
@@ -191,6 +191,8 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
     private ImageTopButton currentButton; // 当前的按钮
     private boolean powerStateChange;
     private int globalPower;
+    private int sumBack;
+    private Thread timeThread;
 
 
     private String hourToTime(int time) {
@@ -719,11 +721,25 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RESULT_FIRST_USER) {
             if (data == null) return;
-            int hour = data.getIntExtra("HOUR", -1);
-            int second = data.getIntExtra("SECOND", -1);
+            final int hour = data.getIntExtra("HOUR", -1);
+            final int second = data.getIntExtra("SECOND", -1);
             rightTime = hour * 3600 + second * 60;
             rightSumTime = rightTime;
             tvData.setText(hourToTime(rightTime));
+            sumBack = 5;
+            if (timeThread ==null||(timeThread !=null&&!timeThread.isAlive())){
+                timeThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (!Thread.currentThread().isInterrupted() && sumBack > 0) {
+                            sumBack--;
+                            SystemClock.sleep(1000);
+                            TcpSocket.getInstance().write(Protocol2.setCookTime(1, 0, mMode, (hour * 3600 + second * 60) * 1000));
+                        }
+                    }
+                });
+                timeThread.start();
+            }
         }
     }
 
@@ -757,30 +773,6 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
     }
 
     private void reducePower() {
-        /*if (ring_pv.progress <= 1) {
-            ring_pv.setProgress(1);
-        } else {
-            ring_pv.setProgress(ring_pv.progress - 1);
-        }
-        if (mode == 4) {//火锅
-            tvPower.setText(CommonBean.HOTPOTSTRS[ring_pv.progress - 1]);
-        } else if (mode == 5) {//煎炒
-            tvPower.setText(CommonBean.FRYOIlSTRS1[ring_pv.progress - 1]);
-            tvTemperature.setText(CommonBean.FRYOIlSTRS2[ring_pv.progress - 1]);
-        } else if (mode == 6) {//烤炸
-            tvPower.setText(CommonBean.KAOZA1[ring_pv.progress - 1]);
-            tvTemperature.setText(CommonBean.KAOZA2[ring_pv.progress - 1]);
-        } else if (mode == 8) {//煎焗
-            tvPower.setText(CommonBean.JIANJU[ring_pv.progress - 1]);
-        } else if (mode == 11) {//爆炒
-            tvPower.setText(CommonBean.BAOCHAO1[ring_pv.progress - 1]);
-            tvTemperature.setText(CommonBean.BAOCHAO2[ring_pv.progress - 1]);
-        } else if (mode == 12) {//油炸
-            tvPower.setText(CommonBean.YOUZA1[ring_pv.progress - 1]);
-            tvTemperature.setText(CommonBean.YOUZA2[ring_pv.progress - 1]);
-        } else if (mode == 13) {//文火
-            tvPower.setText(CommonBean.WENHUO[ring_pv.progress - 1]);
-        }*/
         if (stall < 2)
             TcpSocket.getInstance().write(Protocol2.stall(1, 0));
         else
@@ -788,30 +780,6 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
     }
 
     private void plusPower() {
-        /*if (ring_pv.progress > ring_pv.maxCount) {
-            ring_pv.setProgress(ring_pv.maxCount);
-        } else {
-            ring_pv.setProgress(ring_pv.progress + 1);
-        }
-        if (mode == 4) {//火锅
-            tvPower.setText(CommonBean.HOTPOTSTRS[ring_pv.progress - 1]);
-        } else if (mode == 5) {//煎炒
-            tvPower.setText(CommonBean.FRYOIlSTRS1[ring_pv.progress - 1]);
-            tvTemperature.setText(CommonBean.FRYOIlSTRS2[ring_pv.progress - 1]);
-        } else if (mode == 6) {//烤炸
-            tvPower.setText(CommonBean.KAOZA1[ring_pv.progress - 1]);
-            tvTemperature.setText(CommonBean.KAOZA2[ring_pv.progress - 1]);
-        } else if (mode == 8) {//煎焗
-            tvPower.setText(CommonBean.JIANJU[ring_pv.progress - 1]);
-        } else if (mode == 11) {//爆炒
-            tvPower.setText(CommonBean.BAOCHAO1[ring_pv.progress - 1]);
-            tvTemperature.setText(CommonBean.BAOCHAO2[ring_pv.progress - 1]);
-        } else if (mode == 12) {//油炸
-            tvPower.setText(CommonBean.YOUZA1[ring_pv.progress - 1]);
-            tvTemperature.setText(CommonBean.YOUZA2[ring_pv.progress - 1]);
-        } else if (mode == 13) {//文火
-            tvPower.setText(CommonBean.WENHUO[ring_pv.progress - 1]);
-        }*/
         if (stall > ring_pv.maxCount)
             TcpSocket.getInstance().write(Protocol2.stall(1, ring_pv.maxCount));
         else
@@ -850,14 +818,6 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                             power_bt.setSelect(true);
                             bottom_ll.setVisibility(View.VISIBLE);
                             setButtonStatus(true);//关机状态
-//                            if (flAdjust.getVisibility() != View.VISIBLE) {
-//                                if (NotNull.isNotNull(bsaeHudHelper)){
-//                                    bsaeHudHelper.hudHide();
-//                                }
-//                                flAdjust.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.adujst_open));
-//                                flAdjust.setVisibility(View.VISIBLE);
-//                            }
-
                             moden = orderObject.getString("moden");
                             mode = Integer.valueOf(moden);
                             mMode = mode;
@@ -886,7 +846,7 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                             setButtonStatus(false);//关机状态
                             bottom_ll.setVisibility(View.INVISIBLE);
                             if (NotNull.isNotNull(select_bt_r))
-                                select_bt_r.setSelect(false);
+                                select_bt_r.setEnabledStatus(false);
                             if (flAdjust.getVisibility() == View.VISIBLE) {
                                 flAdjust.setVisibility(View.INVISIBLE);
                                 flAdjust.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.adujst_close));
@@ -925,7 +885,7 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                             RightPowerOnOff = false;
                             power_bt.setSelect(false);
                             bottom_ll.setVisibility(View.INVISIBLE);
-                            select_bt_r.setSelect(false);
+                            select_bt_r.setEnabledStatus(false);
                             if (flAdjust.getVisibility() == View.INVISIBLE) {
                                 flAdjust.setVisibility(View.INVISIBLE);
                                 flAdjust.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.adujst_close));
@@ -966,31 +926,6 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                         moden = orderObject.getString("moden");
 //                        stall = Integer.valueOf(orderObject.getString("stall"));
                         mode = Integer.valueOf(moden);
-//                        if (stall < 0) {
-//                            ring_pv.setProgress(Integer.valueOf(orderObject.getString("stall"))+1);
-//                        } else {
-//                            ring_pv.setProgress(stall + 1);
-//                        }
-                       /* if (mode == 4) {//火锅
-                            tvPower.setText(CommonBean.HOTPOTSTRS[stall]);
-                        } else if (mode == 5) {//煎炒
-                            tvPower.setText(CommonBean.FRYOIlSTRS1[stall]);
-                            tvTemperature.setText(CommonBean.FRYOIlSTRS2[stall]);
-                        } else if (mode == 6) {//烤炸
-                            tvPower.setText(CommonBean.KAOZA1[stall]);
-                            tvTemperature.setText(CommonBean.KAOZA2[stall]);
-                        } else if (mode == 8) {//煎焗
-                            tvPower.setText(CommonBean.JIANJU[stall]);
-                        } else if (mode == 10) {//爆炒
-                            tvPower.setText(CommonBean.BAOCHAO1[stall]);
-                            tvTemperature.setText(CommonBean.BAOCHAO2[stall]);
-                        } else if (mode == 11) {//油炸
-                            tvPower.setText(CommonBean.YOUZA1[stall]);
-                            tvTemperature.setText(CommonBean.YOUZA2[stall]);
-                        } else if (mode == 12) {//文火
-                            tvPower.setText(CommonBean.WENHUO[stall]);
-                        }*/
-//                        changeRightMode(moden, orderObject);
                         break;
                     case 5://工作时间查询返回
                         double stopTime = orderObject.getDouble("stoptime");
@@ -1014,8 +949,6 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                     case 7://查询预约返回
                         if (!clickRever) return;//点击按钮才进去
                         clickRever = false;
-//                        if (NotNull.isNotNull(bsaeHudHelper))
-//                            bsaeHudHelper.hudHide();
                         if (thread != null) thread.interrupt();
                         moden = orderObject.getString("moden");
                         mode = Integer.valueOf(moden);
@@ -1032,6 +965,15 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                         startActivity(intent);
                         if (thread != null) {//清空线程
                             thread = null;
+                        }
+                        break;
+                    case 8://定时关机返回
+                        String success8 = orderObject.getString("success");
+                        if (TextUtils.equals("true", success8)) {
+                            tvData.setText(hourToTime(rightTime));
+                            if (timeThread!=null){
+                                timeThread.interrupt();
+                            }
                         }
                         break;
                 }
@@ -1142,18 +1084,12 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
         }
         select_bt_r = button;
         button.setSelect(true);
-//        if (flAdjust.getVisibility() != View.VISIBLE) {
-//            if (bsaeHudHelper != null){
-//                bsaeHudHelper.hudHide();
-//            }
-//            flAdjust.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.adujst_open));
-//            flAdjust.setVisibility(View.VISIBLE);
-//        }
     }
 
     public void setCode(int code) {
         this.code = code;
         if (code == -1) {
+            setButtonStatus(false);
             RightPowerOnOff = false;
             power_bt.setSelect(false);
             bottom_ll.setVisibility(View.INVISIBLE);

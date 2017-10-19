@@ -32,8 +32,9 @@
         <activity android:name=".activity.UpdatePwdActivity"/>
         <activity android:name=".activity.ChoiceCookTimeActivity"/>
         <activity android:name=".activity.OrderTimeActivity"/>
-        <activity android:name=".activity.DeviceManageActivity">
-        </activity>
+        <activity android:name=".activity.DeviceManageActivity"/>
+        <activity android:name=".activity.ChangePowerActivity"/>
+        <activity android:name=".activity.ChangePowerNextActivity"/>
     </application>
 
 </manifest>

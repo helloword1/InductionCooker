@@ -18,7 +18,6 @@ public class BaseActivity extends Activity {
     private static final int ConnetContOut = 5;
     private final int READ_COUNT = 1001;
     private final String READ_TAG = "MSG";
-
     HudHelper bsaeHudHelper = new HudHelper();
     protected Handler baseHandler = new Handler() {
         @Override
@@ -52,9 +51,7 @@ public class BaseActivity extends Activity {
     }
 
     private void initData() {
-
         connetCount = 0;
-
     }
 
     protected void handleMsg(String mProtocol) {
@@ -84,8 +81,6 @@ public class BaseActivity extends Activity {
 
                 connetCount++;
                 if (connetCount < ConnetContOut) {
-                    // Log.v("","接到连接失败递归..."+connetCount);
-
                     try {
                         Thread.sleep(200);
                     } catch (InterruptedException e) {
@@ -128,6 +123,5 @@ public class BaseActivity extends Activity {
 
 
     }
-
 
 }

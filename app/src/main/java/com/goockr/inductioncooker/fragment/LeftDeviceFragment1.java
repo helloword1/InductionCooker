@@ -62,12 +62,10 @@ import static com.chad.library.adapter.base.listener.SimpleClickListener.TAG;
  * Created by CMQ on 2017/6/27.
  */
 
-public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.ImageTopButtonOnClickListener, View.OnClickListener{
+public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.ImageTopButtonOnClickListener, View.OnClickListener {
     private static final int REVER_DEX = 123;
     View contentView;
-
     List<ImageTopButton> buttons;
-
     FragmentManager fragmentManager;
     private static String effectStr0 = "";
     private static String effectStr1 = "";
@@ -129,7 +127,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     break;
                 case TIME_OUT:
                     try {
-                        Toast.makeText(getActivity(), "时间到", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(), "时间到", Toast.LENGTH_SHORT).show();
                     } catch (NullPointerException e) {
 
                     }
@@ -138,7 +136,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         }
     };
     // 取消倒计时用的
-    private Handler cancelCountDownHandler = new Handler(){
+    private Handler cancelCountDownHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -197,11 +195,11 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
     private ImageTopButton currentButton; // 当前的按钮
     private boolean powerStateChange;
     private int globalPower;
+    private int sumBack;
+    private Thread timeThread;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        // Inflate the layout for this fragment
         contentView = inflater.inflate(R.layout.fragment_leftdevice1, container, false);
         reservationPon = ((ImageView) contentView.findViewById(R.id.reservationPon));
         ButterKnife.bind(this, contentView);
@@ -226,6 +224,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
             public void onTick(long millisUntilFinished) {
 
             }
+
             @Override
             public void onFinish() {
                 hud.setLabel("切换超时");
@@ -511,9 +510,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
 
         // 只有电源通了的情况下才可以执行
         if (leftPowerOnOff) {
-
             hud.setLabel("切换中....");
-
             switch (id) {
                 case R.id.fragment_leftdevice_bt0://煲粥
                     mode = 0;
@@ -552,37 +549,18 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
             if (mMode != mode) {
                 TcpSocket.getInstance().write(Protocol2.moden(0, mode));
                 TcpSocket.getInstance().write(Protocol2.timeStatus(0, mode));
-//                sendTimeModeHandler.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//
-//                    }
-//                },300);
-
                 hadChangeModeBool = true;
-//                if (bsaeHudHelper == null) {
-//                    bsaeHudHelper = new HudHelper();
-//                }
-//                bsaeHudHelper.hudShow(getActivity(), "正在加载...");
-//                mMode = mode;
             } else {
                 hadChangeModeBool = false;
-//                flAdjust.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.adujst_open));
-//                flAdjust.setVisibility(View.VISIBLE);
             }
             if (hadChangeModeBool) {
                 hud.show();
-            }else {
+            } else {
                 hud.dismiss();
             }
             countDown.start();
 
             currentButton = button;
-//            if (select_bt != null) {
-//                select_bt.setSelect(false); // 更新之前的按钮显示图片
-//            }
-//            button.setSelect(true); // 更新当前点击的按钮显示图片
-//            select_bt = button;
         } else {
             button.setEnabledStatus(false);
             showTurnOn();
@@ -635,9 +613,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                 cookMode5();
                 tvTemperature.setText("260℃");
                 tvPower.setText("1600W");
-//                leftTime = 3600 + 20 * 60;
                 tvData.setText(hourToTime(leftTime));
-//                leftSumTime = leftTime;
                 break;
             case 6://烤炒
                 stall = 3;
@@ -645,18 +621,13 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                 tvTemperature.setText("260℃");
                 tvRightTemperature.setText("80℃");
                 tvPower.setText("1600W");
-//                leftTime = 3600 + 20 * 60;
                 tvData.setText(hourToTime(leftTime));
-//                leftSumTime = leftTime;
-
                 break;
             case 7://保温
                 cookMode7();
                 tvTemperature.setText("80℃");
                 tvPower.setText("100W");
-//                leftTime = 3600 * 2;
                 tvData.setText(hourToTime(leftTime));
-//                leftSumTime = leftTime;
                 break;
         }
         if (!NotNull.isNotNull(leftThread) || !leftThread.isAlive()) {
@@ -681,12 +652,25 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RESULT_FIRST_USER) {
             if (data == null) return;
-            int hour = data.getIntExtra("HOUR", -1);
-            int second = data.getIntExtra("SECOND", -1);
+            final int hour = data.getIntExtra("HOUR", -1);
+            final int second = data.getIntExtra("SECOND", -1);
             leftTime = hour * 3600 + second * 60;
             leftSumTime = leftTime;
             tvData.setText(hourToTime(leftTime));
-
+            sumBack = 5;
+            if (timeThread==null||(timeThread!=null&&!timeThread.isAlive())){
+                timeThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (!Thread.currentThread().isInterrupted() && sumBack > 0) {
+                            sumBack--;
+                            SystemClock.sleep(1000);
+                            TcpSocket.getInstance().write(Protocol2.setCookTime(1, 0, mMode, (hour * 3600 + second * 60) * 1000));
+                        }
+                    }
+                });
+                timeThread.start();
+            }
         }
     }
 
@@ -745,10 +729,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         ring_pv.setProgress(stall + 1);
         ring_pv.setMaxCount(12);
         tvPower.setText("1600w");
-//        leftTime = 3600 * 2;
         tvData.setText(hourToTime(leftTime));
-//        leftSumTime = leftTime;
-
     }
 
     //烧水
@@ -763,11 +744,8 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         ring_pv.setProgress(9);
         ring_pv.setMaxCount(12);
         tvPower.setText("Auto");
-//        tvPower.setText("1600w");
-//        leftTime = 3600 + 20 * 60;
         tvData.setText("Auto");
         tvUnit.setVisibility(View.GONE);
-//        leftSumTime = leftTime;
     }
 
 
@@ -783,11 +761,8 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         ring_pv.setProgress(7);
         ring_pv.setMaxCount(12);
         tvPower.setText("Auto");
-//        tvPower.setText("1600w");
-//        leftTime = 3600 + 20 * 60;
         tvData.setText("Auto");
         tvUnit.setVisibility(View.GONE);
-//        leftSumTime = leftTime;
     }
 
     //煲粥、煲汤
@@ -802,38 +777,11 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         ring_pv.setProgress(7);
         ring_pv.setMaxCount(12);
         tvPower.setText("Auto");
-//        tvPower.setText("1200w");
-//        leftTime = 3600 + 20 * 60;
         tvData.setText("Auto");
         tvUnit.setVisibility(View.GONE);
-//        leftSumTime = leftTime;
     }
 
     private void reducePower() {
-        /*if (ring_pv.progress <= 1) {
-            ring_pv.setProgress(1);
-        } else {
-            ring_pv.setProgress(ring_pv.progress - 1);
-        }
-        if (mode == 4) {//火锅
-            tvPower.setText(CommonBean.HOTPOTSTRS[ring_pv.progress - 1]);
-        } else if (mode == 5) {//煎炒
-            tvPower.setText(CommonBean.FRYOIlSTRS1[ring_pv.progress - 1]);
-            tvTemperature.setText(CommonBean.FRYOIlSTRS2[ring_pv.progress - 1]);
-        } else if (mode == 6) {//烤炸
-            tvPower.setText(CommonBean.KAOZA1[ring_pv.progress - 1]);
-            tvTemperature.setText(CommonBean.KAOZA2[ring_pv.progress - 1]);
-        } else if (mode == 8) {//煎焗
-            tvPower.setText(CommonBean.JIANJU[ring_pv.progress - 1]);
-        } else if (mode == 11) {//爆炒
-            tvPower.setText(CommonBean.BAOCHAO1[ring_pv.progress - 1]);
-            tvTemperature.setText(CommonBean.BAOCHAO2[ring_pv.progress - 1]);
-        } else if (mode == 12) {//油炸
-            tvPower.setText(CommonBean.YOUZA1[ring_pv.progress - 1]);
-            tvTemperature.setText(CommonBean.YOUZA2[ring_pv.progress - 1]);
-        } else if (mode == 13) {//文火
-            tvPower.setText(CommonBean.WENHUO[ring_pv.progress - 1]);
-        }*/
         if (stall < 2)
             TcpSocket.getInstance().write(Protocol2.stall(0, 0));
         else
@@ -841,30 +789,6 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
     }
 
     private void plusPower() {
-        /*if (ring_pv.progress > ring_pv.maxCount) {
-            ring_pv.setProgress(ring_pv.maxCount);
-        } else {
-            ring_pv.setProgress(ring_pv.progress + 1);
-        }
-        if (mode == 4) {//火锅
-            tvPower.setText(CommonBean.HOTPOTSTRS[ring_pv.progress - 1]);
-        } else if (mode == 5) {//煎炒
-            tvPower.setText(CommonBean.FRYOIlSTRS1[ring_pv.progress - 1]);
-            tvTemperature.setText(CommonBean.FRYOIlSTRS2[ring_pv.progress - 1]);
-        } else if (mode == 6) {//烤炸
-            tvPower.setText(CommonBean.KAOZA1[ring_pv.progress - 1]);
-            tvTemperature.setText(CommonBean.KAOZA2[ring_pv.progress - 1]);
-        } else if (mode == 8) {//煎焗
-            tvPower.setText(CommonBean.JIANJU[ring_pv.progress - 1]);
-        } else if (mode == 11) {//爆炒
-            tvPower.setText(CommonBean.BAOCHAO1[ring_pv.progress - 1]);
-            tvTemperature.setText(CommonBean.BAOCHAO2[ring_pv.progress - 1]);
-        } else if (mode == 12) {//油炸
-            tvPower.setText(CommonBean.YOUZA1[ring_pv.progress - 1]);
-            tvTemperature.setText(CommonBean.YOUZA2[ring_pv.progress - 1]);
-        } else if (mode == 13) {//文火
-            tvPower.setText(CommonBean.WENHUO[ring_pv.progress - 1]);
-        }*/
         if (stall > ring_pv.maxCount)
             TcpSocket.getInstance().write(Protocol2.stall(0, ring_pv.maxCount));
         else
@@ -875,14 +799,14 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
     public void onClick(View view) {
         switch (view.getId()) {
             case (R.id.fragment_adjust_reservation_ib)://定时
-                Intent intent = new Intent(getActivity(),ChoiceCookTimeActivity.class);
-                intent.putExtra("mode",mMode);
-                intent.putExtra("deviceId",0);
+                Intent intent = new Intent(getActivity(), ChoiceCookTimeActivity.class);
+                intent.putExtra("mode", mMode);
+                intent.putExtra("deviceId", 0);
                 startActivityForResult(intent, RESULT_FIRST_USER);
                 break;
-
             case (R.id.fragment_adjust_unreservation_ib)://取消定时，关闭
-                leftTime = 1;
+                leftTime = 0;
+                TcpSocket.getInstance().write(Protocol2.setCookTime(0,0,mMode,0));// 这里关闭定时
                 break;
             case (R.id.fragment_adjust_lower_ib):
                 flAdjust.setVisibility(View.INVISIBLE);
@@ -900,7 +824,8 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
 
     public void setCode(int code) {
         this.code = code;
-        if (code == -1) {//关机代码
+        if (code == -1 || code == -3) {//关机代码
+            setButtonStatus(false);
             leftPowerOnOff = false;
             if (NotNull.isNotNull(power_bt))
                 power_bt.setSelect(false);
@@ -911,7 +836,6 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     select_bt.setSelect(false);
                 flAdjust.setVisibility(View.INVISIBLE);
                 flAdjust.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.adujst_close));
-//                Toast.makeText(getActivity(), "设备已断开连接", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -946,7 +870,6 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     String leftPower = orderObject.getString("power");
                     // 提示app会干扰弹窗
                     tipDialog(orderObject);
-
                     lPower = leftPower;
                     if (TextUtils.equals(leftPower, "1")) {//开机
                         setButtonStatus(true);
@@ -977,10 +900,9 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                         leftPowerOnOff = false;
                         power_bt.setSelect(false);
                         bottom_ll.setVisibility(View.INVISIBLE);
-
                         if (flAdjust.getVisibility() == View.VISIBLE) {
                             if (NotNull.isNotNull(select_bt))
-                                select_bt.setSelect(false);
+                                select_bt.setEnabledStatus(false);
                             flAdjust.setVisibility(View.INVISIBLE);
                             flAdjust.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.adujst_close));
                         }
@@ -1017,7 +939,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                         leftPowerOnOff = false;
                         power_bt.setSelect(false);
                         bottom_ll.setVisibility(View.INVISIBLE);
-                        select_bt.setSelect(false);
+                        select_bt.setEnabledStatus(false);
                         if (flAdjust.getVisibility() == View.INVISIBLE) {
                             flAdjust.setVisibility(View.INVISIBLE);
                             flAdjust.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.adujst_close));
@@ -1029,7 +951,6 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                 case 3://更改模式返回
                     moden = orderObject.getString("moden");
                     mode = Integer.valueOf(moden);
-                    //----------------------------------------------------------------
                     if (preMode != mode) {
                         hadChangeMode = 1;
                     } else {
@@ -1050,40 +971,12 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                         cancelCountDown();
                         scheduleDismiss();
                     }
-                    //----------------------------------------------------------------
-
                     break;
                 case 4://档位设定返回
                     Log.d(TAG, "setMProtocol: ");
                     moden = orderObject.getString("moden");
                     stall = Integer.valueOf(orderObject.getString("stall"));
                     mode = Integer.valueOf(moden);
-
-//                    if (stall > 0) {
-//                    ring_pv.setProgress(stall + 1);
-//                    } else {
-//                        ring_pv.setProgress(stall + 1);
-//                    }
-                    /*if (mode == 4) {//火锅
-                        tvPower.setText(CommonBean.HOTPOTSTRS[stall]);
-                    } else if (mode == 5) {//煎炒
-                        tvPower.setText(CommonBean.FRYOIlSTRS1[stall]);
-                        tvTemperature.setText(CommonBean.FRYOIlSTRS2[stall]);
-                    } else if (mode == 6) {//烤炸
-                        tvPower.setText(CommonBean.KAOZA1[stall]);
-                        tvTemperature.setText(CommonBean.KAOZA2[stall]);
-                    } else if (mode == 8) {//煎焗
-                        tvPower.setText(CommonBean.JIANJU[stall]);
-                    } else if (mode == 11) {//爆炒
-                        tvPower.setText(CommonBean.BAOCHAO1[stall]);
-                        tvTemperature.setText(CommonBean.BAOCHAO2[stall]);
-                    } else if (mode == 12) {//油炸
-                        tvPower.setText(CommonBean.YOUZA1[stall]);
-                        tvTemperature.setText(CommonBean.YOUZA2[stall]);
-                    } else if (mode == 13) {//文火
-                        tvPower.setText(CommonBean.WENHUO[stall]);
-                    }*/
-//                        changeLeftMode(moden, orderObject);
                     break;
                 case 5://工作时间查询返回
                     Log.d(TAG, "setMProtocol: ");
@@ -1091,7 +984,6 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     if (allTime != stoptime) {
                         allTime = stoptime;
                     }
-
                     break;
                 case 6://设置/取消预约时间返回
                     String error = orderObject.getString("error");
@@ -1118,8 +1010,6 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     String appointment = orderObject.getString("appointment");//工作时间
                     aBootTime = Long.valueOf(bootTime);
                     aAppointment = Long.valueOf(appointment);
-//                    globalJson = orderObject;
-//                    changeLeftMode(moden, orderObject);
                     Intent intent = new Intent(getActivity(), OrderTimeActivity.class);
                     intent.putExtra("LRIndex", 0);
                     intent.putExtra("moden", mode);
@@ -1128,6 +1018,15 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     startActivity(intent);
                     if (thread != null) {//清空线程
                         thread = null;
+                    }
+                    break;
+                case 8://定时关机返回
+                    String success8 = orderObject.getString("success");
+                    if (TextUtils.equals("true", success8)) {
+                        tvData.setText(hourToTime(leftTime));
+                        if (timeThread!=null){
+                            timeThread.interrupt();
+                        }
                     }
                     break;
             }
@@ -1139,6 +1038,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
 
     /**
      * 开启电磁炉时的APP干扰提示
+     *
      * @param orderObject
      * @throws JSONException
      */
@@ -1146,7 +1046,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         int currentPower = orderObject.getInt("power");
         if (globalPower != currentPower) {
             powerStateChange = true;
-        }else {
+        } else {
             powerStateChange = false;
         }
         globalPower = currentPower;
@@ -1155,6 +1055,13 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
             final DialongView dialongView = new DialongView(getActivity());
             View view = dialongView.showCustomDialong(R.layout.dialong_tips);
             Button btnKnow = (Button) view.findViewById(R.id.btn_know);
+            ImageView dialongDelete = (ImageView) view.findViewById(R.id.dialong_delete);
+            dialongDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialongView.dismissDialong();
+                }
+            });
             btnKnow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -1190,7 +1097,6 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         leftSumTime = (int) allTime / 1000; // 毫秒转成秒
         if (NotNull.isNotNull(moden)) {
             mode = Integer.valueOf(moden);
-
             tvMode.setText(modeStr[mode]);
             //模式
             switch (mode) {
@@ -1216,11 +1122,6 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     String mStall = orderObject.getString("stall");
                     if (NotNull.isNotNull(mStall)) {
                         int progress = Integer.valueOf(mStall);
-//                        if (progress < 0) {
-//                            ring_pv.setProgress(0);//当前档位
-//                        } else {
-//                            ring_pv.setProgress(progress + 1);//当前档位
-//                        }
                         tvPower.setText(CommonBean.HOTPOTSTRS[progress]);
                     }
 
@@ -1230,7 +1131,6 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     setModenButton(R.id.fragment_leftdevice_bt5);
                     String stall5 = orderObject.getString("stall");
                     if (NotNull.isNotNull(stall5)) {
-//                        ring_pv.setProgress(Integer.valueOf(stall5+1));//当前档位
                         int progress = Integer.valueOf(stall5);
                         if (progress >= 0)
                             tvPower.setText(CommonBean.FRYOIlSTRS1[progress]);
@@ -1242,7 +1142,6 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     setModenButton(R.id.fragment_leftdevice_bt6);
                     String stall6 = orderObject.getString("stall");
                     if (NotNull.isNotNull(stall6)) {
-//                        ring_pv.setProgress(Integer.valueOf(stall6));//当前档位
                         int progress = Integer.valueOf(stall6);
                         if (progress >= 0)
                             tvPower.setText(CommonBean.KAOZA1[progress]);
@@ -1305,7 +1204,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         getView().setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                     if (countDown != null) {
                         cancelCountDown();
                     }

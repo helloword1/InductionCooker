@@ -32,9 +32,6 @@ import butterknife.OnClick;
 public class ReservationFragment extends Fragment implements ImageTopButton.ImageTopButtonOnClickListener {
 
     View contentView;
-
-    //   private FragmentManager fragmentManager;
-
     List<ImageTopButton> buttons;
 
     @BindView(R.id.navbar_title_tv)
@@ -90,8 +87,6 @@ public class ReservationFragment extends Fragment implements ImageTopButton.Imag
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        // Inflate the layout for this fragment
         contentView = inflater.inflate(R.layout.fragment_reservation, container, false);
 
         ButterKnife.bind(this, contentView);
@@ -114,7 +109,6 @@ public class ReservationFragment extends Fragment implements ImageTopButton.Imag
         List<String> tips = new ArrayList<String>();
         tips.add("1.选择功能模式");
         tips.add("2.多久后启动");
-        // tips.add("3.预约定时时间");
         bar_pv.setTips(tips);
         bar_pv.setMaxCount(2);
         bar_pv.setProgress(1);
@@ -172,28 +166,13 @@ public class ReservationFragment extends Fragment implements ImageTopButton.Imag
     }
 
     private void rightButtonClick() {
-
         ReservationBootFragment fragment = ReservationBootFragment.newInstance(select_bt.getText());
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//
-//        fragmentTransaction.add(R.id.activity_reservation,fragment, Common.TimeReservationFragment);
-//
-//        fragmentTransaction.hide(this);
-//
-//        fragmentTransaction.show(fragment);
-//
-//        fragmentTransaction.addToBackStack(Common.TimeReservationFragment);
-//
-//        fragmentTransaction.commit();
-
         FragmentHelper.addFragmentToBackStack(getActivity(), R.id.activity_reservation, this, fragment, Common.ReservationBootFragment);
-
     }
-
 
     @Override
     public void imageTopButtonOnClickListener(ImageTopButton button) {
-
+        int id = button.getId();
         if (select_bt == button) return;
         select_bt.setSelect(!select_bt.isSelect());
         button.setSelect(!button.isSelect());

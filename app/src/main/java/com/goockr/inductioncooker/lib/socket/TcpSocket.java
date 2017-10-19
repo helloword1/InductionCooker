@@ -1,6 +1,7 @@
 package com.goockr.inductioncooker.lib.socket;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.goockr.inductioncooker.utils.NotNull;
@@ -442,7 +443,7 @@ public class TcpSocket {
                     write(Protocol2.Heartbeat(1));
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    new Handler().post(new Runnable() {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
                             Log.d(TAG, "run: 断开连接");

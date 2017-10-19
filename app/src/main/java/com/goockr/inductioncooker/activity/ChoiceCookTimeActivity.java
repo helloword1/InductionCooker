@@ -9,8 +9,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.goockr.inductioncooker.R;
-import com.goockr.inductioncooker.lib.socket.Protocol2;
-import com.goockr.inductioncooker.lib.socket.TcpSocket;
 import com.goockr.inductioncooker.view.OptionsPickView0;
 
 import java.util.ArrayList;
@@ -33,6 +31,7 @@ public class ChoiceCookTimeActivity extends BaseActivity {
     private int second;
     private int mMode;
     private int mDeviceId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +78,7 @@ public class ChoiceCookTimeActivity extends BaseActivity {
         navbarLeftBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TcpSocket.getInstance().write(Protocol2.setCookTime(0,mDeviceId,mMode,-1));// 这里有待
+
                 finish();
             }
         });
@@ -92,7 +91,7 @@ public class ChoiceCookTimeActivity extends BaseActivity {
                 intent.putExtra("HOUR",hour);
                 intent.putExtra("SECOND",second);
                 setResult(RESULT_OK,intent);
-                TcpSocket.getInstance().write(Protocol2.setCookTime(1,mDeviceId,mMode,(hour * 3600 + second * 60) * 1000));
+
                 finish();
             }
         });

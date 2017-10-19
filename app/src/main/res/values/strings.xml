@@ -41,5 +41,6 @@
     <string name="update_pwd_null">请填写密码和确认密码</string>
     <string name="confir">确定</string>
     <string name="onetime">工作时长</string>
+    <string name="had_login">当前账号已登录</string>
 
 </resources>

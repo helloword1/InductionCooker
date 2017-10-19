@@ -25,6 +25,8 @@ import com.bigkoo.pickerview.listener.CustomListener;
 import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.activity.OrderTimeActivity;
 import com.goockr.inductioncooker.common.Common;
+import com.goockr.inductioncooker.lib.socket.Protocol2;
+import com.goockr.inductioncooker.lib.socket.TcpSocket;
 import com.goockr.inductioncooker.utils.FragmentHelper;
 import com.goockr.inductioncooker.view.BarProgress;
 import com.goockr.inductioncooker.view.TimePickerView0;
@@ -49,9 +51,6 @@ import static com.chad.library.adapter.base.listener.SimpleClickListener.TAG;
 public class ReservationBootFragment extends Fragment {
 
     View contentView;
-
-    //private FragmentManager fragmentManager;
-
     private TimePickerView0 pvCustomTime;
 
     @BindView(R.id.navbar_title_tv)
@@ -68,15 +67,15 @@ public class ReservationBootFragment extends Fragment {
     private Date time;
     private int mMode;
     private int deviceId;
-    private final String[] modeStr = {"煲粥", "煲汤", "煮饭", "烧水", "火锅", "煎炒", "烤炸", "保温", "煎焗", "闷烧", "爆炒", "油炸", "文火"};
+    private final String[] modeStr = {"煲粥", "煲汤", "煮饭", "烧水", "火锅", "煎炒", "烤炸", "保温", "煎焗", "闷烧", "保温","爆炒", "油炸", "文火"};
     private Thread thread;
     private HudHelper bsaeHudHelper;
+    private boolean canRever;
 
     public static final ReservationBootFragment newInstance(String mode) {
         ReservationBootFragment fragment = new ReservationBootFragment();
         Bundle bundle = new Bundle();
         bundle.putString("MODE", mode);
-//        bundle.putString("message", message);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -89,6 +88,9 @@ public class ReservationBootFragment extends Fragment {
             if (TextUtils.equals(mode, modeStr[i])) {
                 mMode = i;
                 deviceId = i > 7 ? 1 : 0;
+                if (TextUtils.equals(mode,modeStr[7])){
+                    mMode=7;
+                }
             }
         }
     }
@@ -106,14 +108,38 @@ public class ReservationBootFragment extends Fragment {
     }
 
     private void initUI() {
-
         List<String> tips = new ArrayList<String>();
-        tips.add("1.选择功能模式");
-        tips.add("2.预约开机时间");
-        tips.add("3.预约定时时间");
-        bar_pv.setTips(tips);
-        bar_pv.setMaxCount(3);
-        bar_pv.setProgress(2);
+       switch (mMode){
+           case 4:
+           case 5:
+           case 6:
+           case 7:
+           case 11:
+           case 12:
+           case 13:
+               tips.add("1.选择功能模式");
+               tips.add("2.预约开机时间");
+               tips.add("3.预约定时时间");
+               bar_pv.setTips(tips);
+               bar_pv.setMaxCount(3);
+               bar_pv.setProgress(2);
+               canRever =true;
+               break;
+           case 0:
+           case 1:
+           case 2:
+           case 3:
+           case 8:
+           case 9:
+               tips.add("1.选择功能模式");
+               tips.add("2.预约定时时间");
+               bar_pv.setTips(tips);
+               bar_pv.setMaxCount(2);
+               bar_pv.setProgress(2);
+               canRever =false;
+               break;
+       }
+
         initDatePickerView();
     }
 
@@ -155,13 +181,11 @@ public class ReservationBootFragment extends Fragment {
                             @Override
                             public void onClick(View v) {
 
-                                /*pvTime.dismiss();*/
                             }
                         });
                         ivCancel.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                /*pvTime.dismiss();*/
                             }
                         });
                     }
@@ -204,7 +228,7 @@ public class ReservationBootFragment extends Fragment {
             return;
         }
         bsaeHudHelper = new HudHelper();
-        if ("煮饭".equals(mode) || "焖烧".equals(mode)) {//不可定时
+        if (!canRever) {//不可定时
             bsaeHudHelper.hudShow(getActivity(), "正在连接...");
             if (thread == null) {
                 thread = new Thread(new Runnable() {
@@ -212,7 +236,7 @@ public class ReservationBootFragment extends Fragment {
                     public void run() {
                         while (!Thread.currentThread().isInterrupted()) {
                             SystemClock.sleep(500);
-//                            TcpSocket.getInstance().write(Protocol2.setReservation(deviceId, mMode, 1, ReservationBootFragment.this.time.getTime(), 0L));
+                            TcpSocket.getInstance().write(Protocol2.setReservation(deviceId, mMode, 1, ReservationBootFragment.this.time.getTime()- System.currentTimeMillis(), 0L));
                             if (HomeFragment1.code1 == 6) {
                                 thread.interrupt();
                                 SystemClock.sleep(500);

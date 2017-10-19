@@ -36,7 +36,7 @@ public class UpdatePwdFragment extends Fragment {
 
     View contentView;
 
-    HudHelper hud=new HudHelper();
+    HudHelper hud = new HudHelper();
 
     @BindView(R.id.navbar_title_tv)
     TextView title_tv;
@@ -101,12 +101,9 @@ public class UpdatePwdFragment extends Fragment {
     }
 
 
-
-    @OnClick({R.id.navbar_right_bt,R.id.navbar_left_bt,R.id.fragment_update_pwd_forget_tv})
-    public void OnClick(View v)
-    {
-        switch (v.getId())
-        {
+    @OnClick({R.id.navbar_right_bt, R.id.navbar_left_bt, R.id.fragment_update_pwd_forget_tv})
+    public void OnClick(View v) {
+        switch (v.getId()) {
             case (R.id.navbar_right_bt):
 
                 updatePwd();
@@ -114,46 +111,40 @@ public class UpdatePwdFragment extends Fragment {
                 break;
 
             case (R.id.navbar_left_bt):
-             //   FragmentHelper.clearBackStack(getActivity());
-
+                getActivity().finish();
                 break;
 
             case (R.id.fragment_update_pwd_forget_tv):
-
                 forgetButtonClick();
-
                 break;
         }
     }
 
     private void updatePwd() {
 
-        if (oldpwd_et.getText().length()==0||newpwd_et.getText().length()==0||againpwd_et.getText().length()==0)
-        {
-            hud.hudShowTip(getActivity(),getResources().getString(R.string.update_pwd_null),Common.KHUDTIPSHORTTIME);
+        if (oldpwd_et.getText().length() == 0 || newpwd_et.getText().length() == 0 || againpwd_et.getText().length() == 0) {
+            hud.hudShowTip(getActivity(), getResources().getString(R.string.update_pwd_null), Common.KHUDTIPSHORTTIME);
             return;
         }
 
-        if (! (newpwd_et.getText().toString().equals(againpwd_et.getText().toString())))
-        {
-            hud.hudShowTip(getActivity(),getResources().getString(R.string.pwd_againpwd_unequal),Common.KHUDTIPSHORTTIME);
+        if (!(newpwd_et.getText().toString().equals(againpwd_et.getText().toString()))) {
+            hud.hudShowTip(getActivity(), getResources().getString(R.string.pwd_againpwd_unequal), Common.KHUDTIPSHORTTIME);
             return;
         }
 
-        hud.hudShow(getActivity(),getResources().getString(R.string.chage_pwd_tip));
+        hud.hudShow(getActivity(), getResources().getString(R.string.chage_pwd_tip));
 
-        Map<String,Object> map=new HashMap<>();
-//functype=ch&mobile=13763085121&token=64f62f5341b6455981ed456bdb95eb80&old=123&new=456
-        map.put("functype","ch");
+        Map<String, Object> map = new HashMap<>();
+        map.put("functype", "ch");
         map.put("mobile", User.getInstance().mobile);
-        map.put("token",User.getInstance().token);
-        map.put("old",oldpwd_et.getText().toString());
-        map.put("new",newpwd_et.getText().toString());
+        map.put("token", User.getInstance().token);
+        map.put("old", oldpwd_et.getText().toString());
+        map.put("new", newpwd_et.getText().toString());
         HttpHelper.updatePwd(map, new OKHttp.HttpCallback() {
             @Override
             public void onFailure(HttpError error) {
 
-                hud.hudUpdateAndHid(error.msg,Common.KHUDFINISHTIME);
+                hud.hudUpdateAndHid(error.msg, Common.KHUDFINISHTIME);
 
             }
 
@@ -174,12 +165,12 @@ public class UpdatePwdFragment extends Fragment {
 
     private void forgetButtonClick() {
 
-        VerifiedPhoneNumFragment fragment=new VerifiedPhoneNumFragment();
-        Bundle bundle=new Bundle();
-        bundle.putInt("state",1);
-        bundle.putInt("content",R.id.activity_update_pwd);
+        VerifiedPhoneNumFragment fragment = new VerifiedPhoneNumFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("state", 1);
+        bundle.putInt("content", R.id.activity_update_pwd);
         fragment.setArguments(bundle);
-        FragmentHelper.addFragmentToBackStack(getActivity(),R.id.activity_update_pwd,this,fragment, Common.VerifiedPhoneNumFragment);
+        FragmentHelper.addFragmentToBackStack(getActivity(), R.id.activity_update_pwd, this, fragment, Common.VerifiedPhoneNumFragment);
 
     }
 

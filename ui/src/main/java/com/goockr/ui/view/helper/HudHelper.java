@@ -112,6 +112,7 @@ public class HudHelper {
     }
 
     public void hudUpdate(String tip) {
+        if (hud!=null)
         hud.setLabel(tip);
     }
 
@@ -127,6 +128,7 @@ public class HudHelper {
     }
 
     public void hudUpdateAndHid(String tip, double delay, final SuccessCallBack callBack) {
+        if (hud!=null)
         hud.setLabel(tip);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {

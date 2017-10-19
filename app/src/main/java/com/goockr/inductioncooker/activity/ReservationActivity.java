@@ -39,11 +39,8 @@ public class ReservationActivity extends BaseActivity {
     }
 
     private void initData() {
-
         Intent intent = getIntent();
         moden = intent.getIntExtra(Common.HomeFragmentSelectIndexKey, 0);
-
-
     }
 
     private void initUI() {
@@ -52,7 +49,6 @@ public class ReservationActivity extends BaseActivity {
         bundle.putInt(KModenKey, moden);
         fragment.setArguments(bundle);
         FragmentHelper.addFirstFragmentToBackStack(this, R.id.activity_reservation, fragment, Common.ReservationFragment);
-
     }
 
     @Override
