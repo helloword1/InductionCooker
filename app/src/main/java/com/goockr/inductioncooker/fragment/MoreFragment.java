@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.goockr.inductioncooker.R;
-import com.goockr.inductioncooker.activity.ChangePowerActivity;
 import com.goockr.inductioncooker.activity.DeviceManageActivity;
 import com.goockr.inductioncooker.activity.LoginActivity;
 import com.goockr.inductioncooker.activity.UpdatePwdActivity;
@@ -22,6 +21,7 @@ import com.goockr.inductioncooker.models.MySection;
 import com.goockr.inductioncooker.utils.NotNull;
 import com.goockr.inductioncooker.utils.SharePreferencesUtils;
 import com.goockr.ui.view.activity.CompanyIntroduceActivity;
+import com.jinlin.zxing.CaptureActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,12 +64,13 @@ public class MoreFragment extends Fragment {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Log.d(TAG, "onItemClick: " + position);
                 switch (position) {
-                    case 1: // 设备管理
+                    case 1: // 添加设备
                         // initPermissions();
-                        getActivity().startActivity(new Intent(getActivity(), DeviceManageActivity.class));
+                        getActivity().startActivity(new Intent(getActivity(), CaptureActivity.class));
+//                        getActivity().startActivity(new Intent(getActivity(), DeviceManageActivity.class));
                         break;
-                    case 3://权限转移
-                        getActivity().startActivity(new Intent(getActivity(), ChangePowerActivity.class));
+                    case 3://设备管理
+                        getActivity().startActivity(new Intent(getActivity(), DeviceManageActivity.class));
                         break;
                     case 4://用户名
                         getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
@@ -90,9 +91,6 @@ public class MoreFragment extends Fragment {
         sectionAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                //Toast.makeText(getActivity(), "onItemChildClick" + position, Toast.LENGTH_SHORT).show();
-
-
             }
         });
 
@@ -105,7 +103,7 @@ public class MoreFragment extends Fragment {
         }
         List<MySection> list = new ArrayList<>();
         list.add(new MySection(true, "Section 1", false));
-        list.add(new MySection(new MoreAdapterModel("设备管理", "", true)));
+        list.add(new MySection(new MoreAdapterModel("添加设备", "", true)));
         list.add(new MySection(true, "Section 2", true));
         String userName = SharePreferencesUtils.getUserName();
         if (!NotNull.isNotNull(userName)) {

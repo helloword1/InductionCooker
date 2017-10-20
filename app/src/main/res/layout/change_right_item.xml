@@ -1,0 +1,75 @@
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_gravity="center"
+    android:background="@color/white">
+
+    <View
+        android:id="@+id/lineTop"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorlightgray"
+        android:visibility="gone" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorlightgray" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        app:layout_marginBottomPercent="6%"
+        app:layout_marginLeftPercent="5%"
+        app:layout_marginTopPercent="6%">
+
+        <TextView
+            android:id="@+id/item_section_content_title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="fafdafafdagdaga"
+            android:textSize="15sp"
+            app:layout_marginBottomPercent="6%"
+            app:layout_marginLeftPercent="5%"
+            app:layout_marginTopPercent="6%" />
+
+        <TextView
+            android:id="@+id/item_id_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/item_section_content_title_tv"
+            android:layout_marginTop="3dp"
+            android:text="1111111"
+            android:textColor="@color/colorGray2"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/item_section_content_go_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@mipmap/more_list_icon_go_normal"
+        app:layout_marginRightPercent="5%" />
+
+    <TextView
+        android:id="@+id/item_section_content_des_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/item_section_content_go_iv"
+        android:text=""
+        android:textSize="13sp"
+        app:layout_marginRightPercent="2%" />
+
+</android.support.percent.PercentRelativeLayout>

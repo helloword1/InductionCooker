@@ -1,11 +1,11 @@
 package com.goockr.inductioncooker.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.goockr.inductioncooker.R;
@@ -13,6 +13,7 @@ import com.goockr.inductioncooker.adapter.DeviceAdapter;
 import com.goockr.inductioncooker.lib.http.HttpError;
 import com.goockr.inductioncooker.lib.http.HttpHelper;
 import com.goockr.inductioncooker.lib.http.OKHttp;
+import com.goockr.inductioncooker.models.BaseDevice;
 import com.goockr.inductioncooker.utils.SharePreferencesUtils;
 import com.goockr.ui.view.helper.HudHelper;
 
@@ -31,19 +32,16 @@ import java.util.Map;
 public class DeviceManageActivity extends BaseActivity {
     private static final String TAG = "";
     private android.widget.TextView back;
-    private android.widget.TextView addDevice;
-    private android.widget.RelativeLayout capturenarbar;
     private RecyclerView slideListView;
     public HudHelper hud = new HudHelper();
-    private List<String> codes;
+    private List<BaseDevice> codes;
+    private DeviceAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_manage);
         this.slideListView = (RecyclerView) findViewById(R.id.slideListView);
-        this.capturenarbar = (RelativeLayout) findViewById(R.id.capture_narbar);
-        this.addDevice = (TextView) findViewById(R.id.addDevice);
         this.back = (TextView) findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,10 +49,18 @@ public class DeviceManageActivity extends BaseActivity {
                 finish();
             }
         });
+        codes = new ArrayList<>();
+        slideListView.setLayoutManager(new LinearLayoutManager(DeviceManageActivity.this));
+        slideListView.setAdapter(adapter = new DeviceAdapter(this, codes));
         myInitData();
-
+        adapter.setOnItemClickListener(new DeviceAdapter.OnItemClickListener() {
+            @Override
+            public void itemClickListener(int position) {
+                String deviceId = codes.get(position).getDeviceId();
+                startActivity(new Intent(DeviceManageActivity.this,ChangePowerActivity.class).putExtra("DEVICE_ID",deviceId));
+            }
+        });
     }
-
     /**
      * 获取手机关联的信息
      */
@@ -63,7 +69,7 @@ public class DeviceManageActivity extends BaseActivity {
         Map<String, Object> map = new HashMap<>();
         map.put("mobile", SharePreferencesUtils.getMobile());
         map.put("token", SharePreferencesUtils.getToken());
-        codes = new ArrayList<>();
+
         HttpHelper.checkDevice(map, new OKHttp.HttpCallback() {
             @Override
             public void onFailure(HttpError error) {
@@ -81,11 +87,12 @@ public class DeviceManageActivity extends BaseActivity {
                         JSONArray list = jsonObject.getJSONArray("list");
                         for (int i = 0; i < list.length(); i++) {
                             String devicecode = list.getString(i);
-                            codes.add(devicecode);
-                        }
-                        slideListView.setLayoutManager(new LinearLayoutManager(DeviceManageActivity.this));
-                        slideListView.setAdapter(new DeviceAdapter(DeviceManageActivity.this, codes));
-
+                            BaseDevice baseDevice = new BaseDevice();
+                            baseDevice.setDeviceName("设备");
+                            baseDevice.setDeviceId(devicecode);
+                            codes.add(baseDevice);
+                      }
+                        adapter.notifyDataSetChanged();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

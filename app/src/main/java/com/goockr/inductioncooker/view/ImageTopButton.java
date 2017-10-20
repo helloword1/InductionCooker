@@ -20,15 +20,10 @@ import butterknife.ButterKnife;
  * Created by CMQ on 2017/6/27.
  */
 
-public class ImageTopButton extends LinearLayout implements  View.OnClickListener {
-
-
+public class ImageTopButton extends LinearLayout implements View.OnClickListener {
     View contentView;
-
     private ImageTopButtonOnClickListener callback;
-
     public Moden moden;
-
     @BindView(R.id.imagetop_button_title_tv)
     TextView title_tv;
     @BindView(R.id.imagetop_button_top_iv)
@@ -62,7 +57,6 @@ public class ImageTopButton extends LinearLayout implements  View.OnClickListene
         this.normImageId = normImageId;
         top_iv.setImageResource(normImageId);
     }
-
     public int getHightLightImageId() {
         return hightLightImageId;
     }
@@ -110,9 +104,6 @@ public class ImageTopButton extends LinearLayout implements  View.OnClickListene
     public void setNormTextCoclor(int normTextCoclor) {
         this.normTextCoclor = normTextCoclor;
         title_tv.setTextColor(getResources().getColor(normTextCoclor));
-
-        // title_tv.setTextColor(R.color.colorRed);
-
     }
 
     public int getSelTextColor() {
@@ -147,7 +138,6 @@ public class ImageTopButton extends LinearLayout implements  View.OnClickListene
         this.disabledImageId = disabledImageId;
     }
 
-
     public ImageTopButton(Context context) {
         this(context, null);
 
@@ -177,46 +167,17 @@ public class ImageTopButton extends LinearLayout implements  View.OnClickListene
 
         m_ll.setClickable(true);
         m_ll.setOnClickListener(this);
-//        m_ll.setOnTouchListener(this);
-        // m_ll.setBackgroundColor(Color.YELLOW);
-    }
 
+    }
 
     public void buttonOnClickListener(ImageTopButtonOnClickListener callback) {
         this.callback = callback;
     }
-
-//    @Override
-//    public boolean onTouch(View v, MotionEvent event) {
-//
-//        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//
-//            top_iv.setImageResource(selImageId);
-//
-//        } else if (event.getAction() == MotionEvent.ACTION_UP) {
-//
-//            if (isSelect()) {
-//                top_iv.setImageResource(selImageId);
-//            } else {
-//
-//                top_iv.setImageResource(normImageId);
-//            }
-//
-//
-//        }
-//
-//        return false;
-//    }
-
     @Override
     public void onClick(View v) {
-
-        // Toast.makeText(MyApplication.getContext(),"onClick",Toast.LENGTH_SHORT);
-
         if (this.callback != null) {
             this.callback.imageTopButtonOnClickListener(this);
         }
-
     }
 
     public interface ImageTopButtonOnClickListener {

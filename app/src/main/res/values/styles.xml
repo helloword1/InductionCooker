@@ -41,5 +41,10 @@
         <item name="android:paddingBottom">5dp</item>
     </style>
 
+    <style name="popuAnima">
+        <item name="android:windowEnterAnimation">@anim/popu_top_open</item>
+        <item name="android:windowExitAnimation">@anim/popu_bottom_close</item>
+    </style>
+
 
 </resources>

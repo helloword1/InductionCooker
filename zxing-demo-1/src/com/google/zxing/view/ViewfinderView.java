@@ -133,8 +133,8 @@ public final class ViewfinderView extends View {
         if (frame == null) {
             return;
         }
-        frame.top = getBottom()/4;
-        frame.bottom = 3*getBottom()/4;
+//        frame.top = getBottom()/4;
+//        frame.bottom = 3*getBottom()/4;
 
         // 绘制遮掩层
         drawCover(canvas, frame);

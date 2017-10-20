@@ -26,7 +26,7 @@
     <RelativeLayout
         android:id="@+id/capture_bottomview"
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="120dp"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
         android:background="@color/colorbg"
@@ -43,7 +43,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_below="@+id/capture_tip_tv"
             android:layout_marginTop="10dp">
 
@@ -71,9 +71,7 @@
 
         </RelativeLayout>
 
-
     </RelativeLayout>
-
 
     <RelativeLayout
         android:id="@+id/capture_narbar"
@@ -154,7 +152,4 @@
                 android:src="@drawable/scan_photo"/>
         </LinearLayout>
     </LinearLayout>
-
-
-
 </RelativeLayout>

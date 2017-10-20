@@ -91,7 +91,6 @@ public class ChoiceCookTimeActivity extends BaseActivity {
                 intent.putExtra("HOUR",hour);
                 intent.putExtra("SECOND",second);
                 setResult(RESULT_OK,intent);
-
                 finish();
             }
         });

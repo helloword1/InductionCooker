@@ -13,21 +13,46 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
             <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <com.goockr.inductioncooker.view.ImageTopButton
                     android:id="@+id/fragment_rightdevice_power_bt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"></com.goockr.inductioncooker.view.ImageTopButton>
+                    android:layout_centerHorizontal="true" />
 
             </RelativeLayout>
 
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <com.goockr.inductioncooker.view.ImageTopButton
+                    android:id="@+id/fragment_rightdevice_reservation_bt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+
+                    />
+
+                <ImageView
+                    android:id="@+id/reservationPon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@id/fragment_rightdevice_reservation_bt"
+                    android:layout_alignTop="@id/fragment_rightdevice_reservation_bt"
+                    android:background="@drawable/red_ciricle"
+                    android:visibility="gone" />
+            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -36,65 +61,42 @@
             android:layout_weight="1"
             android:orientation="horizontal">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="1">
 
-                >
+                <com.goockr.inductioncooker.view.ImageTopButton
+                    android:id="@+id/fragment_rightdevice_unreservation_bt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true" />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+            </RelativeLayout>
 
-                    <com.goockr.inductioncooker.view.ImageTopButton
-                        android:id="@+id/fragment_rightdevice_reservation_bt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-
-                        />
-                    <ImageView
-                        android:id="@+id/reservationPon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignRight="@id/fragment_rightdevice_reservation_bt"
-                        android:layout_alignTop="@id/fragment_rightdevice_reservation_bt"
-                        android:background="@drawable/red_ciricle"
-                        android:visibility="gone" />
-                </RelativeLayout>
-
-
-            </LinearLayout>
-
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="1">
 
-                >
+                <com.goockr.inductioncooker.view.ImageTopButton
+                    android:id="@+id/fragment_leftdevice_change"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true" />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <com.goockr.inductioncooker.view.ImageTopButton
-                        android:id="@+id/fragment_rightdevice_unreservation_bt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-
-                        />
-
-                </RelativeLayout>
-
-
-            </LinearLayout>
-
+                <ImageView
+                    android:id="@+id/iv_fragment_leftdevice_change"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@id/fragment_leftdevice_change"
+                    android:layout_alignTop="@id/fragment_leftdevice_change"
+                    android:background="@drawable/red_ciricle"
+                    android:visibility="gone" />
+            </RelativeLayout>
         </LinearLayout>
-
     </LinearLayout>
 
     <RelativeLayout
@@ -265,8 +267,8 @@
             android:layout_alignParentBottom="true"
             android:background="@mipmap/home_btn_pull"
             android:clickable="true"
-            android:visibility="invisible"
-            android:gravity="center">
+            android:gravity="center"
+            android:visibility="invisible">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -277,6 +279,7 @@
                 android:src="@mipmap/home_btn_icon_upper" />
 
         </LinearLayout>
+
         <RelativeLayout
             android:id="@+id/flAdjust"
             android:layout_width="match_parent"

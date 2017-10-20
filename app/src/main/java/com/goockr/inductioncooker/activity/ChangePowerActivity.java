@@ -44,6 +44,8 @@ public class ChangePowerActivity extends BaseActivity {
     private int FINISH = 112;
     private List<String> codes = new ArrayList<>();
     private JSONArray list;
+    private String device_id;
+    private String devcode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +58,14 @@ public class ChangePowerActivity extends BaseActivity {
         this.powerright = (TextView) findViewById(R.id.power_right);
         this.powerleft = (TextView) findViewById(R.id.power_left);
         dialongView = new DialongView(this);
-        checkDevice();
+        Intent intent = getIntent();
+        if (NotNull.isNotNull(intent))
+        device_id =intent.getStringExtra("DEVICE_ID");
         initDatas();
     }
 
     private void initDatas() {
-        tvPhone.setText("13522222222");
+//        tvPhone.setText("13522222222");
         powerright.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,58 +138,13 @@ public class ChangePowerActivity extends BaseActivity {
         });
 
     }
-
-    //检查电磁炉编号
-    private void checkDevice() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("mobile", SharePreferencesUtils.getMobile());
-        map.put("token", SharePreferencesUtils.getToken());
-
-        HttpHelper.checkDevice(map, new OKHttp.HttpCallback() {
-
-            @Override
-            public void onFailure(HttpError error) {
-                Log.d(TAG, "onFailure: " + error.msg);
-            }
-
-            @Override
-            public void onSuccess(JSONObject jsonObject) {
-                hud.hudHide();
-                int result = 1;
-                Log.d(TAG, "onSuccess: " + jsonObject);
-                try {
-                    result = jsonObject.getInt("result");
-                    list = jsonObject.getJSONArray("list");
-                    if (list.length() == 0) {
-                        hud.hudShowTip(ChangePowerActivity.this, "暂无可用设备", 1500);
-                        return;
-                    }
-                    if (result == 0) {//成功
-
-                        for (int i = 0; i < list.length(); i++) {
-                            String devicecode = list.getString(i);
-                            codes.add(devicecode);
-                        }
-
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
     //访问网络
     private void initNet(final String Phone) {
-        String devcode = "";
-        if (codes.size() > 0) {
-            devcode = codes.get(0);
-        }
         Map<String, Object> map = new HashMap<>();
         map.put("functype", "pt");
         map.put("curruser", SharePreferencesUtils.getMobile());
         map.put("transfer", Phone);
-        map.put("devcode", devcode);
+        map.put("devcode", device_id);
         map.put("token", SharePreferencesUtils.getToken());
 
         HttpHelper.tranferRightReady(map, new OKHttp.HttpCallback() {
@@ -200,7 +159,6 @@ public class ChangePowerActivity extends BaseActivity {
             public void onSuccess(JSONObject jsonObject) {
                 hud.hudHide();
                 int result = 1;
-                String code = "";
                 Log.d(TAG, "onSuccess: " + jsonObject);
                 try {
                     result = jsonObject.getInt("result");

@@ -2,8 +2,6 @@ package com.goockr.inductioncooker.lib.socket;
 
 import android.util.Log;
 
-import com.goockr.inductioncooker.utils.SharePreferencesUtils;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,12 +15,12 @@ public class Protocol2 {
 //    private static final String targetId = "c11c95c";//消息接收方ID(多个用逗号分隔);
 //    private static String Phone = "17620830220";
 
-    private static final String targetId = "c11c95c731907033ff7";//消息接收方ID(多个用逗号分隔);
-//    private static String Phone = "13522222222";
-    private static String Phone = SharePreferencesUtils.getMobile();
+//    private static final String targetId = "c11c95c731907033ff7";//消息接收方ID(多个用逗号分隔);
+////    private static String Phone = "13522222222";
+//    private static String Phone = SharePreferencesUtils.getMobile();
 
-//    private static final String targetId = "131c92862d902c1c134";//消息接收方ID(多个用逗号分隔);
-//    private static  String Phone = "13763085121";
+    private static final String targetId = "131c92862d902c1c134";//消息接收方ID(多个用逗号分隔);
+    private static  String Phone = "13763085121";
 
     public static int deviceId = 0;
 

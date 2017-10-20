@@ -32,18 +32,14 @@ public class HomeFragment1 extends Fragment implements SegmentController.Segment
     View contentView;
     private LeftDeviceFragment1 leftFragment;
     private RightDeviceFragment rightFragment;
-    private boolean isShowAdjustFragment = false;
     @BindView(R.id.fragment_home_moden_ll)
     LinearLayout moden_ll;
     @BindView(R.id.fragment_home_segment)
     SegmentController segmentController;
     private FragmentTransaction fragmentTransaction;
-    private static String effectStr0 = "";
-    private static String effectStr1 = "";
     public static int code1;
     public static int error = -1;
     public static int success = -1;
-    public static int reverMode = -1;
     public int code;
     private DialongView dialongView;
 
