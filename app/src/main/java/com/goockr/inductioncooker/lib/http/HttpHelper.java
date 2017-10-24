@@ -64,4 +64,9 @@ public class HttpHelper {
         OKHttp.post(urlString, map, callback);
 
     }
+    public static void addDevice(Map<String, Object> map, OKHttp.HttpCallback callback) {
+        String urlString = HttpCommon.KHttpIp + HttpCommon.KHttpaddDevices;
+        OKHttp.post(urlString, map, callback);
+
+    }
 }

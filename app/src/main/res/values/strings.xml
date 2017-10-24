@@ -42,5 +42,13 @@
     <string name="confir">确定</string>
     <string name="onetime">工作时长</string>
     <string name="had_login">当前账号已登录</string>
-
+    <array name="noticeArr">
+        <item>无锅或锅材质不对或锅具小于 8cm</item>
+        <item>IGBT超温</item>
+        <item>高压保护</item>
+        <item>低压保护</item>
+        <item>炉面开路（热敏开路）</item>
+        <item>炉面超温保护，短路保护</item>
+        <item>线盘开路短路，振荡电路故障（大电容开路短路）</item>
+    </array>
 </resources>

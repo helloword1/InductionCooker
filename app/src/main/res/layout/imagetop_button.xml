@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/imagetop_button_top_ll"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:id="@+id/imagetop_button_top_ll"
-    >
-        <ImageView
-            android:id="@+id/imagetop_button_top_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:src="@mipmap/btn_reservation_pressed"
-            android:background="#00000000"
-            android:padding="0dp"
-            />
-        <TextView
-            android:id="@+id/imagetop_button_title_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="预约"
-            />
+    android:orientation="vertical">
 
+    <ImageView
+        android:id="@+id/imagetop_button_top_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="#00000000"
+        android:src="@mipmap/btn_reservation_pressed" />
+
+    <TextView
+        android:id="@+id/imagetop_button_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textSize="13sp"
+        android:textColor="@color/colorGray2"
+        android:text="预约" />
 </LinearLayout>

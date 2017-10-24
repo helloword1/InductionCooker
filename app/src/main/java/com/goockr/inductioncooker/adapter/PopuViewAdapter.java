@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.goockr.inductioncooker.R;
+import com.goockr.inductioncooker.models.BaseDevice;
 
 import java.util.List;
 
@@ -20,10 +21,10 @@ import java.util.List;
 public class PopuViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final LayoutInflater inflate;
     private Context context;
-    private List<String> datas;
+    private List<BaseDevice> datas;
     private OnGetAdapterListener listener;
 
-    public PopuViewAdapter(Context context, List<String> datas) {
+    public PopuViewAdapter(Context context, List<BaseDevice> datas) {
         this.context = context;
         this.datas = datas;
         inflate = LayoutInflater.from(context);
@@ -37,7 +38,13 @@ public class PopuViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         IntenvoryViewHolder viewHolder = (IntenvoryViewHolder) holder;
-        viewHolder.textView.setText(datas.get(position));
+        viewHolder.textView.setText(datas.get(position).getDeviceId());
+        viewHolder.textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.itemClick(position);
+            }
+        });
     }
 
     @Override

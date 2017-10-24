@@ -83,7 +83,34 @@ public class HudHelper {
             }
         }).start();
     }
+    public void hudShowChange(final Context context, String tip) {
+        if (hud != null) {
+            return;
+        }
+        hud = KProgressHUD.create(context)
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setLabel(tip)
+                .setCancellable(false);
 
+        hud.show();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 3; i++) {
+                    SystemClock.sleep(1000);
+
+                }
+                Handler handler = new Handler(context.getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (hud != null)
+                            hud.dismiss();
+                    }
+                });
+            }
+        }).start();
+    }
     public void hudShowNoText(final Context context) {
         if (hud != null) {
             return;

@@ -17,7 +17,7 @@ import com.goockr.inductioncooker.lib.http.OKHttp;
 import com.goockr.inductioncooker.utils.CountDownButtonHelper;
 import com.goockr.inductioncooker.utils.NotNull;
 import com.goockr.inductioncooker.utils.SharePreferencesUtils;
-import com.goockr.inductioncooker.view.DialongView;
+import com.goockr.inductioncooker.view.DialogView;
 import com.goockr.ui.view.helper.HudHelper;
 
 import org.json.JSONException;
@@ -32,7 +32,7 @@ public class ChangePowerNextActivity extends BaseActivity implements View.OnClic
     private android.widget.TextView tvShowTips;
     private android.widget.EditText tvCode;
     private android.widget.Button tvGetCode;
-    private DialongView dialongView;
+    private DialogView dialogView;
     private String code;
     private String phone;
     private String TAG = "";
@@ -54,7 +54,8 @@ public class ChangePowerNextActivity extends BaseActivity implements View.OnClic
         powerleft.setOnClickListener(this);
         powerright.setOnClickListener(this);
         tvGetCode.setOnClickListener(this);
-        dialongView = new DialongView(this);
+        dialogView = DialogView.getSingleton();
+        dialogView.setContext(this);
         initDatas();
     }
 
@@ -67,13 +68,13 @@ public class ChangePowerNextActivity extends BaseActivity implements View.OnClic
 
 
     private void showTurnOn() {
-        View view = dialongView.showCustomDialong(R.layout.dialog_power_change_succeed);
+        View view = dialogView.showCustomDialong(R.layout.dialog_power_change_succeed);
         TextView tvCommit = (TextView) view.findViewById(R.id.tvCommit);
 
         tvCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialongView.dismissDialong();
+                dialogView.dismissDialong();
                 ChangePowerNextActivity.this.setResult(FINISH);
                 finish();
             }

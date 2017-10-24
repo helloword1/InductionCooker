@@ -26,11 +26,13 @@ import com.goockr.inductioncooker.lib.socket.Protocol2;
 import com.goockr.inductioncooker.models.User;
 import com.goockr.inductioncooker.utils.CountDownButtonHelper;
 import com.goockr.inductioncooker.utils.DensityUtil;
+import com.goockr.inductioncooker.utils.FileCache;
 import com.goockr.inductioncooker.utils.FragmentHelper;
 import com.goockr.inductioncooker.utils.SharePreferencesUtils;
 import com.goockr.inductioncooker.view.MyEditText;
 import com.goockr.ui.view.helper.HudHelper;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -219,12 +221,14 @@ public class SmsLoginFragment extends Fragment {
             @Override
             public void onSuccess(JSONObject jsonObject) {
                 // 登陆成功就更新当前的手机号
+                SharePreferencesUtils.setMobile(phone_et.getText().toString().trim());
                 Protocol2.setPhone(phone_et.getText().toString().trim());
                 // 获取token值，并保存到SP
                 try {
                     JSONObject userInfo = jsonObject.getJSONObject("userInfo");
                     String token = userInfo.getString("token");
                     SharePreferencesUtils.setToken(token);
+
                     Log.d("copycat", "token:" + token);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -305,6 +309,7 @@ public class SmsLoginFragment extends Fragment {
                 }
                 SharePreferencesUtils.setMobile(mobile);
                 SharePreferencesUtils.setToken(token);
+
                 return;
             } catch (JSONException e1) {
                 e1.printStackTrace();
@@ -315,6 +320,7 @@ public class SmsLoginFragment extends Fragment {
         SharePreferencesUtils.setUserName(name);
         SharePreferencesUtils.setMobile(mobile);
         SharePreferencesUtils.setUserID(userId);
+        myInitData();
 
     }
 
@@ -350,7 +356,36 @@ public class SmsLoginFragment extends Fragment {
         fragment.setArguments(bundle);
         FragmentHelper.addFragmentToBackStack(getActivity(), R.id.activity_login_content_fl, this, fragment, Common.VerifiedPhoneNumFragment);
     }
+    /**
+     * 获取手机关联的信息
+     */
+    private void myInitData() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("mobile", SharePreferencesUtils.getMobile());
+        map.put("token", SharePreferencesUtils.getToken());
 
+        HttpHelper.checkDevice(map, new OKHttp.HttpCallback() {
+            @Override
+            public void onFailure(HttpError error) {
+
+            }
+
+            @Override
+            public void onSuccess(JSONObject jsonObject) {
+                int result = 1;
+                try {
+                    result = jsonObject.getInt("result");
+                    if (result == 0) {//成功
+                        JSONArray list = jsonObject.getJSONArray("list");
+                        FileCache.get(getActivity()).put("DEVICE_LIST",list);
+                        SharePreferencesUtils.setDeviceId(list.get(0).toString());
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
     private void getSmsCode() {
         if (TextUtils.equals(sms_phone_et.getText().toString(),SharePreferencesUtils.getMobile())){
             hud.hudShowTip(getActivity(), getResources().getString(R.string.had_login), Common.KHUDTIPSHORTTIME);

@@ -1,84 +1,116 @@
 package com.goockr.inductioncooker.fragment;
 
+import android.annotation.TargetApi;
 import android.app.Fragment;
-import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
+import android.support.percent.PercentRelativeLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.goockr.inductioncooker.R;
-import com.goockr.inductioncooker.adapter.MoreAdapter;
 import com.goockr.inductioncooker.adapter.NotiseAdapter;
-import com.goockr.inductioncooker.models.MoreAdapterModel;
-import com.goockr.inductioncooker.models.MySection;
+import com.goockr.inductioncooker.lib.observer.NoticeObserval;
+import com.goockr.inductioncooker.lib.observer.NoticeObserver;
 import com.goockr.inductioncooker.models.NotiseAdapterModel;
-import com.goockr.inductioncooker.models.NotiseModel;
 import com.goockr.inductioncooker.models.NotiseSection;
+import com.goockr.inductioncooker.utils.FileCache;
+import com.goockr.inductioncooker.utils.NotNull;
+import com.goockr.inductioncooker.view.DialogView;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import butterknife.BindView;
+import static android.content.ContentValues.TAG;
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 /**
  * Created by CMQ on 2017/6/21.
  */
 
-public class NoticeFragment extends Fragment {
-
+public class NoticeFragment extends Fragment implements NoticeObserver {
     View view;
-
-  //  @BindView(R.id.fragment_notice_rv)
-    RecyclerView mRecyclerView;
-    private NotiseAdapter adapter;
-
+    SwipeMenuRecyclerView mRecyclerView;
     private List<NotiseSection> mData;
-
-    private static String TAG = "NoticeFragment";
+    private NotiseAdapter sectionAdapter;
+    private PercentRelativeLayout notiPercent;
+    private int[] drablwIcon = {R.mipmap.notice_icon_avatar_1, R.mipmap.notice_icon_avatar_2, R.mipmap.notice_icon_avatar_3,
+            R.mipmap.notice_icon_avatar_4, R.mipmap.notice_icon_avatar_5, R.mipmap.notice_icon_avatar_6, R.mipmap.notice_icon_avatar_7};
+    private final String SAVE_ITEM = "NOTICE_JSON";
+    private FileCache fileCache;
+    private JSONArray notice_json;
+    private boolean isEnough;
+    private TextView textView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        // Inflate the layout for this fragment
-         view = inflater.inflate(R.layout.fragment_notice, container, false);
-
+        view = inflater.inflate(R.layout.fragment_notice, container, false);
         initData();
-
         initUI();
-
         return view;
     }
 
     private void initData() {
-
-        List<NotiseSection> list = new ArrayList<>();
-        list.add(new NotiseSection(true, "Section 1", false));
-
-        list.add(new NotiseSection(new NotiseAdapterModel(R.mipmap.notice_icon_avatar_default,"有人在限用时间内打开电磁炉！", new Date())));
-        list.add(new NotiseSection(new NotiseAdapterModel(R.mipmap.notice_icon_avatar_default2,"电磁炉温度超出限制温度！", new Date())));
-        mData=list;
-
+        fileCache = FileCache.get(getActivity());
+        mData = new ArrayList<>();
+//        mData.add(new NotiseSection(true, "Section 1", false));
+//        mData.add(new NotiseSection(new NotiseAdapterModel(R.mipmap.notice_icon_avatar_default, "有人在限用时间内打开电磁炉！", new Date())));
+//        mData.add(new NotiseSection(new NotiseAdapterModel(R.mipmap.notice_icon_avatar_default2, "电磁炉温度超出限制温度！", new Date())));
     }
 
     private void initUI() {
-
-       mRecyclerView=(RecyclerView)view.findViewById(R.id.fragment_notice_rv);
+        getNOticeData();
+        mRecyclerView = (SwipeMenuRecyclerView) view.findViewById(R.id.fragment_notice_rv);
+        notiPercent = (PercentRelativeLayout) view.findViewById(R.id.notiPercent);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        //mRecyclerView.addItemDecoration(new SpaceItemDecoration(0));
-        NotiseAdapter sectionAdapter = new NotiseAdapter(R.layout.item_notise_content, R.layout.def_section_head, mData);
+        mRecyclerView.useDefaultLoadMore(); // 使用默认的加载更多的View。
+        mRecyclerView.setLoadMoreListener(new SwipeMenuRecyclerView.LoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                /*if (NotNull.isNotNull(notice_json)&&notice_json.length()>0){
+                    if (mData.size()<notice_json.length()){
+                        notice_json.get()
+                    }
 
-        mRecyclerView.setAdapter(sectionAdapter);
 
+                    sectionAdapter.notifyDataSetChanged();
+                    if (mData.size()==notice_json.length()-1){
+                        // 数据完更多数据，一定要调用这个方法。
+                        // 第一个参数：表示此次数据是否为空。
+                        // 第二个参数：表示是否还有更多数据。
+                        mRecyclerView.loadMoreFinish(false, false);
+                    }else{
+                        mRecyclerView.loadMoreFinish(false, true);
+                    }
+                }else {
+                    mRecyclerView.loadMoreFinish(true, false);
+                }*/
+
+            }
+        });
+
+        sectionAdapter = new NotiseAdapter(R.layout.item_notise_content, R.layout.def_section_head, mData);
         sectionAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -95,9 +127,149 @@ public class NoticeFragment extends Fragment {
                 Toast.makeText(getActivity(), "onItemChildClick" + position, Toast.LENGTH_SHORT).show();
             }
         });
+        // 菜单点击监听。
+        mRecyclerView.setSwipeMenuItemClickListener(new SwipeMenuItemClickListener() {
+            @Override
+            public void onItemClick(SwipeMenuBridge menuBridge) {
+                // 任何操作必须先关闭菜单，否则可能出现Item菜单打开状态错乱。
+                menuBridge.closeMenu();
+                // 左侧还是右侧菜单。
+                int direction = menuBridge.getDirection();
+                if (direction == -1) {//删除
+                    int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
+                    int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
+                    showTurnOn("是否删除此通知", adapterPosition);
+                }
+            }
+        });
+        // 设置监听器。
+        mRecyclerView.setSwipeMenuCreator(new SwipeMenuCreator() {
+            @Override
+            public void onCreateMenu(SwipeMenu leftMenu, SwipeMenu rightMenu, int viewType) {
+                rightMenu.addMenuItem(new SwipeMenuItem(getActivity()).setText("删除").
+                        setTextColor(getActivity().getResources().getColor(R.color.white)).setHeight(MATCH_PARENT).setWidth(180).setBackgroundColorResource(R.color.colorRed).setTextSize(15)); // 在Item右侧添加一个菜单。
+            }
+        });
+        if (mData.size() == 0) setEmptyView();
+        else if (NotNull.isNotNull(textView)) {
+            textView.setVisibility(View.GONE);
+        }
+        mRecyclerView.setAdapter(sectionAdapter);
+    }
+
+    private void showTurnOn(String msg, final int potion) {
+        final DialogView dialogView = DialogView.getSingleton();
+        dialogView.setContext(getActivity());
+        View view = dialogView.showCustomDialong(R.layout.dialog_power_change);
+        TextView tvCancel = (TextView) view.findViewById(R.id.tvCancel);
+        TextView tvContent = (TextView) view.findViewById(R.id.tvContent);
+        TextView alert_title = (TextView) view.findViewById(R.id.alert_title);
+        alert_title.setText("通知");
+        tvContent.setText(msg);
+        TextView tvCommit = (TextView) view.findViewById(R.id.tvCommit);
+        tvCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogView.dismissDialong();
+            }
+        });
+        tvCommit.setOnClickListener(new View.OnClickListener() {
+            @TargetApi(Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onClick(View v) {
+                mData.remove(potion);
+                removeDate(potion);//删除
+                sectionAdapter.notifyDataSetChanged();
+                if (mData.size() == 0)
+                    setEmptyView();
+                dialogView.dismissDialong();
+
+            }
+        });
 
     }
 
+    private void setEmptyView() {
+        textView = new TextView(getActivity());
+        textView.setText("暂时还没有内容哦");
+        textView.setTextSize(15);
+        textView.setTextColor(getResources().getColor(R.color.colormain));
+        textView.setGravity(Gravity.CENTER);
+        notiPercent.addView(textView);
+    }
+
+    public void setObservable(NoticeObserval o) {
+        o.registerObserver(this);
+    }
 
 
+    @Override
+    public void update(String succeedStr) {
+        Log.d(TAG, "update: " + succeedStr);
+        saveNotice(succeedStr);
+    }
+
+    private String[] getStringArray() {
+        return getActivity()
+                .getResources().getStringArray(R.array.noticeArr);
+    }
+
+    private void saveNotice(String json) {
+        notice_json = fileCache.getAsJSONArray(SAVE_ITEM);
+        try {
+            JSONObject object = new JSONObject(json);
+            if (!NotNull.isNotNull(notice_json)) {
+                notice_json = new JSONArray();
+                notice_json.put(0, object);
+            } else {
+                notice_json.put(object);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        fileCache.put(SAVE_ITEM, notice_json);
+        getNOticeData();
+
+    }
+
+    private void getNOticeData() {
+        if (!NotNull.isNotNull(notice_json)) {
+            notice_json = fileCache.getAsJSONArray(SAVE_ITEM);
+        }
+        if (!NotNull.isNotNull(notice_json)) return;
+        mData.clear();
+        if (notice_json.length() == 0) return;
+        for (int i = 0; i < notice_json.length(); i++) {
+            try {
+                JSONObject jsonObject = notice_json.getJSONObject(i);
+                String warm = jsonObject.getString("warm");
+                if (warm.contains("__")) {
+                    String[] strings = warm.split("__");
+                    Integer index = Integer.valueOf(strings[0].substring(1, 2));
+                    mData.add(new NotiseSection(new NotiseAdapterModel(drablwIcon[index - 1], getStringArray()[index - 1], new Date(Long.valueOf(strings[1])))));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        if (NotNull.isNotNull(textView)) {
+            textView.setVisibility(View.GONE);
+        }
+        Collections.reverse(mData);
+        if (NotNull.isNotNull(sectionAdapter))
+            sectionAdapter.notifyDataSetChanged();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void removeDate(int position) {
+        if (NotNull.isNotNull(notice_json)) {
+            notice_json.remove(position);
+        } else {
+            notice_json = fileCache.getAsJSONArray(SAVE_ITEM);
+        }
+        if (NotNull.isNotNull(notice_json))
+            fileCache.put(SAVE_ITEM, notice_json);
+        else
+            fileCache.clear();
+    }
 }

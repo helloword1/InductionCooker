@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,17 +17,30 @@ import com.goockr.inductioncooker.activity.DeviceManageActivity;
 import com.goockr.inductioncooker.activity.LoginActivity;
 import com.goockr.inductioncooker.activity.UpdatePwdActivity;
 import com.goockr.inductioncooker.adapter.MoreAdapter;
+import com.goockr.inductioncooker.lib.http.HttpError;
+import com.goockr.inductioncooker.lib.http.HttpHelper;
+import com.goockr.inductioncooker.lib.http.OKHttp;
 import com.goockr.inductioncooker.models.MoreAdapterModel;
 import com.goockr.inductioncooker.models.MySection;
+import com.goockr.inductioncooker.utils.FileCache;
+import com.goockr.inductioncooker.utils.MyToast;
 import com.goockr.inductioncooker.utils.NotNull;
 import com.goockr.inductioncooker.utils.SharePreferencesUtils;
 import com.goockr.ui.view.activity.CompanyIntroduceActivity;
 import com.jinlin.zxing.CaptureActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by CMQ on 2017/6/21.
@@ -66,7 +80,7 @@ public class MoreFragment extends Fragment {
                 switch (position) {
                     case 1: // 添加设备
                         // initPermissions();
-                        getActivity().startActivity(new Intent(getActivity(), CaptureActivity.class));
+                        MoreFragment.this.startActivityForResult(new Intent(getActivity(), CaptureActivity.class), 120);
 //                        getActivity().startActivity(new Intent(getActivity(), DeviceManageActivity.class));
                         break;
                     case 3://设备管理
@@ -95,6 +109,82 @@ public class MoreFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == 120 && NotNull.isNotNull(data)) {
+            String result_data = data.getStringExtra("RESULT_DATA");
+            if (TextUtils.equals(result_data,""))return;
+            bindDevice(result_data);
+
+        }
+    }
+
+    private void bindDevice(String device) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("mobile", SharePreferencesUtils.getMobile());
+        map.put("token", SharePreferencesUtils.getToken());
+        map.put("devcode", device);
+
+        HttpHelper.addDevice(map, new OKHttp.HttpCallback() {
+            @Override
+            public void onFailure(HttpError error) {
+                Log.d(TAG, "onFailure: " + error.msg);
+                MyToast.showToastCustomerStyleText(getActivity(), error.msg);
+            }
+
+            @Override
+            public void onSuccess(JSONObject jsonObject) {
+                int result = 1;
+                Log.d(TAG, "onSuccess: " + jsonObject);
+                try {
+                    result = jsonObject.getInt("result");
+                    String msg = jsonObject.getString("msg");
+                    if (result == 0) {//成功
+                        MyToast.showToastCustomerStyleText(getActivity(), msg);
+                        myInitData();
+                    } else {
+                        MyToast.showToastCustomerStyleText(getActivity(), msg);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /**
+     * 获取手机关联的信息
+     */
+    private void myInitData() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("mobile", SharePreferencesUtils.getMobile());
+        map.put("token", SharePreferencesUtils.getToken());
+
+        HttpHelper.checkDevice(map, new OKHttp.HttpCallback() {
+            @Override
+            public void onFailure(HttpError error) {
+                Log.d(TAG, "onFailure: " + error.msg);
+            }
+
+            @Override
+            public void onSuccess(JSONObject jsonObject) {
+                int result = 1;
+                Log.d(TAG, "onSuccess: " + jsonObject);
+                try {
+                    result = jsonObject.getInt("result");
+                    if (result == 0) {//成功
+                        JSONArray list = jsonObject.getJSONArray("list");
+                        FileCache.get(getActivity()).put("DEVICE_LIST", list);
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private void initData() {

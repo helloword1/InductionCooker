@@ -19,6 +19,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
@@ -126,13 +127,14 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     private String photoPath;
 
     private Handler mHandler = new MyHandler(this);
+    private EditText editText;
 
-    static class MyHandler extends Handler {
+    class MyHandler extends Handler {
 
         private WeakReference<Activity> activityReference;
 
         public MyHandler(Activity activity) {
-            activityReference = new WeakReference<Activity>(activity);
+            activityReference = new WeakReference<>(activity);
         }
 
         @Override
@@ -140,7 +142,9 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
             switch (msg.what) {
                 case PARSE_BARCODE_SUC: // 解析图片成功
-                    Toast.makeText(activityReference.get(), "解析成功，结果为：" + msg.obj, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(activityReference.get(), "解析成功，结果为：" + msg.obj, Toast.LENGTH_SHORT).show();
+                    CaptureActivity.this.setResult(RESULT_OK, new Intent().putExtra("RESULT_DATA", String.valueOf(msg.obj)));
+                    finish();
                     break;
 
                 case PARSE_BARCODE_FAIL:// 解析图片失败
@@ -183,7 +187,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         findViewById(R.id.capture_back_tv).setOnClickListener(this);
 
         findViewById(R.id.capture_add_bt).setOnClickListener(this);
-
+        editText = (EditText) findViewById(R.id.etCapicture);
 
         //悬浮弹窗权限申请
 //		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -441,8 +445,9 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             // 把图片画到扫描框
 //            viewfinderView.drawResultBitmap(barcode);
             beepManager.playBeepSoundAndVibrate();
-            Toast.makeText(this, "识别结果:" + ResultParser.parseResult(rawResult).toString(), Toast.LENGTH_SHORT).show();
-
+//            Toast.makeText(this, "识别结果:" + ResultParser.parseResult(rawResult).toString(), Toast.LENGTH_SHORT).show();
+            CaptureActivity.this.setResult(RESULT_OK, new Intent().putExtra("RESULT_DATA", ResultParser.parseResult(rawResult).toString()));
+            finish();
         }
     }
 
@@ -555,6 +560,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         } else if (v.getId() == R.id.capture_back_tv) {
             finish();
         } else if (v.getId() == R.id.capture_add_bt) {
+            CaptureActivity.this.setResult(RESULT_OK, new Intent().putExtra("RESULT_DATA", editText.getText().toString()));
             finish();
         }
 

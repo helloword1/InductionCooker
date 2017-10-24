@@ -30,15 +30,18 @@ import com.goockr.inductioncooker.activity.OrderTimeActivity;
 import com.goockr.inductioncooker.activity.ReservationActivity;
 import com.goockr.inductioncooker.common.Common;
 import com.goockr.inductioncooker.common.CommonBean;
-import com.goockr.inductioncooker.lib.observer.PowerObserver;
 import com.goockr.inductioncooker.lib.observer.PowerObserval;
+import com.goockr.inductioncooker.lib.observer.PowerObserver;
 import com.goockr.inductioncooker.lib.socket.Protocol2;
 import com.goockr.inductioncooker.lib.socket.TcpSocket;
+import com.goockr.inductioncooker.models.BaseDevice;
 import com.goockr.inductioncooker.models.BaseProtocol;
 import com.goockr.inductioncooker.models.Moden;
+import com.goockr.inductioncooker.utils.FileCache;
 import com.goockr.inductioncooker.utils.NotNull;
 import com.goockr.inductioncooker.utils.ReadAdssetsJson;
-import com.goockr.inductioncooker.view.DialongView;
+import com.goockr.inductioncooker.utils.SharePreferencesUtils;
+import com.goockr.inductioncooker.view.DialogView;
 import com.goockr.inductioncooker.view.ImageTopButton;
 import com.goockr.inductioncooker.view.PopWindowUtils;
 import com.goockr.inductioncooker.view.ProgressView;
@@ -185,7 +188,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
     private int mMode = 0;
     private int touTime = 0;
     private int touTime1 = 0;
-    private DialongView dialongView;
+    private DialogView dialogView;
     private double allTime = 0;
     private TextView tvUnit;
     private JSONObject globalJson;
@@ -201,6 +204,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
     private int sumBack;
     private Thread timeThread;
     private List<PowerObserver> observers = new ArrayList<>();
+    private OnDeviceListener listener;
 
     @Override
     public void registerObserver(PowerObserver observer) {
@@ -294,31 +298,30 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         power_bt.setNormImageId(R.mipmap.btn_openkey_normal);
         power_bt.setDisabledImageId(R.mipmap.btn_openkey_pressed);
         power_bt.setSelImageId(R.mipmap.btn_openkey_selected);
-        power_bt.setNormTextCoclor(R.color.colorBlack);
+//        power_bt.setNormTextCoclor(R.color.colorBlack);
         power_bt.setText("开关机");
 
         reservation_bt.setNormImageId(R.mipmap.btn_reservation_normal);
         reservation_bt.setSelImageId(R.mipmap.btn_reservation_pressed);
         reservation_bt.setDisabledImageId(R.mipmap.btn_reservation_disabled);
-        reservation_bt.setNormTextCoclor(R.color.colorBlack);
+//        reservation_bt.setNormTextCoclor(R.color.colorBlack);
         reservation_bt.setText("预约");
 
         unreservation_bt.setNormImageId(R.mipmap.btn_cancel_normal);
         unreservation_bt.setSelImageId(R.mipmap.btn_cancel_pressed);
         unreservation_bt.setDisabledImageId(R.mipmap.btn_cancel_disabled);
-        unreservation_bt.setNormTextCoclor(R.color.colorBlack);
+//        unreservation_bt.setNormTextCoclor(R.color.colorBlack);
         unreservation_bt.setText("取消预约");
 
         device_change.setNormImageId(R.mipmap.btn_device_switching_normal);
         device_change.setSelImageId(R.mipmap.btn_device_switching_pressed);
-        device_change.setDisabledImageId(R.mipmap.btn_device_switching_disabled);
-        device_change.setNormTextCoclor(R.color.colorBlack);
+        device_change.setDisabledImageId(R.mipmap.btn_device_switching_normal);
+//        device_change.setNormTextCoclor(R.color.colorBlack);
         device_change.setText("设备切换");
 
         reservation_bt.buttonOnClickListener(this);
         unreservation_bt.buttonOnClickListener(this);
         power_bt.buttonOnClickListener(this);
-        device_change.buttonOnClickListener(this);
 
         setButtonType(bt_0, R.mipmap.btn_soup_normal, R.mipmap.btn_soup_pressed, R.mipmap.btn_soup_disabled, R.color.colorGrayText, "煲粥");
         setButtonType(bt_1, R.mipmap.btn_porridge_normal, R.mipmap.btn_porridge_selected, R.mipmap.btn_porridge_disabled, R.color.colorGrayText, "煲汤");
@@ -329,7 +332,8 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         setButtonType(bt_6, R.mipmap.btn_baked_fried_normal, R.mipmap.btn_baked_fried__selected, R.mipmap.btn_baked_fried_disabled, R.color.colorGrayText, "烤炸");
         setButtonType(bt_7, R.mipmap.btn_temperature_normal, R.mipmap.btn_temperature__selected, R.mipmap.btn_temperature_disabled, R.color.colorGrayText, "保温");
         flAdjust.addView(getAdView());
-        dialongView = new DialongView(getActivity());
+        dialogView = DialogView.getSingleton();
+        dialogView.setContext(getActivity());
         setButtonStatus(false);// 默认是关机状态，显示对应的图片
     }
 
@@ -430,6 +434,43 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
             bt.setClickable(true);
             bt.buttonOnClickListener(this); // 每个按钮都添加一样的回调ImageTopButtonOnClickListener
         }
+        device_change.buttonOnClickListener(new ImageTopButton.ImageTopButtonOnClickListener() {
+            @Override
+            public void imageTopButtonOnClickListener(ImageTopButton button) {
+                //设备切换
+                JSONArray device_list = FileCache.get(getActivity()).getAsJSONArray("DEVICE_LIST");
+                if (!NotNull.isNotNull(device_list)) return;
+                final List<BaseDevice> list = new ArrayList<>();
+                for (int i = 0; i < device_list.length(); i++) {
+                    String devicecode = null;
+                    try {
+                        devicecode = device_list.getString(i);
+                        BaseDevice baseDevice = new BaseDevice();
+                        baseDevice.setDeviceName("设备");
+                        baseDevice.setDeviceId(devicecode);
+                        list.add(baseDevice);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+//                if (list.size() == 1) {
+//                    MyToast.showToastCustomerStyleText(getActivity(), "没有发现其他设备");
+//                    return;
+//                }
+                PopWindowUtils popWindow = PopWindowUtils.getPopWindow();
+                popWindow.showButtonPopwindow(getActivity(), list);
+                popWindow.setOnItemclickListener(new PopWindowUtils.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        if (NotNull.isNotNull(listener)){
+                            listener.deviceListener(list.get(position).getDeviceId());
+                            new HudHelper().hudShowChange(getActivity(),"正在切换中");
+                            SharePreferencesUtils.setDeviceId(list.get(position).getDeviceId());
+                        }
+                    }
+                });
+            }
+        });
 
     }
 
@@ -541,14 +582,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     thread.start();
                 }
                 return;
-            case R.id.fragment_leftdevice_change://设备切换
-                List<String> list = new ArrayList<>();
-                list.add("123");
-                list.add("234");
-                list.add("456");
-                list.add("567");
-                PopWindowUtils.getPopWindow().showButtonPopwindow(getActivity(),list);
-                return;
+
         }
 
         // 只有电源通了的情况下才可以执行
@@ -973,10 +1007,12 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                         isReverBl = true;
                         reservationPon.setVisibility(View.VISIBLE);
                         reservation_bt.setSelect(true);
+                        unreservation_bt.setEnabledStatus(true);
                     } else {
                         isReverBl = false;
                         reservationPon.setVisibility(View.GONE);
                         reservation_bt.setSelect(false);
+                        unreservation_bt.setEnabledStatus(false);
                     }
                     break;
                 case 2://开关机返回
@@ -1116,20 +1152,24 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         globalPower = currentPower;
         if (powerStateChange && globalPower == 1) {
             // 提示窗弹出
-            final DialongView dialongView = new DialongView(getActivity());
-            View view = dialongView.showCustomDialong(R.layout.dialong_tips);
+            final DialogView dialogView = DialogView.getSingleton();
+            dialogView.setContext(getActivity());
+            if (dialogView.isShow()){
+                return;
+            }
+            View view = dialogView.showCustomDialong(R.layout.dialong_tips);
             Button btnKnow = (Button) view.findViewById(R.id.btn_know);
             ImageView dialongDelete = (ImageView) view.findViewById(R.id.dialong_delete);
             dialongDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dialongView.dismissDialong();
+                    dialogView.dismissDialong();
                 }
             });
             btnKnow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dialongView.dismissDialong();
+                    dialogView.dismissDialong();
                 }
             });
         }
@@ -1243,12 +1283,12 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
     }
 
     private void showTurnOn() {
-        View view = dialongView.showCustomDialong(R.layout.dialong_view);
+        View view = dialogView.showCustomDialong(R.layout.dialong_view);
         ImageView deleteView = (ImageView) view.findViewById(R.id.dialong_delete);
         deleteView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialongView.dismissDialong();
+                dialogView.dismissDialong();
             }
         });
         TextView dialongText = (TextView) view.findViewById(R.id.dialongText);
@@ -1300,6 +1340,13 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
      * 结束倒计时
      */
     public void cancelCountDown() {
+
         cancelCountDownHandler.sendMessage(Message.obtain());
+    }
+    public interface  OnDeviceListener{
+        void deviceListener(String deviceName);
+    }
+    public void setOnDeviceListener(OnDeviceListener listener){
+        this.listener=listener;
     }
 }

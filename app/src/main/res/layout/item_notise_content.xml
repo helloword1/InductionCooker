@@ -28,6 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:singleLine="true"
                 android:text="12346546546546544654545"
                 android:textColor="@color/colorBlack"
                 android:textSize="14sp" />

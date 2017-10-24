@@ -10,17 +10,30 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.goockr.inductioncooker.R;
+import com.goockr.inductioncooker.utils.NotNull;
 
 /**
  * Created by LJN on 2017/9/27.
  */
 
-public class DialongView {
+public class DialogView {
     private Context context;
     private AlertDialog.Builder dialong;
     private AlertDialog alertDialog;
+    private volatile static DialogView singleton;
 
-    public DialongView(Context context) {
+    public static DialogView getSingleton() {
+        if (singleton == null) {
+            synchronized (DialogView.class) {
+                if (singleton == null) {
+                    singleton = new DialogView();
+                }
+            }
+        }
+        return singleton;
+    }
+
+    public void setContext(Context context) {
         this.context = context;
         dialong = new AlertDialog.Builder(context, R.style.AlertDialog);
     }
@@ -41,6 +54,14 @@ public class DialongView {
         lp.height = (int) DHeight;// 定义高度
         alertDialog.getWindow().setAttributes(lp);
         return inflateDialong;
+    }
+
+    public boolean isShow() {
+        if (NotNull.isNotNull(alertDialog) && alertDialog.isShowing()) {
+           return true;
+        }else{
+            return false;
+        }
     }
 
     public View showCustomDialong(int layout) {

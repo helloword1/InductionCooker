@@ -2,6 +2,8 @@ package com.goockr.inductioncooker.lib.socket;
 
 import android.util.Log;
 
+import com.goockr.inductioncooker.utils.SharePreferencesUtils;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -280,10 +282,10 @@ public class Protocol2 {
         JSONObject order = new JSONObject();
         try {
             json.put("type", 2);//表示app
-            json.put("id", Phone);
+            json.put("id", SharePreferencesUtils.getMobile());
             json.put("msgtype", 1);//表示指令
             json.put("rectype", 1);//接收方类型 发给设备
-            json.put("target", targetId);//接收放ID
+            json.put("target", SharePreferencesUtils.getDeviceId());//接收放ID
             json.put("order", order);//指令内容
 
         } catch (JSONException e) {

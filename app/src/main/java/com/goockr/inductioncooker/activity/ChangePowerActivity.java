@@ -19,7 +19,7 @@ import com.goockr.inductioncooker.lib.http.OKHttp;
 import com.goockr.inductioncooker.utils.NotNull;
 import com.goockr.inductioncooker.utils.SharePreferencesUtils;
 import com.goockr.inductioncooker.utils.StringUtils;
-import com.goockr.inductioncooker.view.DialongView;
+import com.goockr.inductioncooker.view.DialogView;
 import com.goockr.ui.view.helper.HudHelper;
 
 import org.json.JSONArray;
@@ -39,7 +39,7 @@ public class ChangePowerActivity extends BaseActivity {
     private android.widget.ImageView ivDelete;
     public static final String TAG = "";
     public HudHelper hud = new HudHelper();
-    private DialongView dialongView;
+    private DialogView dialogView;
     private String MPHONE = "phone";
     private int FINISH = 112;
     private List<String> codes = new ArrayList<>();
@@ -57,7 +57,8 @@ public class ChangePowerActivity extends BaseActivity {
         this.capturenarbar = (RelativeLayout) findViewById(R.id.capture_narbar);
         this.powerright = (TextView) findViewById(R.id.power_right);
         this.powerleft = (TextView) findViewById(R.id.power_left);
-        dialongView = new DialongView(this);
+        dialogView = DialogView.getSingleton();
+        dialogView.setContext(this);
         Intent intent = getIntent();
         if (NotNull.isNotNull(intent))
         device_id =intent.getStringExtra("DEVICE_ID");
@@ -119,21 +120,23 @@ public class ChangePowerActivity extends BaseActivity {
     }
 
     private void showTurnOn(String msg) {
-        View view = dialongView.showCustomDialong(R.layout.dialog_power_change);
+        View view = dialogView.showCustomDialong(R.layout.dialog_power_change);
         TextView tvCancel = (TextView) view.findViewById(R.id.tvCancel);
         TextView tvContent = (TextView) view.findViewById(R.id.tvContent);
+
         tvContent.setText(msg);
         TextView tvCommit = (TextView) view.findViewById(R.id.tvCommit);
         tvCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialongView.dismissDialong();
+                dialogView.dismissDialong();
             }
         });
         tvCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialongView.dismissDialong();
+
+                dialogView.dismissDialong();
             }
         });
 

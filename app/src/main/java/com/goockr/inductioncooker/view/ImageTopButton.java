@@ -125,8 +125,10 @@ public class ImageTopButton extends LinearLayout implements View.OnClickListener
 
         if (enabledStatus) {
             top_iv.setImageResource(normImageId);
+            title_tv.setTextColor(getResources().getColor(R.color.colorBlack));
         } else {
             top_iv.setImageResource(disabledImageId);
+            title_tv.setTextColor(getResources().getColor(R.color.colorGray2));
         }
     }
 

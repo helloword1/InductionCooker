@@ -13,17 +13,23 @@ public class SharePreferencesUtils {
 
     public static String USERINFO = "userinfo";
 
-    private static final String USERIDKEY  = "USERIDKEY";
+    private static final String USERIDKEY = "USERIDKEY";
 
-    private static final String TOKENKEY  = "TOKENKEY";
+    private static final String TOKENKEY = "TOKENKEY";
 
-    private static final String MOBILEKEY  = "MOBILEKEY";
+    private static final String MOBILEKEY = "MOBILEKEY";
 
-    private static final String NAMEKEY  = "NAMEKEY";
+    private static final String NAMEKEY = "NAMEKEY";
+
+    private static final String DEVICEID = "DEVICEID";
 
 
     public static String getUserID() {
         return getInfo(USERINFO, USERIDKEY);
+    }
+
+    public static String getDeviceId() {
+        return getInfo(DEVICEID, DEVICEID);
     }
 
     public static String getToken() {
@@ -41,6 +47,10 @@ public class SharePreferencesUtils {
 
     public static void setUserID(String value) {
         setInfo(USERINFO, USERIDKEY, value);
+    }
+
+    public static void setDeviceId(String value) {
+        setInfo(DEVICEID, DEVICEID, value);
     }
 
     public static void setToken(String value) {

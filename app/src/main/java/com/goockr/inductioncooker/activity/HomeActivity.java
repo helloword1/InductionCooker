@@ -107,6 +107,7 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragment = new HomeFragment1();
         notifragment = new NoticeFragment();
+        notifragment.setObservable(fragment);//关联观察者
         morefragment = new MoreFragment();
         fragmentTransaction.add(R.id.maincontent, fragment, "HomeFragment"); // 首页
         fragmentTransaction.add(R.id.maincontent, notifragment, "HomeFragment");// 通知

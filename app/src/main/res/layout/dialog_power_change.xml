@@ -15,6 +15,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="12dp"
             android:text="错误信息"
+            android:id="@+id/alert_title"
             android:textColor="@color/contents_text"
             android:textSize="15sp" />
 
