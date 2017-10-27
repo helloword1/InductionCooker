@@ -7,11 +7,11 @@ import android.net.DhcpInfo;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.util.Log;
 
-import java.io.DataInputStream;
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -97,7 +97,8 @@ public class WifiHelper {
                 Process process = null;
                 try {
                     process = Runtime.getRuntime().exec("su");
-                    DataInputStream dis = new DataInputStream(process.getInputStream());
+//                    DataInputStream dis = new DataInputStream(process.getInputStream());
+                    BufferedReader dis = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     DataOutputStream dos = new DataOutputStream(process.getOutputStream());
                     dos.writeBytes("getprop | grep eth0.ipaddress" + "\n");
                     dos.flush();
@@ -123,7 +124,8 @@ public class WifiHelper {
                 Process process = null;
                 try {
                     process = Runtime.getRuntime().exec("su");
-                    DataInputStream dis = new DataInputStream(process.getInputStream());
+//                    DataInputStream dis = new DataInputStream(process.getInputStream());
+                    BufferedReader dis = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     DataOutputStream dos = new DataOutputStream(process.getOutputStream());
                     dos.writeBytes("getprop | grep eth0.gateway" + "\n");
                     dos.flush();
@@ -143,7 +145,7 @@ public class WifiHelper {
      */
     public static String getWifiSSID(Context context)
     {
-        WifiManager wifiManager = (WifiManager)context.getSystemService(context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 //        Log.d("wifiInfo", wifiInfo.toString());
 //        Log.d("SSID",wifiInfo.getSSID());

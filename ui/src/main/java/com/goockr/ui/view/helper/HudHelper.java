@@ -3,13 +3,15 @@ package com.goockr.ui.view.helper;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
-import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by CMQ on 2017/6/12.
@@ -18,12 +20,15 @@ import java.util.TimerTask;
 public class HudHelper {
 
     KProgressHUD hud;
-
-    private Timer tipTimer;
-
-    TimerTask tipTask;
+    private ScheduledExecutorService service;
 
     public void hudShowTip(Context context, String tip, int delay) {
+        service = new ScheduledThreadPoolExecutor(1, new ThreadFactory() {
+            @Override
+            public Thread newThread(@NonNull Runnable r) {
+                return new Thread(r);
+            }
+        });
         final TextView tv_Reset = new TextView(context);
         tv_Reset.setTextColor(Color.WHITE);
         tv_Reset.setTextSize(13);
@@ -32,25 +37,15 @@ public class HudHelper {
         hud = KProgressHUD.create(context)
                 .setCustomView(tv_Reset)
                 .show();
-        if (tipTimer != null) {
-            tipTimer.cancel();
-            tipTimer = null;
-        }
-        if (tipTask != null) {
-            tipTask.cancel();
-            tipTask = null;
-        }
-        tipTask = new TimerTask() {
+        service.schedule(new Runnable() {
+            @Override
             public void run() {
                 if (hud != null) {
                     hud.dismiss();
                     hud = null;
                 }
             }
-        };
-        tipTimer = new Timer();
-        tipTimer.schedule(tipTask, delay);
-
+        }, delay, TimeUnit.MILLISECONDS);
 
     }
 
@@ -65,24 +60,22 @@ public class HudHelper {
                 .setCancellable(false);
 
         hud.show();
-        new Thread(new Runnable() {
+        service = new ScheduledThreadPoolExecutor(1, new ThreadFactory() {
+            @Override
+            public Thread newThread(@NonNull Runnable r) {
+                return new Thread(r);
+            }
+        });
+        service.schedule(new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; i < 5; i++) {
-                    SystemClock.sleep(1000);
-
+                if (hud != null) {
+                    hud.dismiss();
                 }
-                Handler handler = new Handler(context.getMainLooper());
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (hud != null)
-                            hud.dismiss();
-                    }
-                });
             }
-        }).start();
+        }, 5, TimeUnit.SECONDS);
     }
+
     public void hudShowChange(final Context context, String tip) {
         if (hud != null) {
             return;
@@ -93,24 +86,22 @@ public class HudHelper {
                 .setCancellable(false);
 
         hud.show();
-        new Thread(new Runnable() {
+        service = new ScheduledThreadPoolExecutor(1, new ThreadFactory() {
+            @Override
+            public Thread newThread(@NonNull Runnable r) {
+                return new Thread(r);
+            }
+        });
+        service.schedule(new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; i < 3; i++) {
-                    SystemClock.sleep(1000);
-
+                if (hud != null) {
+                    hud.dismiss();
                 }
-                Handler handler = new Handler(context.getMainLooper());
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (hud != null)
-                            hud.dismiss();
-                    }
-                });
             }
-        }).start();
+        }, 3, TimeUnit.SECONDS);
     }
+
     public void hudShowNoText(final Context context) {
         if (hud != null) {
             return;
@@ -119,28 +110,26 @@ public class HudHelper {
                 .setStyle(KProgressHUD.Style.ANNULAR_DETERMINATE)
                 .setCancellable(false);
         hud.show();
-        new Thread(new Runnable() {
+        service = new ScheduledThreadPoolExecutor(1, new ThreadFactory() {
+            @Override
+            public Thread newThread(@NonNull Runnable r) {
+                return new Thread(r);
+            }
+        });
+        service.schedule(new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; i < 5; i++) {
-                    SystemClock.sleep(1000);
-
+                if (hud != null) {
+                    hud.dismiss();
                 }
-                Handler handler = new Handler(context.getMainLooper());
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (hud != null)
-                            hud.dismiss();
-                    }
-                });
             }
-        }).start();
+        }, 5, TimeUnit.SECONDS);
     }
 
     public void hudUpdate(String tip) {
-        if (hud!=null)
-        hud.setLabel(tip);
+        if (hud != null) {
+            hud.setLabel(tip);
+        }
     }
 
     public void hudUpdateAndHid(String tip, double delay) {
@@ -155,8 +144,9 @@ public class HudHelper {
     }
 
     public void hudUpdateAndHid(String tip, double delay, final SuccessCallBack callBack) {
-        if (hud!=null)
-        hud.setLabel(tip);
+        if (hud != null) {
+            hud.setLabel(tip);
+        }
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

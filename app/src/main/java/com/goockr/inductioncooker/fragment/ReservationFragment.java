@@ -116,7 +116,7 @@ public class ReservationFragment extends Fragment implements ImageTopButton.Imag
         //   fragmentManager= getFragmentManager();
 
         Bundle bundle = getArguments();
-        int moden = bundle.getInt(ReservationActivity.KModenKey);
+        int moden = bundle.getInt(ReservationActivity.KMODEN_KEY);
 
         if (moden == 0) {
             left_ll.setVisibility(View.VISIBLE);
@@ -161,19 +161,23 @@ public class ReservationFragment extends Fragment implements ImageTopButton.Imag
             case (R.id.navbar_right_bt)://下一步
                 rightButtonClick();
                 break;
+            default:
+                break;
         }
 
     }
 
     private void rightButtonClick() {
         ReservationBootFragment fragment = ReservationBootFragment.newInstance(select_bt.getText());
-        FragmentHelper.addFragmentToBackStack(getActivity(), R.id.activity_reservation, this, fragment, Common.ReservationBootFragment);
+        FragmentHelper.addFragmentToBackStack(getActivity(), R.id.activity_reservation, this, fragment, Common.RESERVATION_BOOT_FRAGMENT);
     }
 
     @Override
     public void imageTopButtonOnClickListener(ImageTopButton button) {
         int id = button.getId();
-        if (select_bt == button) return;
+        if (select_bt == button) {
+            return;
+        }
         select_bt.setSelect(!select_bt.isSelect());
         button.setSelect(!button.isSelect());
         select_bt = button;

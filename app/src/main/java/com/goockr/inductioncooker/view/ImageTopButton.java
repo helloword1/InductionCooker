@@ -3,6 +3,7 @@ package com.goockr.inductioncooker.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +58,7 @@ public class ImageTopButton extends LinearLayout implements View.OnClickListener
         this.normImageId = normImageId;
         top_iv.setImageResource(normImageId);
     }
+
     public int getHightLightImageId() {
         return hightLightImageId;
     }
@@ -103,7 +105,7 @@ public class ImageTopButton extends LinearLayout implements View.OnClickListener
 
     public void setNormTextCoclor(int normTextCoclor) {
         this.normTextCoclor = normTextCoclor;
-        title_tv.setTextColor(getResources().getColor(normTextCoclor));
+        title_tv.setTextColor(ContextCompat.getColor(getContext(),normTextCoclor));
     }
 
     public int getSelTextColor() {
@@ -125,10 +127,10 @@ public class ImageTopButton extends LinearLayout implements View.OnClickListener
 
         if (enabledStatus) {
             top_iv.setImageResource(normImageId);
-            title_tv.setTextColor(getResources().getColor(R.color.colorBlack));
+            title_tv.setTextColor(ContextCompat.getColor(getContext(),R.color.colorBlack));
         } else {
             top_iv.setImageResource(disabledImageId);
-            title_tv.setTextColor(getResources().getColor(R.color.colorGray2));
+            title_tv.setTextColor(ContextCompat.getColor(getContext(),R.color.colorGray2));
         }
     }
 
@@ -175,6 +177,7 @@ public class ImageTopButton extends LinearLayout implements View.OnClickListener
     public void buttonOnClickListener(ImageTopButtonOnClickListener callback) {
         this.callback = callback;
     }
+
     @Override
     public void onClick(View v) {
         if (this.callback != null) {

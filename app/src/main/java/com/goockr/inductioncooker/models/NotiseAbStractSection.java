@@ -1,20 +1,20 @@
 package com.goockr.inductioncooker.models;
 
-import com.chad.library.adapter.base.entity.SectionEntity;
+import com.chad.library.adapter.base.entity.AbStractSectionEntity;
 
 /**
  * Created by CMQ on 2017/6/23.
  */
 
-public class NotiseSection  extends SectionEntity<NotiseAdapterModel> {
+public class NotiseAbStractSection extends AbStractSectionEntity<NotiseAdapterModel> {
 
     private boolean isMore;
-    public NotiseSection(boolean isHeader, String header, boolean isMroe) {
+    public NotiseAbStractSection(boolean isHeader, String header, boolean isMroe) {
         super(isHeader, header);
         this.isMore = isMroe;
     }
 
-    public NotiseSection(NotiseAdapterModel t) {
+    public NotiseAbStractSection(NotiseAdapterModel t) {
         super(t);
     }
 

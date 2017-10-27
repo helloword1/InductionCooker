@@ -3,7 +3,6 @@ package com.goockr.inductioncooker.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.WindowManager;
 
@@ -31,34 +30,27 @@ public class LauncherActivity extends Activity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_launcher);
-        myInitData();
+
     }
 
     @Override
-    protected void onStart() {
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-                Intent intent =new Intent();
-                intent.setClass(LauncherActivity.this, HomeActivity.class);
-
-                startActivity(intent);
-                finish();
-                //overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
-
-            }
-        }, 1000);super.onStart();
-
-
+    protected void onResume() {
+        super.onResume();
+        myInitData();
     }
+
     /**
      * 获取手机关联的信息
      */
     private void myInitData() {
         Map<String, Object> map = new HashMap<>();
-        map.put("mobile", SharePreferencesUtils.getMobile());
+        String mobile = SharePreferencesUtils.getMobile();
+        if (!NotNull.isNotNull(mobile)) {
+            startActivity(new Intent(this, LoginActivity.class).putExtra("FROM_GUIDE",true));
+            finish();
+            return;
+        }
+        map.put("mobile", mobile);
         map.put("token", SharePreferencesUtils.getToken());
 
         HttpHelper.checkDevice(map, new OKHttp.HttpCallback() {
@@ -75,11 +67,15 @@ public class LauncherActivity extends Activity {
                     result = jsonObject.getInt("result");
                     if (result == 0) {//成功
                         JSONArray list = jsonObject.getJSONArray("list");
-                        FileCache.get(LauncherActivity.this).put("DEVICE_LIST",list);
+                        FileCache.get(LauncherActivity.this).put("DEVICE_LIST", list);
                         String deviceId = SharePreferencesUtils.getDeviceId();
-                        if (!NotNull.isNotNull(deviceId)){
+                        if (!NotNull.isNotNull(deviceId)) {
                             SharePreferencesUtils.setDeviceId(list.get(0).toString());
                         }
+                        Intent intent = new Intent();
+                        intent.setClass(LauncherActivity.this, HomeActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -1,6 +1,7 @@
 package com.goockr.inductioncooker.view;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,30 +55,36 @@ public class SegmentController extends LinearLayout implements View.OnClickListe
     private void initData() {
         selectIndex = 0;
     }
-
+        @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case (R.id.segment_controller_leftbg_ll):
-                if (selectIndex == 0) return;
+                if (selectIndex == 0) {
+                    return;
+                }
                 selectIndex = 0;
-                LTv1.setTextColor(getResources().getColor(R.color.white));
-                LTv.setTextColor(getResources().getColor(R.color.white));
-                RTv.setTextColor(getResources().getColor(R.color.colorPrimary));
-                RTv1.setTextColor(getResources().getColor(R.color.colorPrimary));
+                LTv1.setTextColor(ContextCompat.getColor(getContext(),R.color.white));
+                LTv.setTextColor(ContextCompat.getColor(getContext(),R.color.white));
+                RTv.setTextColor(ContextCompat.getColor(getContext(),R.color.colorPrimary));
+                RTv1.setTextColor(ContextCompat.getColor(getContext(),R.color.colorPrimary));
                 rightbg_ll.setBackgroundResource(R.mipmap.segment_controls_right_normal);
                 leftbg_ll.setBackgroundResource(R.mipmap.segment_controls_left_selected);
                 callback.selectIndexChange(selectIndex);
                 break;
             case (R.id.segment_controller_rightbg_ll):
-                if (selectIndex == 1) return;
+                if (selectIndex == 1) {
+                    return;
+                }
                 selectIndex = 1;
-                LTv1.setTextColor(getResources().getColor(R.color.colorPrimary));
-                LTv.setTextColor(getResources().getColor(R.color.colorPrimary));
-                RTv.setTextColor(getResources().getColor(R.color.white));
-                RTv1.setTextColor(getResources().getColor(R.color.white));
+                LTv1.setTextColor(ContextCompat.getColor(getContext(),R.color.colorPrimary));
+                LTv.setTextColor(ContextCompat.getColor(getContext(),R.color.colorPrimary));
+                RTv.setTextColor(ContextCompat.getColor(getContext(),R.color.white));
+                RTv1.setTextColor(ContextCompat.getColor(getContext(),R.color.white));
                 leftbg_ll.setBackgroundResource(R.mipmap.segment_controls_left_normal);
                 rightbg_ll.setBackgroundResource(R.mipmap.segment_controls_right_selected);
                 callback.selectIndexChange(selectIndex);
+                break;
+            default:
                 break;
         }
     }

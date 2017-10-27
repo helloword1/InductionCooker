@@ -10,9 +10,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
  *
  * A convenience class to extend when you only want to OnItemClickListener for a subset
  * of all the SimpleClickListener. This implements all methods in the
- * {@link SimpleClickListener}
+ * {@link AbstractSimpleClickListener}
  */
-public abstract   class OnItemClickListener extends SimpleClickListener {
+public abstract   class AbstractOnItemClickListenerAbstract extends AbstractSimpleClickListener {
 
 
     @Override

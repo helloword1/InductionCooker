@@ -43,9 +43,9 @@ import com.chad.library.adapter.base.animation.SlideInBottomAnimation;
 import com.chad.library.adapter.base.animation.SlideInLeftAnimation;
 import com.chad.library.adapter.base.animation.SlideInRightAnimation;
 import com.chad.library.adapter.base.entity.IExpandable;
-import com.chad.library.adapter.base.loadmore.LoadMoreView;
-import com.chad.library.adapter.base.loadmore.SimpleLoadMoreView;
-import com.chad.library.adapter.base.util.MultiTypeDelegate;
+import com.chad.library.adapter.base.loadmore.AbstractLoadMoreView;
+import com.chad.library.adapter.base.loadmore.SimpleAbstractLoadMoreView;
+import com.chad.library.adapter.base.util.AbstractMultiTypeDelegate;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -71,7 +71,7 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
     private boolean mNextLoadEnable = false;
     private boolean mLoadMoreEnable = false;
     private boolean mLoading = false;
-    private LoadMoreView mLoadMoreView = new SimpleLoadMoreView();
+    private AbstractLoadMoreView mAbstractLoadMoreView = new SimpleAbstractLoadMoreView();
     private RequestLoadMoreListener mRequestLoadMoreListener;
     private boolean mEnableLoadMoreEndClick = false;
 
@@ -209,9 +209,13 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
      */
     public void disableLoadMoreIfNotFullPage(RecyclerView recyclerView) {
         setEnableLoadMore(false);
-        if (recyclerView == null) return;
+        if (recyclerView == null) {
+            return;
+        }
         RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
-        if (manager == null) return;
+        if (manager == null) {
+            return;
+        }
         if (manager instanceof LinearLayoutManager) {
             final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) manager;
             recyclerView.postDelayed(new Runnable() {
@@ -312,8 +316,8 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
      *
      * @param loadingView
      */
-    public void setLoadMoreView(LoadMoreView loadingView) {
-        this.mLoadMoreView = loadingView;
+    public void setLoadMoreView(AbstractLoadMoreView loadingView) {
+        this.mAbstractLoadMoreView = loadingView;
     }
 
     /**
@@ -325,7 +329,7 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
         if (mRequestLoadMoreListener == null || !mLoadMoreEnable) {
             return 0;
         }
-        if (!mNextLoadEnable && mLoadMoreView.isLoadEndMoreGone()) {
+        if (!mNextLoadEnable && mAbstractLoadMoreView.isLoadEndMoreGone()) {
             return 0;
         }
         if (mData.size() == 0) {
@@ -370,11 +374,11 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
         }
         mLoading = false;
         mNextLoadEnable = false;
-        mLoadMoreView.setLoadMoreEndGone(gone);
+        mAbstractLoadMoreView.setLoadMoreEndGone(gone);
         if (gone) {
             notifyItemRemoved(getLoadMoreViewPosition());
         } else {
-            mLoadMoreView.setLoadMoreStatus(LoadMoreView.STATUS_END);
+            mAbstractLoadMoreView.setLoadMoreStatus(AbstractLoadMoreView.STATUS_END);
             notifyItemChanged(getLoadMoreViewPosition());
         }
     }
@@ -388,7 +392,7 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
         }
         mLoading = false;
         mNextLoadEnable = true;
-        mLoadMoreView.setLoadMoreStatus(LoadMoreView.STATUS_DEFAULT);
+        mAbstractLoadMoreView.setLoadMoreStatus(AbstractLoadMoreView.STATUS_DEFAULT);
         notifyItemChanged(getLoadMoreViewPosition());
     }
 
@@ -400,7 +404,7 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
             return;
         }
         mLoading = false;
-        mLoadMoreView.setLoadMoreStatus(LoadMoreView.STATUS_FAIL);
+        mAbstractLoadMoreView.setLoadMoreStatus(AbstractLoadMoreView.STATUS_FAIL);
         notifyItemChanged(getLoadMoreViewPosition());
     }
 
@@ -420,7 +424,7 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
             }
         } else {
             if (newLoadMoreCount == 1) {
-                mLoadMoreView.setLoadMoreStatus(LoadMoreView.STATUS_DEFAULT);
+                mAbstractLoadMoreView.setLoadMoreStatus(AbstractLoadMoreView.STATUS_DEFAULT);
                 notifyItemInserted(getLoadMoreViewPosition());
             }
         }
@@ -478,7 +482,7 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
             mNextLoadEnable = true;
             mLoadMoreEnable = true;
             mLoading = false;
-            mLoadMoreView.setLoadMoreStatus(LoadMoreView.STATUS_DEFAULT);
+            mAbstractLoadMoreView.setLoadMoreStatus(AbstractLoadMoreView.STATUS_DEFAULT);
         }
         mLastPosition = -1;
         notifyDataSetChanged();
@@ -604,10 +608,12 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
      */
     @Nullable
     public T getItem(@IntRange(from = 0) int position) {
-        if (position < mData.size())
+        if (position < mData.size()) {
             return mData.get(position);
-        else
+        } else {
             return null;
+        }
+
     }
 
     /**
@@ -731,8 +737,8 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
     }
 
     protected int getDefItemViewType(int position) {
-        if (mMultiTypeDelegate != null) {
-            return mMultiTypeDelegate.getDefItemViewType(mData, position);
+        if (mAbstractMultiTypeDelegate != null) {
+            return mAbstractMultiTypeDelegate.getDefItemViewType(mData, position);
         }
         return super.getItemViewType(position);
     }
@@ -765,15 +771,15 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
     }
 
     private K getLoadingView(ViewGroup parent) {
-        View view = getItemView(mLoadMoreView.getLayoutId(), parent);
+        View view = getItemView(mAbstractLoadMoreView.getLayoutId(), parent);
         K holder = createBaseViewHolder(view);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mLoadMoreView.getLoadMoreStatus() == LoadMoreView.STATUS_FAIL) {
+                if (mAbstractLoadMoreView.getLoadMoreStatus() == AbstractLoadMoreView.STATUS_FAIL) {
                     notifyLoadMoreToLoading();
                 }
-                if (mEnableLoadMoreEndClick && mLoadMoreView.getLoadMoreStatus() == LoadMoreView.STATUS_END) {
+                if (mEnableLoadMoreEndClick && mAbstractLoadMoreView.getLoadMoreStatus() == AbstractLoadMoreView.STATUS_END) {
                     notifyLoadMoreToLoading();
                 }
             }
@@ -785,10 +791,10 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
      * The notification starts the callback and loads more
      */
     public void notifyLoadMoreToLoading() {
-        if (mLoadMoreView.getLoadMoreStatus() == LoadMoreView.STATUS_LOADING) {
+        if (mAbstractLoadMoreView.getLoadMoreStatus() == AbstractLoadMoreView.STATUS_LOADING) {
             return;
         }
-        mLoadMoreView.setLoadMoreStatus(LoadMoreView.STATUS_DEFAULT);
+        mAbstractLoadMoreView.setLoadMoreStatus(AbstractLoadMoreView.STATUS_DEFAULT);
         notifyItemChanged(getLoadMoreViewPosition());
     }
 
@@ -925,7 +931,7 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
                 convert(holder, mData.get(holder.getLayoutPosition() - getHeaderLayoutCount()));
                 break;
             case LOADING_VIEW:
-                mLoadMoreView.convert(holder);
+                mAbstractLoadMoreView.convert(holder);
                 break;
             case HEADER_VIEW:
                 break;
@@ -965,20 +971,20 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
         }
     }
 
-    private MultiTypeDelegate<T> mMultiTypeDelegate;
+    private AbstractMultiTypeDelegate<T> mAbstractMultiTypeDelegate;
 
-    public void setMultiTypeDelegate(MultiTypeDelegate<T> multiTypeDelegate) {
-        mMultiTypeDelegate = multiTypeDelegate;
+    public void setMultiTypeDelegate(AbstractMultiTypeDelegate<T> abstractMultiTypeDelegate) {
+        mAbstractMultiTypeDelegate = abstractMultiTypeDelegate;
     }
 
-    public MultiTypeDelegate<T> getMultiTypeDelegate() {
-        return mMultiTypeDelegate;
+    public AbstractMultiTypeDelegate<T> getMultiTypeDelegate() {
+        return mAbstractMultiTypeDelegate;
     }
 
     protected K onCreateDefViewHolder(ViewGroup parent, int viewType) {
         int layoutId = mLayoutResId;
-        if (mMultiTypeDelegate != null) {
-            layoutId = mMultiTypeDelegate.getLayoutId(viewType);
+        if (mAbstractMultiTypeDelegate != null) {
+            layoutId = mAbstractMultiTypeDelegate.getLayoutId(viewType);
         }
         return createBaseViewHolder(parent, layoutId);
     }
@@ -1220,8 +1226,9 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
      * @param header
      */
     public void removeHeaderView(View header) {
-        if (getHeaderLayoutCount() == 0) return;
-
+        if (getHeaderLayoutCount() == 0){
+            return;
+        }
         mHeaderLayout.removeView(header);
         if (mHeaderLayout.getChildCount() == 0) {
             int position = getHeaderViewPosition();
@@ -1238,7 +1245,9 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
      * @param footer
      */
     public void removeFooterView(View footer) {
-        if (getFooterLayoutCount() == 0) return;
+        if (getFooterLayoutCount() == 0) {
+            return;
+        }
 
         mFooterLayout.removeView(footer);
         if (mFooterLayout.getChildCount() == 0) {
@@ -1253,7 +1262,9 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
      * remove all header view from mHeaderLayout and set null to mHeaderLayout
      */
     public void removeAllHeaderView() {
-        if (getHeaderLayoutCount() == 0) return;
+        if (getHeaderLayoutCount() == 0) {
+            return;
+        }
 
         mHeaderLayout.removeAllViews();
         int position = getHeaderViewPosition();
@@ -1266,7 +1277,9 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
      * remove all footer view from mFooterLayout and set null to mFooterLayout
      */
     public void removeAllFooterView() {
-        if (getFooterLayoutCount() == 0) return;
+        if (getFooterLayoutCount() == 0){
+            return;
+        }
 
         mFooterLayout.removeAllViews();
         int position = getFooterViewPosition();
@@ -1406,10 +1419,10 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
         if (position < getItemCount() - mPreLoadNumber) {
             return;
         }
-        if (mLoadMoreView.getLoadMoreStatus() != LoadMoreView.STATUS_DEFAULT) {
+        if (mAbstractLoadMoreView.getLoadMoreStatus() != AbstractLoadMoreView.STATUS_DEFAULT) {
             return;
         }
-        mLoadMoreView.setLoadMoreStatus(LoadMoreView.STATUS_LOADING);
+        mAbstractLoadMoreView.setLoadMoreStatus(AbstractLoadMoreView.STATUS_LOADING);
         if (!mLoading) {
             mLoading = true;
             if (getRecyclerView() != null) {

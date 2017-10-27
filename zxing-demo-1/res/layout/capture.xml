@@ -65,7 +65,7 @@
                 android:background="@drawable/bg_edittext"
                 android:inputType="textCapSentences"
                 android:lines="1"
-                android:paddingLeft="2dp" />
+                android:paddingLeft="5dp" />
 
 
         </RelativeLayout>

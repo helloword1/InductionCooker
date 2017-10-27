@@ -16,19 +16,20 @@ import static com.chad.library.adapter.base.BaseMultiItemQuickAdapter.TYPE_NOT_F
  * <p>
  *
  * more information: https://github.com/CymChad/BaseRecyclerViewAdapterHelper/issues/968
+ * @author tysheng
  */
 
-public abstract class MultiTypeDelegate<T> {
+public abstract class AbstractMultiTypeDelegate<T> {
 
     private static final int DEFAULT_VIEW_TYPE = -0xff;
     private SparseIntArray layouts;
     private boolean autoMode, selfMode;
 
-    public MultiTypeDelegate(SparseIntArray layouts) {
+    public AbstractMultiTypeDelegate(SparseIntArray layouts) {
         this.layouts = layouts;
     }
 
-    public MultiTypeDelegate() {
+    public AbstractMultiTypeDelegate() {
     }
 
     public final int getDefItemViewType(List<T> data, int position) {
@@ -61,7 +62,7 @@ public abstract class MultiTypeDelegate<T> {
      * @param layoutResIds layout id arrays
      * @return MultiTypeDelegate
      */
-    public MultiTypeDelegate registerItemTypeAutoIncrease(@LayoutRes int... layoutResIds) {
+    public AbstractMultiTypeDelegate registerItemTypeAutoIncrease(@LayoutRes int... layoutResIds) {
         autoMode = true;
         checkMode(selfMode);
         for (int i = 0; i < layoutResIds.length; i++) {
@@ -77,7 +78,7 @@ public abstract class MultiTypeDelegate<T> {
      * @param layoutResId layout id
      * @return MultiTypeDelegate
      */
-    public MultiTypeDelegate registerItemType(int type, @LayoutRes int layoutResId) {
+    public AbstractMultiTypeDelegate registerItemType(int type, @LayoutRes int layoutResId) {
         selfMode = true;
         checkMode(autoMode);
         addItemType(type, layoutResId);

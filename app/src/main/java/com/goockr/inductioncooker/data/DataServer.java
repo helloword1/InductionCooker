@@ -4,7 +4,7 @@ package com.goockr.inductioncooker.data;
 
 
 import com.goockr.inductioncooker.models.MoreAdapterModel;
-import com.goockr.inductioncooker.models.MySection;
+import com.goockr.inductioncooker.models.MyAbStractSection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +22,10 @@ public class DataServer {
 
 
 
-    public static List<MySection> getSampleData() {
-        List<MySection> list = new ArrayList<>();
-        list.add(new MySection(true, "Section 1", false));
-        list.add(new MySection(new MoreAdapterModel("添加设备", "",true)));
+    public static List<MyAbStractSection> getSampleData() {
+        List<MyAbStractSection> list = new ArrayList<>();
+        list.add(new MyAbStractSection(true, "Section 1", false));
+        list.add(new MyAbStractSection(new MoreAdapterModel("添加设备", "",true)));
 
 //        list.add(new MySection(true, "Section 2", true));
 //        list.add(new MySection(new MoreAdapterModel("用户名", CYM_CHAD)));

@@ -17,6 +17,8 @@ import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.lib.observer.NoticeObserval;
 import com.goockr.inductioncooker.lib.observer.NoticeObserver;
 import com.goockr.inductioncooker.lib.observer.PowerObserver;
+import com.goockr.inductioncooker.lib.socket.Protocol2;
+import com.goockr.inductioncooker.lib.socket.TcpSocket;
 import com.goockr.inductioncooker.utils.NotNull;
 import com.goockr.inductioncooker.view.DialogView;
 import com.goockr.inductioncooker.view.ImageTopButton;
@@ -99,7 +101,7 @@ public class HomeFragment1 extends Fragment implements SegmentController.Segment
                     object.put("deviceId", "0");
                     Random random = new Random();
                     int i = random.nextInt(7);
-                    object.put("warm", String.format("E%s__%s", i + 1, String.valueOf(System.currentTimeMillis())));
+                    object.put("warm", String.format("E%s___%s", i + 1, String.valueOf(System.currentTimeMillis())));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -167,16 +169,13 @@ public class HomeFragment1 extends Fragment implements SegmentController.Segment
             try {
                 JSONObject object = new JSONObject(read);
                 String id = object.getString("id");
-                if (!TextUtils.equals(id, mId)) {
-                    title_tv.setText(id);
-                    mId = id;
-                }
                 order = object.getJSONObject("order");
                 if (NotNull.isNotNull(order)) {
-                    tvConnect.setText("已连接");
                     int LRID = Integer.valueOf(order.getString("deviceId"));//左右炉
+                    tvConnect.setText("已连接");
                     code = Integer.valueOf(order.getString("code"));// 指令码
                     if (code == 9) {
+                        TcpSocket.getInstance().write(Protocol2.returnError(LRID));
                         notifyObservers(order.toString());
                         return;
                     }
@@ -196,7 +195,10 @@ public class HomeFragment1 extends Fragment implements SegmentController.Segment
                             rightFragment.setMProtocol(read);
                         }
                     }
-
+                    if (!TextUtils.equals(id, mId)) {
+                        title_tv.setText(id);
+                        mId = id;
+                    }
                 } else {
                     tvConnect.setText("未连接");
                 }
@@ -205,6 +207,9 @@ public class HomeFragment1 extends Fragment implements SegmentController.Segment
                 e.printStackTrace();
                 try {
                     code = Integer.valueOf(order.getString("code"));
+                    if (code==-1){
+                        title_tv.setText(new JSONObject(read).getString("target"));
+                    }
                 } catch (JSONException e1) {
                     e1.printStackTrace();
                 }
@@ -216,6 +221,10 @@ public class HomeFragment1 extends Fragment implements SegmentController.Segment
                 tvConnect.setText("未连接");
                 leftFragment.setCode(code);
                 rightFragment.setCode(code);
+                if (NotNull.isNotNull(segmentController)) {
+                    segmentController.setSelectLeft("");
+                    segmentController.setSelectRight("");
+                }
             }
 
         }

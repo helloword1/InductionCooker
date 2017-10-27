@@ -16,17 +16,18 @@
 
 package com.google.zxing.camera;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
 import com.google.zxing.common.Runnable;
 import com.google.zxing.config.Config;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * 由于对焦不是一次性完成的任务（手抖），而系统提供的对焦仅有Camera.autoFocus()方法，

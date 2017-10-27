@@ -117,6 +117,8 @@ public class UpdatePwdFragment extends Fragment {
             case (R.id.fragment_update_pwd_forget_tv):
                 forgetButtonClick();
                 break;
+            default:
+                break;
         }
     }
 
@@ -170,7 +172,7 @@ public class UpdatePwdFragment extends Fragment {
         bundle.putInt("state", 1);
         bundle.putInt("content", R.id.activity_update_pwd);
         fragment.setArguments(bundle);
-        FragmentHelper.addFragmentToBackStack(getActivity(), R.id.activity_update_pwd, this, fragment, Common.VerifiedPhoneNumFragment);
+        FragmentHelper.addFragmentToBackStack(getActivity(), R.id.activity_update_pwd, this, fragment, Common.VERIFIED_PHONE_NUM_FRAGMENT);
 
     }
 

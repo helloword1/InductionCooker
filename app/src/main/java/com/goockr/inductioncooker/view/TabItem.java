@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,13 +46,16 @@ public class TabItem extends RelativeLayout implements Checkable {
 
 	private void init() {
 
-		setBackgroundColor(getResources().getColor(R.color.colorCusTransparent));
+		setBackgroundColor(ContextCompat.getColor(getContext(),R.color.colorCusTransparent));
 		super.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				onChecked();
 				if (OnClickListener != null)
+				{
 					OnClickListener.onClick(v);
+				}
+
 			}
 		});
 	}
@@ -94,7 +98,9 @@ public class TabItem extends RelativeLayout implements Checkable {
 	@Override
 	public void setChecked(boolean checked) {
 		if (isChecked == checked)
+		{
 			return;
+		}
 		for (Checkable ca : chechableList) {
 			ca.setChecked(checked);
 		}

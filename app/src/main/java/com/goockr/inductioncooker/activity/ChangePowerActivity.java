@@ -40,11 +40,11 @@ public class ChangePowerActivity extends BaseActivity {
     public static final String TAG = "";
     public HudHelper hud = new HudHelper();
     private DialogView dialogView;
-    private String MPHONE = "phone";
-    private int FINISH = 112;
+    private String mphone = "phone";
+    private int finish = 112;
     private List<String> codes = new ArrayList<>();
     private JSONArray list;
-    private String device_id;
+    private String deviceId;
     private String devcode;
 
     @Override
@@ -60,13 +60,14 @@ public class ChangePowerActivity extends BaseActivity {
         dialogView = DialogView.getSingleton();
         dialogView.setContext(this);
         Intent intent = getIntent();
-        if (NotNull.isNotNull(intent))
-        device_id =intent.getStringExtra("DEVICE_ID");
+        if (NotNull.isNotNull(intent)) {
+            deviceId = intent.getStringExtra("DEVICE_ID");
+        }
+
         initDatas();
     }
 
     private void initDatas() {
-//        tvPhone.setText("13522222222");
         powerright.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,13 +142,14 @@ public class ChangePowerActivity extends BaseActivity {
         });
 
     }
+
     //访问网络
-    private void initNet(final String Phone) {
+    private void initNet(final String phone) {
         Map<String, Object> map = new HashMap<>();
         map.put("functype", "pt");
         map.put("curruser", SharePreferencesUtils.getMobile());
-        map.put("transfer", Phone);
-        map.put("devcode", device_id);
+        map.put("transfer", phone);
+        map.put("devcode", deviceId);
         map.put("token", SharePreferencesUtils.getToken());
 
         HttpHelper.tranferRightReady(map, new OKHttp.HttpCallback() {
@@ -169,7 +171,7 @@ public class ChangePowerActivity extends BaseActivity {
                     e.printStackTrace();
                 }
                 if (result == 0) {//成功
-                    startActivityForResult(new Intent(ChangePowerActivity.this, ChangePowerNextActivity.class).putExtra(MPHONE, Phone).putExtra("Device", codes.get(0)), 111);
+                    startActivityForResult(new Intent(ChangePowerActivity.this, ChangePowerNextActivity.class).putExtra(mphone, phone).putExtra("Device", codes.get(0)), 111);
                 }
 
             }
@@ -179,7 +181,7 @@ public class ChangePowerActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 111 && resultCode == FINISH) {
+        if (requestCode == 111 && resultCode == finish) {
             finish();
         }
     }

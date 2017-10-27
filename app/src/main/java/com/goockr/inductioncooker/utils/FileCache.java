@@ -28,6 +28,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -136,8 +140,9 @@ public class FileCache {
      */
     public String getAsString(String key) {
         File file = mCache.get(key);
-        if (!file.exists())
+        if (!file.exists()){
             return null;
+        }
         boolean removeFile = false;
         BufferedReader in = null;
         try {
@@ -164,8 +169,10 @@ public class FileCache {
                     e.printStackTrace();
                 }
             }
-            if (removeFile)
+            if (removeFile){
                 remove(key);
+            }
+
         }
     }
 
@@ -318,8 +325,9 @@ public class FileCache {
         boolean removeFile = false;
         try {
             File file = mCache.get(key);
-            if (!file.exists())
+            if (!file.exists()){
                 return null;
+            }
             RAFile = new RandomAccessFile(file, "r");
             byte[] byteArray = new byte[(int) RAFile.length()];
             RAFile.read(byteArray);
@@ -340,8 +348,9 @@ public class FileCache {
                     e.printStackTrace();
                 }
             }
-            if (removeFile)
+            if (removeFile){
                 remove(key);
+            }
         }
     }
 
@@ -414,14 +423,16 @@ public class FileCache {
                 return null;
             } finally {
                 try {
-                    if (bais != null)
+                    if (bais != null){
                         bais.close();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 try {
-                    if (ois != null)
+                    if (ois != null){
                         ois.close();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -523,8 +534,9 @@ public class FileCache {
      */
     public File file(String key) {
         File f = mCache.newFile(key);
-        if (f.exists())
+        if (f.exists()){
             return f;
+        }
         return null;
     }
 
@@ -738,7 +750,7 @@ public class FileCache {
 
         private static String clearDateInfo(String strInfo) {
             if (strInfo != null && hasDateInfo(strInfo.getBytes())) {
-                strInfo = strInfo.substring(strInfo.indexOf(mSeparator) + 1,
+                strInfo = strInfo.substring(strInfo.indexOf(M_SEPARATOR) + 1,
                         strInfo.length());
             }
             return strInfo;
@@ -746,7 +758,7 @@ public class FileCache {
 
         private static byte[] clearDateInfo(byte[] data) {
             if (hasDateInfo(data)) {
-                return copyOfRange(data, indexOf(data, mSeparator) + 1,
+                return copyOfRange(data, indexOf(data, M_SEPARATOR) + 1,
                         data.length);
             }
             return data;
@@ -754,14 +766,14 @@ public class FileCache {
 
         private static boolean hasDateInfo(byte[] data) {
             return data != null && data.length > 15 && data[13] == '-'
-                    && indexOf(data, mSeparator) > 14;
+                    && indexOf(data, M_SEPARATOR) > 14;
         }
 
         private static String[] getDateInfoFromDate(byte[] data) {
             if (hasDateInfo(data)) {
                 String saveDate = new String(copyOfRange(data, 0, 13));
                 String deleteAfter = new String(copyOfRange(data, 14,
-                        indexOf(data, mSeparator)));
+                        indexOf(data, M_SEPARATOR)));
                 return new String[] { saveDate, deleteAfter };
             }
             return null;
@@ -778,22 +790,23 @@ public class FileCache {
 
         private static byte[] copyOfRange(byte[] original, int from, int to) {
             int newLength = to - from;
-            if (newLength < 0)
+            if (newLength < 0){
                 throw new IllegalArgumentException(from + " > " + to);
+            }
             byte[] copy = new byte[newLength];
             System.arraycopy(original, from, copy, 0,
                     Math.min(original.length - from, newLength));
             return copy;
         }
 
-        private static final char mSeparator = ' ';
+        private static final char M_SEPARATOR = ' ';
 
         private static String createDateInfo(int second) {
             String currentTime = System.currentTimeMillis() + "";
             while (currentTime.length() < 13) {
                 currentTime = "0" + currentTime;
             }
-            return currentTime + "-" + second + mSeparator;
+            return currentTime + "-" + second + M_SEPARATOR;
         }
 
         /*
@@ -849,7 +862,7 @@ public class FileCache {
             if (bm == null) {
                 return null;
             }
-            return new BitmapDrawable(bm);
+            return new BitmapDrawable(null,bm);
         }
     }
 }

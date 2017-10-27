@@ -6,31 +6,32 @@ package com.goockr.inductioncooker.common;
 
 public class Common {
 
-    public static final String AdjustFragment  = "AdjustFragment";
+    public static final String ADJUST_FRAGMENT  = "AdjustFragment";
 
-    public static final String ReservationFragment  = "ReservationFragment";
+    public static final String RESERVATION_FRAGMENT = "RESERVATION_FRAGMENT";
 
-    public static final String ReservationBootFragment  = "ReservationBootFragment";
+    public static final String RESERVATION_BOOT_FRAGMENT = "RESERVATION_BOOT_FRAGMENT";
 
-    public static final String TimeReservationFragment = "TimeReservationFragment";
+    public static final String TIME_RESERVATION_FRAGMENT = "TIME_RESERVATION_FRAGMENT";
 
-    public static final String PwdLoginFragment  = "PwdLoginFragment";
+    public static final String PWD_LOGIN_FRAGMENT = "PWD_LOGIN_FRAGMENT";
 
-    public static final String HomeFragmentSelectIndexKey  = "HomeFragmentSelectIndexKey";
+    public static final String HOME_FRAGMENT_SELECT_INDEX_KEY = "HOME_FRAGMENT_SELECT_INDEX_KEY";
 
-    public static final String VerifiedPhoneNumFragment  = "VerifiedPhoneNumFragment";
+    public static final String VERIFIED_PHONE_NUM_FRAGMENT = "VERIFIED_PHONE_NUM_FRAGMENT";
 
-    public static final String VerifiedPhoneNumFragmentPhoneKey  = "VerifiedPhoneNumFragmentPhoneKey";
+    public static final String VERIFIED_PHONE_NUM_FRAGMENT_PHONE_KEY = "VERIFIED_PHONE_NUM_FRAGMENT_PHONE_KEY";
 
-    public static final String SmsCodeFragment  = "SmsCodeFragment";
+    public static final String SMS_CODE_FRAGMENT = "SMS_CODE_FRAGMENT";
 
-    public static final String SetPwdFragment  = "SetPwdFragment";
+    public static final String SET_PWD_FRAGMENT = "SET_PWD_FRAGMENT";
+    public static final String NOTICE_COUNT = "notice_count";
 
     /************************************fragmnet切换动画****************************************************/
-    public static final int FragmentAnimationBottom  = 6;
+    public static final int FRAGMENT_ANIMATION_BOTTOM = 6;
 
     /***********************************WIFI相关参数*****************************************************/
-    public static final String KWIFINameHead  = "abc";
+    public static final String KWIFI_NAME_HEAD = "abc";
 
 
     /***********************************Sokect参数*****************************************************/

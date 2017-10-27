@@ -46,8 +46,9 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         textViewHolder.cardview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (NotNull.isNotNull(listener))
-                listener.itemClickListener(position);
+                if (NotNull.isNotNull(listener)){
+                    listener.itemClickListener(position);
+                }
             }
         });
     }

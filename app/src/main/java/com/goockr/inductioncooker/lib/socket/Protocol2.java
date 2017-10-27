@@ -14,14 +14,14 @@ import org.json.JSONObject;
 public class Protocol2 {
     private static final String TAG = "Protocol2";
 
-//    private static final String targetId = "c11c95c";//消息接收方ID(多个用逗号分隔);
+//    private static final String TARGET_ID = "c11c95c";//消息接收方ID(多个用逗号分隔);
 //    private static String Phone = "17620830220";
 
-//    private static final String targetId = "c11c95c731907033ff7";//消息接收方ID(多个用逗号分隔);
+//    private static final String TARGET_ID = "c11c95c731907033ff7";//消息接收方ID(多个用逗号分隔);
 ////    private static String Phone = "13522222222";
 //    private static String Phone = SharePreferencesUtils.getMobile();
 
-    private static final String targetId = "131c92862d902c1c134";//消息接收方ID(多个用逗号分隔);
+    private static final String TARGET_ID = "131c92862d902c1c134";//消息接收方ID(多个用逗号分隔);
     private static  String Phone = "13763085121";
 
     public static int deviceId = 0;
@@ -102,6 +102,23 @@ public class Protocol2 {
             order.put("code", 2);
             order.put("deviceId", deviceId);
             order.put("power", state);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObjec.toString().getBytes();
+    }/**
+     * 开关机回复
+     *
+     * @param deviceId 炉号
+     * @return
+     */
+    public static byte[] returnError(int deviceId) {
+        JSONObject jsonObjec = textAppending();
+        JSONObject order;
+        try {
+            order = jsonObjec.getJSONObject("order");
+            order.put("code", 9);
+            order.put("deviceId", deviceId);
         } catch (JSONException e) {
             e.printStackTrace();
         }

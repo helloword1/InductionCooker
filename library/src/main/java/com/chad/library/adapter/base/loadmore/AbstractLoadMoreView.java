@@ -8,9 +8,10 @@ import com.chad.library.adapter.base.BaseViewHolder;
 
 /**
  * Created by BlingBling on 2016/11/11.
+ * @author BlingBling
  */
 
-public abstract class LoadMoreView {
+public abstract class AbstractLoadMoreView {
 
     public static final int STATUS_DEFAULT = 1;
     public static final int STATUS_LOADING = 2;
@@ -49,6 +50,8 @@ public abstract class LoadMoreView {
                 visibleLoading(holder, false);
                 visibleLoadFail(holder, false);
                 visibleLoadEnd(holder, false);
+                break;
+            default:
                 break;
         }
     }

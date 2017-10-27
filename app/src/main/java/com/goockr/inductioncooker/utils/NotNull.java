@@ -1,5 +1,7 @@
 package com.goockr.inductioncooker.utils;
 
+import android.text.TextUtils;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -8,7 +10,9 @@ import java.util.Map;
 
 public class NotNull {
 
-	
+
+	private static String naN;
+
 	public static boolean isNotNull(Integer i) {
 		if (null != i && 0 != i) {
 			return true;
@@ -66,7 +70,8 @@ public class NotNull {
 	}
 
 	public static boolean isNotNullAndNaN(Object object) {
-		if (isNotNull(object) && !object.toString().equals("NaN")) {
+		naN = "NaN";
+		if (isNotNull(object) && !TextUtils.equals(object.toString(), naN)) {
 			return true;
 		}
 		return false;

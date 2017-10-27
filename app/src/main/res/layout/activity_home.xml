@@ -7,28 +7,14 @@
     android:orientation="vertical"
     tools:context="com.goockr.inductioncooker.activity.HomeActivity">
 
-
-    <!-- 存放主要页面内容 -->
-
     <FrameLayout
         android:id="@+id/maincontent"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.01" >
-    </FrameLayout>
-
-    <!--<com.goockr.inductioncooker.view.CustomView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="45dp"-->
-        <!--android:background="@color/colorPrimary">-->
-
-
-    <!--</com.goockr.inductioncooker.view.CustomView>-->
+        android:layout_weight="1.01"/>
 
     <com.goockr.inductioncooker.view.Tabbar
         android:id="@+id/tabbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <!--<include layout="@layout/activity_bottom" />-->
-
+        android:layout_height="wrap_content" />
 </LinearLayout>

@@ -1,5 +1,6 @@
 package com.goockr.inductioncooker.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,11 +8,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.text.TextPaint;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.goockr.inductioncooker.MyApplication;
 import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.utils.DensityUtil;
 
@@ -98,11 +98,11 @@ public class BarProgress extends View {
         linePaint.setAntiAlias(true);//取消锯齿
         linePaint.setStrokeWidth(lineHeight);
 
-        Bitmap edit_bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.message_edit);
+        @SuppressLint("DrawAllocation") Bitmap editBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.message_edit);
 
-        Bitmap edited_bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.message_edited);
+        @SuppressLint("DrawAllocation") Bitmap editedBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.message_edited);
 
-        Bitmap nor_edited_bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.message_nor_edited);
+        @SuppressLint("DrawAllocation") Bitmap norEditedBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.message_nor_edited);
 
         float marginLeft=0;
         float marginRight=0;
@@ -129,9 +129,9 @@ public class BarProgress extends View {
         float offWidth=0;
         if (progress==maxCount)
         {
-            offWidth=edit_bitmap.getWidth();
+            offWidth=editBitmap.getWidth();
         }else {
-            offWidth=nor_edited_bitmap.getWidth();
+            offWidth=norEditedBitmap.getWidth();
         }
 
 
@@ -142,36 +142,36 @@ public class BarProgress extends View {
 
             Bitmap bitmap=null;
 
-            float image_x=0;
+            float imageX=0;
 
             if (i<progress)
             {
-                bitmap=edited_bitmap;
-                linePaint.setColor(getResources().getColor(R.color.colorOrange1));
+                bitmap=editedBitmap;
+                linePaint.setColor(ContextCompat.getColor(getContext(),R.color.colorOrange1));
             }else if (i==progress)
             {
-                linePaint.setColor(getResources().getColor(R.color.colorGray1));
-                bitmap=edit_bitmap;
+                linePaint.setColor(ContextCompat.getColor(getContext(),R.color.colorGray1));
+                bitmap=editBitmap;
             }else {
-                bitmap=nor_edited_bitmap;
-                linePaint.setColor(getResources().getColor(R.color.colorGray1));
+                bitmap=norEditedBitmap;
+                linePaint.setColor(ContextCompat.getColor(getContext(),R.color.colorGray1));
             }
 
-            image_x=marginLeft+ (i-1)*margin;
+            imageX=marginLeft+ (i-1)*margin;
 
             if (i<maxCount)
             {
-                canvas.drawLine(image_x+bitmap.getWidth() , height/2 , image_x+margin , height/2 ,linePaint);
+                canvas.drawLine(imageX+bitmap.getWidth() , height/2 , imageX+margin , height/2 ,linePaint);
             }
 
-            canvas.drawBitmap(bitmap,image_x, height/2-(bitmap.getHeight()/2), paint); //在10,60处开始绘制图片
+            canvas.drawBitmap(bitmap,imageX, height/2-(bitmap.getHeight()/2), paint); //在10,60处开始绘制图片
 
             if (i<=tips.size())
             {
                 String text=tips.get(i-1);
                 Rect rect = new Rect();
                 textPaint.getTextBounds(text, 0, text.length(), rect);
-                canvas.drawText(text,0,text.length(), image_x-rect.width()/2+bitmap.getWidth()/2,  height/2+(edit_bitmap.getHeight()/2)+rect.height()+5, textPaint);
+                canvas.drawText(text,0,text.length(), imageX-rect.width()/2+bitmap.getWidth()/2,  height/2+(editBitmap.getHeight()/2)+rect.height()+5, textPaint);
             }
 
 

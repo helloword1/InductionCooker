@@ -47,20 +47,20 @@ public class TcpSocket {
 
     Thread heartBeatThread;
 
-    private static final String codeKey = "code";
-    private static final String deviceIdKey = "deviceId";
+    private static final String CODE_KEY = "code";
+    private static final String DEVICE_ID = "deviceId";
 
-    private static final String powerKey = "power";
+    private static final String POWER_KEY = "power";
 
-    private static final String modenKey = "moden";
+    private static final String MODEN_KEY = "moden";
 
-    private static final String stallKey = "stall";
+    private static final String STALL_KEY = "stall";
 
-    private static final String reservationKey = "reservation ";
+    private static final String RESERVATION_KEY = "reservation ";
 
-    private static final String errorKey = "error";
+    private static final String ERROR_KEY = "error";
 
-    private static final String orderKey = "order";
+    private static final String ORDER_KEY = "order";
 
     public TcpSocket() {
         mHandler = new Handler();
@@ -216,7 +216,9 @@ public class TcpSocket {
                     // 获取读取流
                     reader = new DataInputStream(socket.getInputStream());
                     while (socket != null) {
-                        if (socket.isClosed()) break;
+                        if (socket.isClosed()) {
+                            break;
+                        }
                         byte[] buffer = new byte[MAX_IN_SIZE];
                         System.out.println("*等待客户端输入*");
                         // 读取数据
@@ -261,7 +263,9 @@ public class TcpSocket {
     public void send(String text) {
         DataOutputStream out = null;
         try {
-            if (socket == null) return;
+            if (socket == null) {
+                return;
+            }
             out = new DataOutputStream(socket.getOutputStream());
             //out.writeUTF();
             byte[] bytes = text.getBytes();
@@ -276,7 +280,9 @@ public class TcpSocket {
         DataOutputStream out = null;
         try {
 
-            if (socket == null) return;
+            if (socket == null) {
+                return;
+            }
 
             out = new DataOutputStream(socket.getOutputStream());
 
@@ -292,7 +298,9 @@ public class TcpSocket {
     public void write(byte b[]) {
         DataOutputStream out = null;
         try {
-            if (socket == null) return;
+            if (socket == null) {
+                return;
+            }
             out = new DataOutputStream(socket.getOutputStream());
             Log.v("write", new String(b));
             out.write(b);
@@ -306,12 +314,16 @@ public class TcpSocket {
     public void read() {
         DataInputStream in = null;
         try {
-            if (socket == null) return;
+            if (socket == null) {
+                return;
+            }
             in = new DataInputStream(socket.getInputStream());
             String s = String.valueOf(in);
             Log.d(TAG, "read: " + s);
             while (socket != null) {
-                if (socket.isClosed()) break;
+                if (socket.isClosed()) {
+                    break;
+                }
 
                 byte[] buffer = new byte[MAX_IN_SIZE];
                 // 读取数据
@@ -325,7 +337,9 @@ public class TcpSocket {
                     // 再读一次*/
                     callBack.onRead(reciveStr);
                     if (NotNull.isNotNull(McallBack))
-                    McallBack.onRead(reciveStr);
+                    {
+                        McallBack.onRead(reciveStr);
+                    }
                 }
             }
         } catch (Exception e) {

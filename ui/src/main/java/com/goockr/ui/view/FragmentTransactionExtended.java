@@ -131,6 +131,8 @@ public class FragmentTransactionExtended implements FragmentManager.OnBackStackC
             case ZOOM_FROM_RIGHT_CORNER:
             	transitionZoomFromRightCorner();
                 break;
+            default:
+                break;
         }
         mFragmentTransaction.replace(mContainerID, mSecondFragment);
     }
@@ -307,6 +309,8 @@ public class FragmentTransactionExtended implements FragmentManager.OnBackStackC
                 }else{
                     mDidSlideOut= false;
                 }
+                break;
+            default:
                 break;
         }
     }

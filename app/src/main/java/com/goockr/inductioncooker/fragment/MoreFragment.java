@@ -21,7 +21,7 @@ import com.goockr.inductioncooker.lib.http.HttpError;
 import com.goockr.inductioncooker.lib.http.HttpHelper;
 import com.goockr.inductioncooker.lib.http.OKHttp;
 import com.goockr.inductioncooker.models.MoreAdapterModel;
-import com.goockr.inductioncooker.models.MySection;
+import com.goockr.inductioncooker.models.MyAbStractSection;
 import com.goockr.inductioncooker.utils.FileCache;
 import com.goockr.inductioncooker.utils.MyToast;
 import com.goockr.inductioncooker.utils.NotNull;
@@ -53,7 +53,7 @@ public class MoreFragment extends Fragment {
     @BindView(R.id.fragment_more_rv)
     RecyclerView mRecyclerView;
 
-    private List<MySection> mData;
+    private List<MyAbStractSection> mData;
     private MoreAdapter sectionAdapter;
 
     @Override
@@ -97,7 +97,8 @@ public class MoreFragment extends Fragment {
                     case 7://厂家信息
                         getActivity().startActivity(new Intent(getActivity(), CompanyIntroduceActivity.class));
                         break;
-
+                    default:
+                        break;
 
                 }
             }
@@ -116,7 +117,9 @@ public class MoreFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == 120 && NotNull.isNotNull(data)) {
             String result_data = data.getStringExtra("RESULT_DATA");
-            if (TextUtils.equals(result_data,""))return;
+            if (TextUtils.equals(result_data,"")){
+                return;
+            }
             bindDevice(result_data);
 
         }
@@ -191,19 +194,19 @@ public class MoreFragment extends Fragment {
         if (mData.size() != 0) {
             mData.clear();
         }
-        List<MySection> list = new ArrayList<>();
-        list.add(new MySection(true, "Section 1", false));
-        list.add(new MySection(new MoreAdapterModel("添加设备", "", true)));
-        list.add(new MySection(true, "Section 2", true));
+        List<MyAbStractSection> list = new ArrayList<>();
+        list.add(new MyAbStractSection(true, "Section 1", false));
+        list.add(new MyAbStractSection(new MoreAdapterModel("添加设备", "", true)));
+        list.add(new MyAbStractSection(true, "Section 2", true));
         String userName = SharePreferencesUtils.getUserName();
         if (!NotNull.isNotNull(userName)) {
             userName = SharePreferencesUtils.getMobile();
         }
-        list.add(new MySection(new MoreAdapterModel("权限转移", "", true)));
-        list.add(new MySection(new MoreAdapterModel("用户名", userName, true)));
-        list.add(new MySection(new MoreAdapterModel("修改登录密码", "", true)));
-        list.add(new MySection(new MoreAdapterModel("版本", "V1.0", true)));
-        list.add(new MySection(new MoreAdapterModel("厂家信息", "", true)));
+        list.add(new MyAbStractSection(new MoreAdapterModel("权限转移", "", true)));
+        list.add(new MyAbStractSection(new MoreAdapterModel("用户名", userName, true)));
+        list.add(new MyAbStractSection(new MoreAdapterModel("修改登录密码", "", true)));
+        list.add(new MyAbStractSection(new MoreAdapterModel("版本", "V1.0", true)));
+        list.add(new MyAbStractSection(new MoreAdapterModel("厂家信息", "", true)));
         mData.addAll(list);
         sectionAdapter.notifyDataSetChanged();
     }

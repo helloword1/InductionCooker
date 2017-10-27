@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.percent.PercentRelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,33 +13,34 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:paddingLeft="12dp"
+        android:paddingRight="5dp"
+        android:paddingTop="8dp"
         android:src="@drawable/pop_icon_delete"
-        app:layout_marginBottomPercent="23%"
-        app:layout_marginRightPercent="2%"
-        app:layout_marginTopPercent="1%" />
+        app:layout_marginBottomPercent="23%" />
 
     <TextView
         android:id="@+id/dialongText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        app:layout_marginTopPercent="8%"
         android:gravity="center"
+        android:text="电磁炉正在工作，如果用手机APP控制，\n可能干扰其他用户在电磁炉面板上的操作"
         android:textSize="14sp"
-        android:text="电磁炉正在工作，如果用手机APP控制，\n可能干扰其他用户在电磁炉面板上的操作"/>
+        app:layout_marginTopPercent="8%" />
 
     <Button
         android:id="@+id/btn_know"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:text="知道了"
-        android:minHeight="0dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:maxWidth="0dp"
-        android:background="@drawable/radius_yellow_bg"
-        android:textColor="@color/white"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        app:layout_marginTopPercent="18%"/>
+        android:background="@drawable/radius_yellow_bg"
+        android:maxWidth="0dp"
+        android:minHeight="0dp"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:text="知道了"
+        android:textColor="@color/white"
+        app:layout_marginTopPercent="18%" />
 
 </android.support.percent.PercentRelativeLayout>

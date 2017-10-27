@@ -6,24 +6,24 @@ package com.goockr.inductioncooker.lib.http;
 
 public class HttpCommon {
 
-    public static final String KHttpIp  = "http://120.24.5.252:8099";
-//    public static final String KHttpIp  = "http://192.168.1.187:8080";
+    public static final String K_HTTP_IP = "http://120.24.5.252:8099";
+//    public static final String K_HTTP_IP  = "http://192.168.1.187:8080";
 
-    public static final String KHttpLoginSmsCode  = "/cooker/servlet/AppServlet";
+    public static final String COOKER_SERVLET_APP_SERVLET = "/cooker/servlet/AppServlet";
 
-    public static final String KHttpLoginSms  = "/cooker/servlet/AppServlet";
+    public static final String COOKER_SERVLET_APP_SERVLET1 = "/cooker/servlet/AppServlet";
 
-    public static final String KHttpLoginPwd  = "/cooker/servlet/AppServlet";
+    public static final String COOKER_SERVLET_APP_SERVLET2 = "/cooker/servlet/AppServlet";
 
-    public static final String KHttpForgetCode  = "/cooker/servlet/AppServlet";
+    public static final String COOKER_SERVLET_APP_SERVLET3 = "/cooker/servlet/AppServlet";
 
-    public static final String KHttpForgetPwd  = "/cooker/servlet/AppServlet";
+    public static final String COOKER_SERVLET_APP_SERVLET4 = "/cooker/servlet/AppServlet";
 
-    public static final String KHttpRegist = "/cooker/servlet/AppServlet";
+    public static final String COOKER_SERVLET_APP_SERVLET5 = "/cooker/servlet/AppServlet";
 
-    public static final String KHttpUpdatePwd = "/cooker/servlet/AppServlet";
+    public static final String COOKER_SERVLET_APP_SERVLET6 = "/cooker/servlet/AppServlet";
 
-    public static final String KHttpCheckDevices = "/cooker/a/comm/commDeviceRef/findAppRef";
-    public static final String KHttpaddDevices = "/cooker/a/comm/commDeviceRef/saveDeviceRef";
+    public static final String COOKER_A_COMM_COMM_DEVICE_REF_FIND_APP_REF = "/cooker/a/comm/commDeviceRef/findAppRef";
+    public static final String COOKER_A_COMM_COMM_DEVICE_REF_SAVE_DEVICE_REF = "/cooker/a/comm/commDeviceRef/saveDeviceRef";
 
 }

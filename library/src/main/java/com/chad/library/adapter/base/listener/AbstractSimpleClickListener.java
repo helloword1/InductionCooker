@@ -28,7 +28,7 @@ import static com.chad.library.adapter.base.BaseQuickAdapter.LOADING_VIEW;
  *
  * @see RecyclerView.OnItemTouchListener
  */
-public abstract class SimpleClickListener implements RecyclerView.OnItemTouchListener {
+public abstract class AbstractSimpleClickListener implements RecyclerView.OnItemTouchListener {
     private GestureDetectorCompat mGestureDetector;
     private RecyclerView recyclerView;
     protected BaseQuickAdapter baseQuickAdapter;

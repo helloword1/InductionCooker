@@ -14,9 +14,10 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:src="@drawable/pop_icon_delete"
-        app:layout_marginBottomPercent="23%"
-        app:layout_marginRightPercent="2%"
-        app:layout_marginTopPercent="1%" />
+        android:paddingLeft="12dp"
+        android:paddingRight="5dp"
+        android:paddingTop="8dp"
+        app:layout_marginBottomPercent="23%"/>
 
     <TextView
         android:id="@+id/dialongText"

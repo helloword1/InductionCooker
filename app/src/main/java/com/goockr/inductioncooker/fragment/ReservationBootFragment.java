@@ -41,7 +41,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.chad.library.adapter.base.listener.SimpleClickListener.TAG;
+import static com.chad.library.adapter.base.listener.AbstractSimpleClickListener.TAG;
 
 /**
  * Created by CMQ on 2017/7/3.
@@ -138,6 +138,8 @@ public class ReservationBootFragment extends Fragment {
                bar_pv.setProgress(2);
                canRever =false;
                break;
+           default:
+               break;
        }
 
         initDatePickerView();
@@ -214,6 +216,8 @@ public class ReservationBootFragment extends Fragment {
             case (R.id.navbar_right_bt):
                 rightButtonClick();
                 break;
+            default:
+                break;
         }
 
     }
@@ -269,7 +273,7 @@ public class ReservationBootFragment extends Fragment {
             }
         } else {
             TimeReservationFragment fragment = TimeReservationFragment.newinstance(this.time, mode);
-            FragmentHelper.addFragmentToBackStack(getActivity(), R.id.activity_reservation, this, fragment, Common.TimeReservationFragment);
+            FragmentHelper.addFragmentToBackStack(getActivity(), R.id.activity_reservation, this, fragment, Common.TIME_RESERVATION_FRAGMENT);
         }
     }
 }

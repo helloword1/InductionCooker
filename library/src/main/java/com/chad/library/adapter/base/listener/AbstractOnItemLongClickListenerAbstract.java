@@ -8,7 +8,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
  * create by: allen on 16/8/3.
  */
 
-public abstract class OnItemLongClickListener extends SimpleClickListener {
+public abstract class AbstractOnItemLongClickListenerAbstract extends AbstractSimpleClickListener {
 
 
 

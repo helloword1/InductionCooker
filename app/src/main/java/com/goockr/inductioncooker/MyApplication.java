@@ -74,7 +74,7 @@ public class MyApplication extends Application {
 //                                                               return;
 //                                                           }
 //
-//                                                           String msg = "请连接名称以“" + Common.KWIFINameHead + "”开头的wifi";
+//                                                           String msg = "请连接名称以“" + Common.KWIFI_NAME_HEAD + "”开头的wifi";
 //
 //                                                           tipDialog = new TipDialog(activity, getResources().getString(R.string.dialog_tip), msg, false, true);
 //                                                           tipDialog.setActionButtonClick(new TipDialog.TipDialogCallBack() {

@@ -2,16 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorGreen"
-    >
+    android:background="@color/colorGreen">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="10dp"
         android:background="@mipmap/tab_bg"
-
-        >
+        android:paddingTop="10dp">
 
         <LinearLayout
             android:id="@+id/ll_home"
@@ -20,7 +17,7 @@
             android:layout_weight="1"
             android:gravity="center"
 
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/iv_home"
@@ -44,32 +41,27 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <ImageView
                     android:id="@+id/iv_notise"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/tab_icon_notise_normal"
                     android:layout_centerHorizontal="true"
-                    />
+                    android:src="@mipmap/tab_icon_notise_normal" />
 
                 <com.goockr.ui.view.view.BadgeView
+                    android:id="@+id/bv_notise"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/bv_notise"
-                    android:layout_toRightOf="@+id/iv_notise"
                     android:layout_marginLeft="0dp"
-                    android:text="123"
-                    />
-
+                    android:layout_toRightOf="@+id/iv_notise"
+                    android:text="123" />
             </RelativeLayout>
-
-
-
             <TextView
                 android:id="@+id/tv_notise"
                 android:layout_width="wrap_content"
@@ -86,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/iv_more"
@@ -105,31 +97,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
-
-
-    <!--<LinearLayout-->
-    <!--android:id="@+id/ll_setting"-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_weight="1"-->
-    <!--android:gravity="center"-->
-    <!--android:orientation="vertical" >-->
-
-    <!--<ImageView-->
-    <!--android:id="@+id/iv_setting"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:src="@mipmap/tab_3_normal" />-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/tv_setting"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginTop="3dp"-->
-    <!--android:text="设置"-->
-    <!--android:textColor="#ffffff"-->
-    <!--android:textStyle="bold" />-->
-    <!--</LinearLayout>-->
 
 </LinearLayout>

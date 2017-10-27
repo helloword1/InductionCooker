@@ -1,6 +1,7 @@
 package com.goockr.inductioncooker.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -64,7 +65,7 @@ public class PopuViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             params.setMargins(13,13,13,13);
             textView.setLayoutParams(params);
             textView.setPadding(12, 12, 12, 12);
-            textView.setTextColor(context.getResources().getColor(R.color.colorGrayText));
+            textView.setTextColor(ContextCompat.getColor(context,R.color.colorGrayText));
             textView.setTextSize(15);
             textView.setGravity(Gravity.CENTER);
         }

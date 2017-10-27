@@ -1,21 +1,14 @@
 package com.goockr.inductioncooker.fragment;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.INotificationSideChannel;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.goockr.inductioncooker.MyApplication;
 import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.common.Common;
 import com.goockr.inductioncooker.lib.http.HttpError;
@@ -41,15 +34,15 @@ import butterknife.OnClick;
 public class VerifiedPhoneNumFragment extends Fragment {
 
 
-    private  final int STATE_REGIST = 0;
+    private final int STATE_REGIST = 0;
 
-    private  final int STATE_FORGET = 1;
+    private final int STATE_FORGET = 1;
 
     View contentView;
 
     private HudHelper hudHelper;
 
-    private int state=0;
+    private int state = 0;
 
     private int fragmentContent;
 
@@ -61,7 +54,6 @@ public class VerifiedPhoneNumFragment extends Fragment {
     Button right_bt;
     @BindView(R.id.fragment_verified_phone_num_et)
     MyEditText phone_et;
-
 
 
     @Override
@@ -87,21 +79,18 @@ public class VerifiedPhoneNumFragment extends Fragment {
 
     private void getData() {
 
-        Bundle bundle=getArguments();
-        state=bundle.getInt("state");
-        fragmentContent=bundle.getInt("content");
+        Bundle bundle = getArguments();
+        state = bundle.getInt("state");
+        fragmentContent = bundle.getInt("content");
     }
 
     private void initData() {
 
 
-
     }
 
     private void initUI() {
-
-        hudHelper=new HudHelper();
-
+        hudHelper = new HudHelper();
         title_tv.setText("验证手机号码");
         phone_et.setInputType(InputType.TYPE_CLASS_PHONE);
         phone_et.setHint("手机号码");
@@ -111,65 +100,60 @@ public class VerifiedPhoneNumFragment extends Fragment {
     private void initEvent() {
 
 
-
     }
 
-    private void nextStep()
-    {
+    private void nextStep() {
 
-        if (phone_et.getText().length()==0)
-        {
-            hudHelper.hudShowTip(getActivity(),getResources().getString(R.string.phone_null),Common.KHUDTIPSHORTTIME);
+        if (phone_et.getText().length() == 0) {
+            hudHelper.hudShowTip(getActivity(), getResources().getString(R.string.phone_null), Common.KHUDTIPSHORTTIME);
             return;
         }
 //functype=vc&mobile=13763085121
-        Map<String,Object> map=new HashMap<>();
-        map.put("functype","vc");
-        map.put("mobile",phone_et.getText().toString());
+        Map<String, Object> map = new HashMap<>();
+        map.put("functype", "vc");
+        map.put("mobile", phone_et.getText().toString());
 
-        hudHelper.hudShow(getActivity(),getResources().getString(R.string.get_sms_code));
+        hudHelper.hudShow(getActivity(), getResources().getString(R.string.get_sms_code));
 
         HttpHelper.getForgetSmmCode(map, new OKHttp.HttpCallback() {
             @Override
             public void onFailure(HttpError error) {
-                hudHelper.hudUpdateAndHid(error.msg,Common.KHUDFINISHTIME);
+                hudHelper.hudUpdateAndHid(error.msg, Common.KHUDFINISHTIME);
             }
 
             @Override
             public void onSuccess(JSONObject jsonObject) {
 
                 hudHelper.hudHide();
-                SmsCodeFragment fragment=new SmsCodeFragment();
-                Bundle bundle=new Bundle();
-                bundle.putString(Common.VerifiedPhoneNumFragmentPhoneKey,phone_et.getText());
-                bundle.putInt("content",fragmentContent);
-                bundle.putInt("state",state);
+                SmsCodeFragment fragment = new SmsCodeFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString(Common.VERIFIED_PHONE_NUM_FRAGMENT_PHONE_KEY, phone_et.getText());
+                bundle.putInt("content", fragmentContent);
+                bundle.putInt("state", state);
                 fragment.setArguments(bundle);
-                FragmentHelper.addFragmentToBackStack(getActivity(),fragmentContent,VerifiedPhoneNumFragment.this,fragment,Common.SmsCodeFragment);
+                FragmentHelper.addFragmentToBackStack(getActivity(), fragmentContent, VerifiedPhoneNumFragment.this, fragment, Common.SMS_CODE_FRAGMENT);
             }
         });
 
 
-
     }
 
-    @OnClick({R.id.navbar_left_bt,R.id.navbar_right_bt})
-    public void OnClick(View v)
-    {
-        switch (v.getId())
-        {
+    @OnClick({R.id.navbar_left_bt, R.id.navbar_right_bt})
+    public void OnClick(View v) {
+        switch (v.getId()) {
             case (R.id.navbar_left_bt):
                 FragmentHelper.pop(getActivity());
                 break;
 
             case (R.id.navbar_right_bt):
 
-                if (phone_et.getText().length()==0)
-                {
-                    hudHelper.hudShowTip(getActivity(),"请填写手机号码！",1000);
+                if (phone_et.getText().length() == 0) {
+                    hudHelper.hudShowTip(getActivity(), "请填写手机号码！", 1000);
                     return;
                 }
                 nextStep();
+                break;
+            default:
                 break;
 
         }

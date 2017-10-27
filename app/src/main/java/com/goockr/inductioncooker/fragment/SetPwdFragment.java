@@ -43,7 +43,7 @@ public class SetPwdFragment extends Fragment {
     String smsCode;
     int state;
 
-    HudHelper hud=new HudHelper();
+    HudHelper hud = new HudHelper();
 
     @BindView(R.id.navbar_title_tv)
     TextView title_tv;
@@ -76,14 +76,13 @@ public class SetPwdFragment extends Fragment {
 
     private void initData() {
 
-        Bundle bundle= getArguments();
+        Bundle bundle = getArguments();
 
-        if (bundle!=null)
-        {
-            phone=bundle.getString("phoneNumber");
-            fragmentContent=bundle.getInt("content");
-            smsCode=bundle.getString("smsCode");
-            state=bundle.getInt("state");
+        if (bundle != null) {
+            phone = bundle.getString("phoneNumber");
+            fragmentContent = bundle.getInt("content");
+            smsCode = bundle.getString("smsCode");
+            state = bundle.getInt("state");
         }
 
     }
@@ -105,24 +104,22 @@ public class SetPwdFragment extends Fragment {
 
     }
 
-    @OnClick({R.id.navbar_left_bt,R.id.navbar_right_bt})
-    public void OnClick(View v)
-    {
-        switch (v.getId())
-        {
+    @OnClick({R.id.navbar_left_bt, R.id.navbar_right_bt})
+    public void OnClick(View v) {
+        switch (v.getId()) {
             case (R.id.navbar_left_bt):
                 FragmentHelper.pop(getActivity());
                 break;
             case (R.id.navbar_right_bt):
 
-              //  getActivity().finish();
+                //  getActivity().finish();
 
 
-
-               action();
-
+                action();
 
 
+                break;
+            default:
                 break;
         }
     }
@@ -134,23 +131,21 @@ public class SetPwdFragment extends Fragment {
             return;
         }
 
-        if (!(newpwd_et.getText().toString().equals(again_et.getText().toString())))
-        {
+        if (!(newpwd_et.getText().toString().equals(again_et.getText().toString()))) {
             hud.hudShowTip(getActivity(), getResources().getString(R.string.pwd_againpwd_unequal), Common.KHUDTIPSHORTTIME);
             return;
         }
 
-        if (state==0)
-        {
+        if (state == 0) {
 
-            hud.hudShow(getActivity(),getResources().getString(R.string.registing));
+            hud.hudShow(getActivity(), getResources().getString(R.string.registing));
 
 //functype=cu&mobile=13763085121&vcode=6000
-            Map<String,Object> map=new HashMap<>();
-            map.put("functype","cu");
-            map.put("mobile",phone);
-            map.put("vcode",smsCode);
-            map.put("pwd",newpwd_et.getText().toString());
+            Map<String, Object> map = new HashMap<>();
+            map.put("functype", "cu");
+            map.put("mobile", phone);
+            map.put("vcode", smsCode);
+            map.put("pwd", newpwd_et.getText().toString());
 
             HttpHelper.regist(map, new OKHttp.HttpCallback() {
                 @Override
@@ -164,7 +159,7 @@ public class SetPwdFragment extends Fragment {
                     hud.hudUpdateAndHid(getResources().getString(R.string.registed), Common.KHUDFINISHTIME, new HudHelper.SuccessCallBack() {
                         @Override
                         public void success() {
-                           // FragmentHelper.popRootFragment(getActivity());
+                            // FragmentHelper.popRootFragment(getActivity());
 
                             dataSave(jsonObject);
 
@@ -176,15 +171,15 @@ public class SetPwdFragment extends Fragment {
                 }
             });
 
-        }else {
+        } else {
 
-            hud.hudShow(getActivity(),getResources().getString(R.string.chage_pwd_tip));
+            hud.hudShow(getActivity(), getResources().getString(R.string.chage_pwd_tip));
 
-            Map<String,Object> map=new HashMap<>();
-            map.put("functype","rp");
-            map.put("mobile",phone);
-            map.put("vcode",smsCode);
-            map.put("new",newpwd_et.getText().toString());
+            Map<String, Object> map = new HashMap<>();
+            map.put("functype", "rp");
+            map.put("mobile", phone);
+            map.put("vcode", smsCode);
+            map.put("new", newpwd_et.getText().toString());
             HttpHelper.forgetPwd(map, new OKHttp.HttpCallback() {
                 @Override
                 public void onFailure(HttpError error) {
@@ -208,24 +203,23 @@ public class SetPwdFragment extends Fragment {
         }
 
 
-
     }
 
     private void dataSave(JSONObject json) {
 
-        JSONObject object=new JSONObject();
+        JSONObject object = new JSONObject();
 
-        String name="";
-        String token="";
-        String mobile="";
-        String userId="";
+        String name = "";
+        String token = "";
+        String mobile = "";
+        String userId = "";
 
         try {
-            object=json.getJSONObject("userInfo");
-            name=object.getString("name");
-            token=object.getString("token");
-            mobile=object.getString("mobile");
-            userId=object.getString("id");
+            object = json.getJSONObject("userInfo");
+            name = object.getString("name");
+            token = object.getString("token");
+            mobile = object.getString("mobile");
+            userId = object.getString("id");
 
         } catch (JSONException e) {
             e.printStackTrace();

@@ -96,6 +96,8 @@ public class OrderTimeActivity extends BaseActivity {
             case 9:
                 tvOrderCompleteInfo.setText(String.format("模式:  %1$s\n开机时间：%2$s\n工作时长：自动", modeStr[mMode], time));
                 break;
+            default:
+                break;
         }
     }
 
@@ -112,9 +114,13 @@ public class OrderTimeActivity extends BaseActivity {
     //取消预约
     @OnClick(R.id.tv_cancel_order)//
     public void onclick() {
-        if (lrIndex == -1) return;
+        if (lrIndex == -1) {
+            return;
+        }
         if (bsaeHudHelper == null)
+        {
             bsaeHudHelper = new HudHelper();
+        }
         bsaeHudHelper.hudShow(this, "正在加载...");
         if (thread == null) {
             thread = new Thread(new Runnable() {
@@ -147,6 +153,8 @@ public class OrderTimeActivity extends BaseActivity {
             });
         }
         if (!thread.isAlive())
+        {
             thread.start();
+        }
     }
 }

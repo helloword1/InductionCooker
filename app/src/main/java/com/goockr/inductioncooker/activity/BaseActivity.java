@@ -15,7 +15,7 @@ import com.goockr.ui.view.view.TipDialog;
 
 public class BaseActivity extends Activity {
     private static final String TAG = "BaseActivity";
-    private static final int ConnetContOut = 5;
+    private static final int CONNET_CONT_OUT = 5;
     private final int READ_COUNT = 1001;
     private final String READ_TAG = "MSG";
     HudHelper bsaeHudHelper = new HudHelper();
@@ -29,6 +29,8 @@ public class BaseActivity extends Activity {
 //                    BaseProtocol mProtocol = (BaseProtocol) data.getSerializable(READ_TAG);
                     String mProtocol = data.getString(READ_TAG);
                     handleMsg(mProtocol);
+                    break;
+                default:
                     break;
             }
         }
@@ -46,7 +48,7 @@ public class BaseActivity extends Activity {
 
         initData();
 
-        ConnectSocket();
+        connectSocket();
 
     }
 
@@ -58,10 +60,14 @@ public class BaseActivity extends Activity {
 
     }
 
-    private void ConnectSocket() {
-        if (this.getClass() != HomeActivity.class) return;
+    private void connectSocket() {
+        if (this.getClass() != HomeActivity.class){
+            return;
+        }
 
-        if (TcpSocket.getInstance().isConnect()) return;
+        if (TcpSocket.getInstance().isConnect()){
+            return;
+        }
 
         //  Log.v("","连接服务器...");
 
@@ -80,14 +86,14 @@ public class BaseActivity extends Activity {
                 bsaeHudHelper.hudUpdate("onFailConnnect" + connetCount);
 
                 connetCount++;
-                if (connetCount < ConnetContOut) {
+                if (connetCount < CONNET_CONT_OUT) {
                     try {
                         Thread.sleep(200);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
 
-                    ConnectSocket();
+                    connectSocket();
                 } else { // 如果上面递归连接失败，就弹出连接超时提示框
                     bsaeHudHelper.hudHide();
                     connetCount = 0;
@@ -95,7 +101,7 @@ public class BaseActivity extends Activity {
                     tipDialog.setActionButtonClick(new TipDialog.TipDialogCallBack() {
                         @Override
                         public void buttonClick(TipDialog dialog) {
-                            ConnectSocket();
+                            connectSocket();
                             dialog.dismiss();
                         }
                     });
@@ -106,7 +112,7 @@ public class BaseActivity extends Activity {
 
             @Override
             public void onDisconnect() {
-                ConnectSocket();
+                connectSocket();
             }
 
             @Override

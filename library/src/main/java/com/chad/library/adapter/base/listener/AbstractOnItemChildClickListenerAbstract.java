@@ -8,10 +8,12 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
  * Created by AllenCoder on 2016/8/03.
  * A convenience class to extend when you only want to OnItemChildClickListener for a subset
  * of all the SimpleClickListener. This implements all methods in the
- * {@link SimpleClickListener}
+ * {@link AbstractSimpleClickListener}
+ *
+ * @author AllenCoder
  **/
 
-public abstract class OnItemChildClickListener extends SimpleClickListener {
+public abstract class AbstractOnItemChildClickListenerAbstract extends AbstractSimpleClickListener {
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -33,6 +35,6 @@ public abstract class OnItemChildClickListener extends SimpleClickListener {
 
     }
 
-    public  abstract void onSimpleItemChildClick(BaseQuickAdapter adapter, View view, int position);
+    public abstract void onSimpleItemChildClick(BaseQuickAdapter adapter, View view, int position);
 
 }

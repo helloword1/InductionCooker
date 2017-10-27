@@ -1,16 +1,12 @@
 package com.goockr.inductioncooker.activity;
 
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
 import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.common.Common;
-import com.goockr.inductioncooker.fragment.ReservationFragment;
 import com.goockr.inductioncooker.fragment.UpdatePwdFragment;
 import com.goockr.inductioncooker.utils.FragmentHelper;
 
@@ -30,7 +26,7 @@ public class UpdatePwdActivity extends BaseActivity {
 
         UpdatePwdFragment fragment=new UpdatePwdFragment();
 
-        FragmentHelper.addFirstFragmentToBackStack(this,R.id.activity_update_pwd,fragment, Common.ReservationFragment);
+        FragmentHelper.addFirstFragmentToBackStack(this,R.id.activity_update_pwd,fragment, Common.RESERVATION_FRAGMENT);
 
     }
 

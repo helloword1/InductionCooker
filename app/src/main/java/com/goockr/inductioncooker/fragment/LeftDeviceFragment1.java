@@ -56,13 +56,14 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static android.app.Activity.RESULT_FIRST_USER;
-import static com.chad.library.adapter.base.listener.SimpleClickListener.TAG;
+import static com.chad.library.adapter.base.listener.AbstractSimpleClickListener.TAG;
 
 /**
  * Created by CMQ on 2017/6/27.
@@ -140,6 +141,8 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
 
                     }
                     break;
+                default:
+                    break;
             }
         }
     };
@@ -205,6 +208,8 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
     private Thread timeThread;
     private List<PowerObserver> observers = new ArrayList<>();
     private OnDeviceListener listener;
+    private ScheduledExecutorService theadPool;
+    private Thread modeThread;
 
     @Override
     public void registerObserver(PowerObserver observer) {
@@ -233,7 +238,6 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         contentView = inflater.inflate(R.layout.fragment_leftdevice1, container, false);
         reservationPon = ((ImageView) contentView.findViewById(R.id.reservationPon));
         ButterKnife.bind(this, contentView);
-
         initData();
         initUI();
         initEvent();
@@ -245,8 +249,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
      * 默认数据
      */
     private void initData() {
-
-        countDown = new CountDownTimer(4500, 1000) {
+        countDown = new CountDownTimer(3000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -256,6 +259,9 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
             public void onFinish() {
                 hud.setLabel("切换超时");
                 scheduleDismiss();
+                if (NotNull.isNotNull(modeThread)) {
+                    modeThread.interrupt();
+                }
             }
         };
 
@@ -395,9 +401,9 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         String timeStr = null;
         int hour = 0;
         int minute = 0;
-        if (time <= 0)
+        if (time <= 0) {
             return "00:00";
-        else {
+        } else {
             hour = time / 3600;
             if (hour == 0) { // 不满一小时
                 minute = time / 60 + 1; // 就换成分钟
@@ -407,8 +413,10 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                 }
                 timeStr = unitFormat(hour) + ":" + unitFormat(minute);
             } else {
-                if (hour > 99)
+                if (hour > 99) {
                     return "99:59";
+                }
+
                 minute = (time - hour * 3600) / 60 + 1;
                 if (minute % 60 == 0) {
                     minute = 0;
@@ -422,10 +430,12 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
 
     private String unitFormat(int i) {
         String retStr;
-        if (i >= 0 && i < 10)
+        if (i >= 0 && i < 10) {
             retStr = "0" + Integer.toString(i);
-        else
+        } else {
             retStr = "" + i;
+        }
+
         return retStr;
     }
 
@@ -439,7 +449,9 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
             public void imageTopButtonOnClickListener(ImageTopButton button) {
                 //设备切换
                 JSONArray device_list = FileCache.get(getActivity()).getAsJSONArray("DEVICE_LIST");
-                if (!NotNull.isNotNull(device_list)) return;
+                if (!NotNull.isNotNull(device_list)) {
+                    return;
+                }
                 final List<BaseDevice> list = new ArrayList<>();
                 for (int i = 0; i < device_list.length(); i++) {
                     String devicecode = null;
@@ -462,9 +474,9 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                 popWindow.setOnItemclickListener(new PopWindowUtils.OnItemClickListener() {
                     @Override
                     public void onItemClick(int position) {
-                        if (NotNull.isNotNull(listener)){
+                        if (NotNull.isNotNull(listener)) {
                             listener.deviceListener(list.get(position).getDeviceId());
-                            new HudHelper().hudShowChange(getActivity(),"正在切换中");
+                            new HudHelper().hudShowChange(getActivity(), "正在切换中");
                             SharePreferencesUtils.setDeviceId(list.get(position).getDeviceId());
                         }
                     }
@@ -486,6 +498,8 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                 flAdjust.setVisibility(View.VISIBLE);
                 flAdjust.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.adujst_open));
                 adjustLeftData();
+                break;
+            default:
                 break;
         }
 
@@ -520,14 +534,16 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
             case R.id.fragment_leftdevice_reservation_bt://预约
                 if (!isReverBl) {
                     Intent intent = new Intent(getActivity(), ReservationActivity.class);
-                    intent.putExtra(Common.HomeFragmentSelectIndexKey, 0);
+                    intent.putExtra(Common.HOME_FRAGMENT_SELECT_INDEX_KEY, 0);
                     startActivityForResult(intent, REVER_DEX);
                 } else {
-                    if (bsaeHudHelper == null)
+                    if (bsaeHudHelper == null) {
                         bsaeHudHelper = new HudHelper();
+                    }
                     bsaeHudHelper.hudShow(getActivity(), "正在加载...");
                     clickRever = true;
-                    if (thread == null) {
+                    if (thread == null||!thread.isAlive()) {
+                        touTime=0;
                         thread = new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -543,11 +559,15 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                 }
                 return;
             case R.id.fragment_leftdevice_unreservation_bt://取消预约
-                if (!isReverBl) return;
-                if (bsaeHudHelper == null)
+                if (!isReverBl) {
+                    return;
+                }
+                if (bsaeHudHelper == null) {
                     bsaeHudHelper = new HudHelper();
+                }
                 bsaeHudHelper.hudShow(getActivity(), "正在加载...");
-                if (thread == null) {
+                if (thread == null||!thread.isAlive()) {
+                    touTime1=0;
                     thread = new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -582,7 +602,8 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     thread.start();
                 }
                 return;
-
+            default:
+                break;
         }
 
         // 只有电源通了的情况下才可以执行
@@ -621,10 +642,24 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     mode = 7;
                     preMode = 7;
                     break;
+                default:
+                    break;
             }
             // 当前模式发生变化时，才会用socket发送数据检查状态
             if (mMode != mode) {
-                TcpSocket.getInstance().write(Protocol2.moden(0, mode));
+                if (!NotNull.isNotNull(modeThread) || !modeThread.isAlive()) {
+                    modeThread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            while (!Thread.currentThread().isInterrupted()) {
+                                SystemClock.sleep(500);
+                                TcpSocket.getInstance().write(Protocol2.moden(0, preMode));
+                            }
+                        }
+                    });
+                    modeThread.start();
+                }
+
                 TcpSocket.getInstance().write(Protocol2.timeStatus(0, mode));
                 hadChangeModeBool = true;
             } else {
@@ -709,6 +744,8 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                 notifyObservers("100W");
                 tvData.setText(hourToTime(leftTime));
                 break;
+            default:
+                break;
         }
         if (!NotNull.isNotNull(leftThread) || !leftThread.isAlive()) {
             leftThread = new Thread(new Runnable() {
@@ -731,12 +768,11 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RESULT_FIRST_USER) {
-            if (data == null) return;
+            if (data == null) {
+                return;
+            }
             final int hour = data.getIntExtra("HOUR", -1);
             final int second = data.getIntExtra("SECOND", -1);
-//            resu = hour * 3600 + second * 60;
-//            leftSumTime = leftTime;
-//            tvData.setText(hourToTime(leftTime));
             sumBack = 5;
             hubShow("正在设置");
             if (timeThread == null || (timeThread != null && !timeThread.isAlive())) {
@@ -872,17 +908,19 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
     }
 
     private void reducePower() {
-        if (stall < 2)
+        if (stall < 2) {
             TcpSocket.getInstance().write(Protocol2.stall(0, 0));
-        else
+        } else {
             TcpSocket.getInstance().write(Protocol2.stall(0, stall - 1));
+        }
     }
 
     private void plusPower() {
-        if (stall > ring_pv.maxCount)
+        if (stall > ring_pv.maxCount) {
             TcpSocket.getInstance().write(Protocol2.stall(0, ring_pv.maxCount));
-        else
+        } else {
             TcpSocket.getInstance().write(Protocol2.stall(0, stall + 1));
+        }
     }
 
     @Override
@@ -908,7 +946,8 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
             case (R.id.fragment_adjust_plus_ib):
                 plusPower();
                 break;
-
+            default:
+                break;
         }
     }
 
@@ -917,13 +956,16 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         if (code == -1 || code == -3) {//关机代码
             setButtonStatus(false);
             leftPowerOnOff = false;
-            if (NotNull.isNotNull(power_bt))
+            if (NotNull.isNotNull(power_bt)) {
                 power_bt.setSelect(false);
-            if (bottom_ll.getVisibility() == View.VISIBLE)
+            }
+            if (bottom_ll.getVisibility() == View.VISIBLE) {
                 bottom_ll.setVisibility(View.INVISIBLE);
+            }
             if (flAdjust.getVisibility() == View.VISIBLE) {
-                if (NotNull.isNotNull(select_bt))
+                if (NotNull.isNotNull(select_bt)) {
                     select_bt.setSelect(false);
+                }
                 flAdjust.setVisibility(View.INVISIBLE);
                 flAdjust.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.adujst_close));
             }
@@ -996,8 +1038,9 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                         notifyObservers("");
                         bottom_ll.setVisibility(View.INVISIBLE);
                         if (flAdjust.getVisibility() == View.VISIBLE) {
-                            if (NotNull.isNotNull(select_bt))
+                            if (NotNull.isNotNull(select_bt)) {
                                 select_bt.setEnabledStatus(false);
+                            }
                             flAdjust.setVisibility(View.INVISIBLE);
                             flAdjust.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.adujst_close));
                         }
@@ -1054,20 +1097,16 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     } else {
                         hadChangeMode = 0;
                     }
-
-                    if (hadChangeMode == 0) {
-                        hud.setLabel("切换失败");
-                        cancelCountDown();
-                        scheduleDismiss();
-                    } else {
-                        hud.setLabel("切换成功");
-                        if (select_bt != null) {
-                            select_bt.setSelect(false); // 更新之前的按钮显示图片
-                        }
+                    hud.setLabel("切换成功");
+                    if (select_bt != null) {
+                        select_bt.setSelect(false); // 更新之前的按钮显示图片
                         currentButton.setSelect(true); // 更新当前点击的按钮显示图片
                         select_bt = currentButton;
-                        cancelCountDown();
-                        scheduleDismiss();
+                    }
+                    cancelCountDown();
+                    scheduleDismiss();
+                    if (NotNull.isNotNull(modeThread)) {
+                        modeThread.interrupt();
                     }
                     break;
                 case 4://档位设定返回
@@ -1085,7 +1124,9 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     break;
                 case 6://设置/取消预约时间返回
                     String error = orderObject.getString("error");
-                    if (Integer.valueOf(error) != 0) return;
+                    if (Integer.valueOf(error) != 0) {
+                        return;
+                    }
                     String reser = orderObject.getString("setting");
                     String success = orderObject.getString("success");
                     if (Boolean.valueOf(reser)) {
@@ -1097,11 +1138,16 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     mode = Integer.valueOf(moden);
                     break;
                 case 7://查询预约返回
-                    if (!clickRever) return;//点击按钮才进去
+                    if (!clickRever) {
+                        return;//点击按钮才进去
+                    }
                     clickRever = false;
-                    if (NotNull.isNotNull(bsaeHudHelper))
+                    if (NotNull.isNotNull(bsaeHudHelper)) {
                         bsaeHudHelper.hudHide();
-                    if (thread != null) thread.interrupt();
+                    }
+                    if (thread != null) {
+                        thread.interrupt();
+                    }
                     moden = orderObject.getString("moden");
                     mode = Integer.valueOf(moden);
                     String bootTime = orderObject.getString("bootTime");//开机时间
@@ -1129,6 +1175,8 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     }
                     hud.dismiss();
                     break;
+                default:
+                    break;
             }
 
         } catch (JSONException e) {
@@ -1154,7 +1202,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
             // 提示窗弹出
             final DialogView dialogView = DialogView.getSingleton();
             dialogView.setContext(getActivity());
-            if (dialogView.isShow()){
+            if (dialogView.isShow()) {
                 return;
             }
             View view = dialogView.showCustomDialong(R.layout.dialong_tips);
@@ -1237,8 +1285,9 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     String stall5 = orderObject.getString("stall");
                     if (NotNull.isNotNull(stall5)) {
                         int progress = Integer.valueOf(stall5);
-                        if (progress >= 0)
+                        if (progress >= 0) {
                             tvPower.setText(CommonBean.FRYOIlSTRS1[progress]);
+                        }
                         notifyObservers(CommonBean.FRYOIlSTRS1[progress]);
                         tvTemperature.setText(CommonBean.FRYOIlSTRS2[progress]);
                     }
@@ -1249,8 +1298,9 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     String stall6 = orderObject.getString("stall");
                     if (NotNull.isNotNull(stall6)) {
                         int progress = Integer.valueOf(stall6);
-                        if (progress >= 0)
+                        if (progress >= 0) {
                             tvPower.setText(CommonBean.KAOZA1[progress]);
+                        }
                         notifyObservers(CommonBean.KAOZA1[progress]);
                         tvTemperature.setText(CommonBean.KAOZA2[progress]);
                     }
@@ -1258,6 +1308,8 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                 case 7:
                     cookMode7();
                     setModenButton(R.id.fragment_leftdevice_bt7);
+                    break;
+                default:
                     break;
             }
             int worktime = Integer.valueOf(orderObject.getString("worktime"));
@@ -1293,7 +1345,10 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         });
         TextView dialongText = (TextView) view.findViewById(R.id.dialongText);
         dialongText.setText("请先打开电磁炉");
-        if (select_bt != null) select_bt.setEnabledStatus(false);
+        if (select_bt != null) {
+            select_bt.setEnabledStatus(false);
+        }
+
     }
 
     public CountDownTimer getCountDowmTimer() {
@@ -1343,10 +1398,12 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
 
         cancelCountDownHandler.sendMessage(Message.obtain());
     }
-    public interface  OnDeviceListener{
+
+    public interface OnDeviceListener {
         void deviceListener(String deviceName);
     }
-    public void setOnDeviceListener(OnDeviceListener listener){
-        this.listener=listener;
+
+    public void setOnDeviceListener(OnDeviceListener listener) {
+        this.listener = listener;
     }
 }

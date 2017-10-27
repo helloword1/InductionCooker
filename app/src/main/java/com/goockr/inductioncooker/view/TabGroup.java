@@ -62,7 +62,9 @@ public class TabGroup extends LinearLayout {
 		setCheckedId(checkId);
 		mCheckedId = checkId;
 		if (onTabGroupCheckedListener != null)
+		{
 			onTabGroupCheckedListener.onChecked(checkId);
+		}
 	}
 
 	private void setCheckedId(int id) {

@@ -205,24 +205,24 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     private void initPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //添加需要申请的权限
-            ArrayList<String> PerList = new ArrayList<>();
-            //PerList.add(Manifest.permission.ACCESS_WIFI_STATE);
-            PerList.add(Manifest.permission.CAMERA);
-            //PerList.add(Manifest.permission.READ_PHONE_STATE);
-            //PerList.add(Manifest.permission.ACCESS_NETWORK_STATE);
-            //	PerList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            //	PerList.add(Manifest.permission.RECORD_AUDIO);
+            ArrayList<String> perList = new ArrayList<>();
+            //perList.add(Manifest.permission.ACCESS_WIFI_STATE);
+            perList.add(Manifest.permission.CAMERA);
+            //perList.add(Manifest.permission.READ_PHONE_STATE);
+            //perList.add(Manifest.permission.ACCESS_NETWORK_STATE);
+            //	perList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            //	perList.add(Manifest.permission.RECORD_AUDIO);
 
-            if (!checkSelfPermissions(PerList)) {
-                requestPermissions(PerList.toArray(new String[PerList.size()]), REQUEST_CODE_ASK_PERMISSIONS);
+            if (!checkSelfPermissions(perList)) {
+                requestPermissions(perList.toArray(new String[perList.size()]), REQUEST_CODE_ASK_PERMISSIONS);
             }
         }
     }
 
     //检查权限是否有效
-    private boolean checkSelfPermissions(ArrayList<String> PerList) {
+    private boolean checkSelfPermissions(ArrayList<String> perList) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            for (String per : PerList) {
+            for (String per : perList) {
                 if (checkSelfPermission(per) != PackageManager.PERMISSION_GRANTED) {
                     return false;
                 }
@@ -344,7 +344,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             case KeyEvent.KEYCODE_VOLUME_DOWN:
                 cameraManager.zoomOut();
                 return true;
-
+            default:
+                break;
         }
         return super.onKeyDown(keyCode, event);
     }

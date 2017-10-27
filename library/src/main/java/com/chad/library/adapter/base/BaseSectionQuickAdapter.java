@@ -2,14 +2,14 @@ package com.chad.library.adapter.base;
 
 import android.view.ViewGroup;
 
-import com.chad.library.adapter.base.entity.SectionEntity;
+import com.chad.library.adapter.base.entity.AbStractSectionEntity;
 
 import java.util.List;
 
 /**
  * https://github.com/CymChad/BaseRecyclerViewAdapterHelper
  */
-public abstract class BaseSectionQuickAdapter<T extends SectionEntity, K extends BaseViewHolder> extends BaseQuickAdapter<T, K> {
+public abstract class BaseSectionQuickAdapter<T extends AbStractSectionEntity, K extends BaseViewHolder> extends BaseQuickAdapter<T, K> {
 
 
     protected int mSectionHeadResId;
@@ -35,8 +35,9 @@ public abstract class BaseSectionQuickAdapter<T extends SectionEntity, K extends
 
     @Override
     protected K onCreateDefViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == SECTION_HEADER_VIEW)
+        if (viewType == SECTION_HEADER_VIEW){
             return createBaseViewHolder(getItemView(mSectionHeadResId, parent));
+        }
 
         return super.onCreateDefViewHolder(parent, viewType);
     }

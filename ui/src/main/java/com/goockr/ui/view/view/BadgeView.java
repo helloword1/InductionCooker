@@ -40,6 +40,7 @@ import android.widget.TextView;
 public class BadgeView extends TextView {
 
     private boolean mHideOnNull = true;
+    private final String sero = "0";
 
     public BadgeView(Context context) {
         this(context, null);
@@ -83,7 +84,7 @@ public class BadgeView extends TextView {
 
     public void setBackground(int dipRadius, int badgeColor) {
         int radius = dip2Px(dipRadius);
-        float[] radiusArray = new float[] { radius, radius, radius, radius, radius, radius, radius, radius };
+        float[] radiusArray = new float[]{radius, radius, radius, radius, radius, radius, radius, radius};
         RoundRectShape roundRect = new RoundRectShape(radiusArray, null, null);
         ShapeDrawable bgDrawable = new ShapeDrawable(roundRect);
         bgDrawable.getPaint().setColor(badgeColor);
@@ -112,7 +113,7 @@ public class BadgeView extends TextView {
      */
     @Override
     public void setText(CharSequence text, BufferType type) {
-        if (isHideOnNull() && (text == null || text.toString().equalsIgnoreCase("0"))) {
+        if (mHideOnNull && (text == null || sero.equalsIgnoreCase(text.toString()))) {
             setVisibility(View.GONE);
         } else {
             setVisibility(View.VISIBLE);
@@ -163,7 +164,7 @@ public class BadgeView extends TextView {
 
     public int[] getBadgeMargin() {
         FrameLayout.LayoutParams params = (LayoutParams) getLayoutParams();
-        return new int[] { params.leftMargin, params.topMargin, params.rightMargin, params.bottomMargin };
+        return new int[]{params.leftMargin, params.topMargin, params.rightMargin, params.bottomMargin};
     }
 
     public void incrementBadgeCount(int increment) {
@@ -219,7 +220,7 @@ public class BadgeView extends TextView {
 
             badgeContainer.setLayoutParams(parentLayoutParams);
             target.setLayoutParams(new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
             parentContainer.addView(badgeContainer, groupIndex, parentLayoutParams);
             badgeContainer.addView(target);

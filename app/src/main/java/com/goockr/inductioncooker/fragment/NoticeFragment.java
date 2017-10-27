@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,10 +21,11 @@ import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.adapter.NotiseAdapter;
 import com.goockr.inductioncooker.lib.observer.NoticeObserval;
 import com.goockr.inductioncooker.lib.observer.NoticeObserver;
+import com.goockr.inductioncooker.models.NotiseAbStractSection;
 import com.goockr.inductioncooker.models.NotiseAdapterModel;
-import com.goockr.inductioncooker.models.NotiseSection;
 import com.goockr.inductioncooker.utils.FileCache;
 import com.goockr.inductioncooker.utils.NotNull;
+import com.goockr.inductioncooker.utils.PreferencesUitls;
 import com.goockr.inductioncooker.view.DialogView;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
@@ -43,6 +45,7 @@ import java.util.List;
 
 import static android.content.ContentValues.TAG;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static com.goockr.inductioncooker.common.Common.NOTICE_COUNT;
 
 /**
  * Created by CMQ on 2017/6/21.
@@ -51,7 +54,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 public class NoticeFragment extends Fragment implements NoticeObserver {
     View view;
     SwipeMenuRecyclerView mRecyclerView;
-    private List<NotiseSection> mData;
+    private List<NotiseAbStractSection> mData;
     private NotiseAdapter sectionAdapter;
     private PercentRelativeLayout notiPercent;
     private int[] drablwIcon = {R.mipmap.notice_icon_avatar_1, R.mipmap.notice_icon_avatar_2, R.mipmap.notice_icon_avatar_3,
@@ -59,8 +62,12 @@ public class NoticeFragment extends Fragment implements NoticeObserver {
     private final String SAVE_ITEM = "NOTICE_JSON";
     private FileCache fileCache;
     private JSONArray notice_json;
-    private boolean isEnough;
+    private String currentNotice;
     private TextView textView;
+    private int unLookCount = 0;
+    private onAlertListener listener;
+    private PreferencesUitls instance;
+    private int length;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,10 +80,9 @@ public class NoticeFragment extends Fragment implements NoticeObserver {
 
     private void initData() {
         fileCache = FileCache.get(getActivity());
+        instance = PreferencesUitls.getInstance(getActivity());
+
         mData = new ArrayList<>();
-//        mData.add(new NotiseSection(true, "Section 1", false));
-//        mData.add(new NotiseSection(new NotiseAdapterModel(R.mipmap.notice_icon_avatar_default, "有人在限用时间内打开电磁炉！", new Date())));
-//        mData.add(new NotiseSection(new NotiseAdapterModel(R.mipmap.notice_icon_avatar_default2, "电磁炉温度超出限制温度！", new Date())));
     }
 
     private void initUI() {
@@ -88,25 +94,6 @@ public class NoticeFragment extends Fragment implements NoticeObserver {
         mRecyclerView.setLoadMoreListener(new SwipeMenuRecyclerView.LoadMoreListener() {
             @Override
             public void onLoadMore() {
-                /*if (NotNull.isNotNull(notice_json)&&notice_json.length()>0){
-                    if (mData.size()<notice_json.length()){
-                        notice_json.get()
-                    }
-
-
-                    sectionAdapter.notifyDataSetChanged();
-                    if (mData.size()==notice_json.length()-1){
-                        // 数据完更多数据，一定要调用这个方法。
-                        // 第一个参数：表示此次数据是否为空。
-                        // 第二个参数：表示是否还有更多数据。
-                        mRecyclerView.loadMoreFinish(false, false);
-                    }else{
-                        mRecyclerView.loadMoreFinish(false, true);
-                    }
-                }else {
-                    mRecyclerView.loadMoreFinish(true, false);
-                }*/
-
             }
         });
 
@@ -114,11 +101,12 @@ public class NoticeFragment extends Fragment implements NoticeObserver {
         sectionAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                NotiseSection mySection = mData.get(position);
-                if (mySection.isHeader)
+                NotiseAbStractSection mySection = mData.get(position);
+                if (mySection.isHeader) {
                     Toast.makeText(getActivity(), mySection.header, Toast.LENGTH_SHORT).show();
-                else
+                } else {
                     Toast.makeText(getActivity(), mySection.t.title, Toast.LENGTH_SHORT).show();
+                }
             }
         });
         sectionAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
@@ -150,8 +138,9 @@ public class NoticeFragment extends Fragment implements NoticeObserver {
                         setTextColor(getActivity().getResources().getColor(R.color.white)).setHeight(MATCH_PARENT).setWidth(180).setBackgroundColorResource(R.color.colorRed).setTextSize(15)); // 在Item右侧添加一个菜单。
             }
         });
-        if (mData.size() == 0) setEmptyView();
-        else if (NotNull.isNotNull(textView)) {
+        if (mData.size() == 0) {
+            setEmptyView();
+        } else if (NotNull.isNotNull(textView)) {
             textView.setVisibility(View.GONE);
         }
         mRecyclerView.setAdapter(sectionAdapter);
@@ -180,8 +169,9 @@ public class NoticeFragment extends Fragment implements NoticeObserver {
                 mData.remove(potion);
                 removeDate(potion);//删除
                 sectionAdapter.notifyDataSetChanged();
-                if (mData.size() == 0)
+                if (mData.size() == 0) {
                     setEmptyView();
+                }
                 dialogView.dismissDialong();
 
             }
@@ -205,6 +195,10 @@ public class NoticeFragment extends Fragment implements NoticeObserver {
 
     @Override
     public void update(String succeedStr) {
+        if (NotNull.isNotNull(currentNotice) && TextUtils.equals(currentNotice, succeedStr)) {
+            return;
+        }
+        currentNotice = succeedStr;
         Log.d(TAG, "update: " + succeedStr);
         saveNotice(succeedStr);
     }
@@ -222,11 +216,18 @@ public class NoticeFragment extends Fragment implements NoticeObserver {
                 notice_json = new JSONArray();
                 notice_json.put(0, object);
             } else {
+                //跟上一条数据一致
+                if (TextUtils.equals(notice_json.get(notice_json.length() - 1).toString(), json)) {
+                    Log.d(TAG, "saveNotice: ");
+                    return;
+                }
+                length++;
                 notice_json.put(object);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        listener.alertListener(Math.abs(length));
         fileCache.put(SAVE_ITEM, notice_json);
         getNOticeData();
 
@@ -236,17 +237,21 @@ public class NoticeFragment extends Fragment implements NoticeObserver {
         if (!NotNull.isNotNull(notice_json)) {
             notice_json = fileCache.getAsJSONArray(SAVE_ITEM);
         }
-        if (!NotNull.isNotNull(notice_json)) return;
+        if (!NotNull.isNotNull(notice_json)) {
+            return;
+        }
         mData.clear();
-        if (notice_json.length() == 0) return;
+        if (notice_json.length() == 0) {
+            return;
+        }
         for (int i = 0; i < notice_json.length(); i++) {
             try {
                 JSONObject jsonObject = notice_json.getJSONObject(i);
                 String warm = jsonObject.getString("warm");
-                if (warm.contains("__")) {
-                    String[] strings = warm.split("__");
+                if (warm.contains("___")) {
+                    String[] strings = warm.split("___");
                     Integer index = Integer.valueOf(strings[0].substring(1, 2));
-                    mData.add(new NotiseSection(new NotiseAdapterModel(drablwIcon[index - 1], getStringArray()[index - 1], new Date(Long.valueOf(strings[1])))));
+                    mData.add(new NotiseAbStractSection(new NotiseAdapterModel(drablwIcon[index - 1], getStringArray()[index - 1], new Date(Long.valueOf(strings[1])))));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -256,8 +261,9 @@ public class NoticeFragment extends Fragment implements NoticeObserver {
             textView.setVisibility(View.GONE);
         }
         Collections.reverse(mData);
-        if (NotNull.isNotNull(sectionAdapter))
+        if (NotNull.isNotNull(sectionAdapter)) {
             sectionAdapter.notifyDataSetChanged();
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -267,9 +273,24 @@ public class NoticeFragment extends Fragment implements NoticeObserver {
         } else {
             notice_json = fileCache.getAsJSONArray(SAVE_ITEM);
         }
-        if (NotNull.isNotNull(notice_json))
+        if (NotNull.isNotNull(notice_json)) {
             fileCache.put(SAVE_ITEM, notice_json);
-        else
+            instance.putValue(NOTICE_COUNT, notice_json.length());
+        } else {
             fileCache.clear();
+            instance.putValue(NOTICE_COUNT, 0);
+        }
+    }
+
+    public void set2Zero() {
+        length=0;
+    }
+
+    public interface onAlertListener {
+        void alertListener(int length);
+    }
+
+    public void setOnAlertListener(onAlertListener listener) {
+        this.listener = listener;
     }
 }

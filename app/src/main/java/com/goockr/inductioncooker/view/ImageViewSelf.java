@@ -40,6 +40,7 @@ public class ImageViewSelf extends ImageView {
     }
 
     //重写onDraw方法
+    @Override
     public void onDraw(Canvas canvas)
     {
         //执行父类的onDraw方法

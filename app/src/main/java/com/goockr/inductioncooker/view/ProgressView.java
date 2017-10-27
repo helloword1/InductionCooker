@@ -9,6 +9,7 @@ import android.graphics.Paint.Cap;
 import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -102,7 +103,7 @@ public class ProgressView extends View {
 		paint.setStrokeWidth((float) 40.0);
 		paint.setStyle(Style.STROKE);
 		paint.setStrokeCap(Cap.ROUND);
-		paint.setColor(getResources().getColor(R.color.colorCirleBg));
+		paint.setColor(ContextCompat.getColor(getContext(),R.color.colorCirleBg));
 		canvas.drawArc(rectBlackBg, 0,  360, false, paint);
 
 

@@ -35,7 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.chad.library.adapter.base.listener.SimpleClickListener.TAG;
+import static com.chad.library.adapter.base.listener.AbstractSimpleClickListener.TAG;
 
 /**
  * Created by CMQ on 2017/7/4.
@@ -136,8 +136,9 @@ public class TimeReservationFragment extends Fragment {
 
                 break;
             case (R.id.navbar_left_bt):
-                // fragmentManager.popBackStack();
                 FragmentHelper.pop(getActivity());
+                break;
+            default:
                 break;
         }
     }

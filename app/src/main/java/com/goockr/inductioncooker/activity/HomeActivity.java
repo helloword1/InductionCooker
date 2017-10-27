@@ -17,8 +17,11 @@ import com.goockr.inductioncooker.fragment.HomeFragment1;
 import com.goockr.inductioncooker.fragment.MoreFragment;
 import com.goockr.inductioncooker.fragment.NoticeFragment;
 import com.goockr.inductioncooker.lib.socket.TcpSocket;
+import com.goockr.inductioncooker.utils.NotNull;
+import com.goockr.inductioncooker.utils.PreferencesUitls;
 import com.goockr.inductioncooker.view.Tabbar;
 import com.goockr.ui.view.helper.HudHelper;
+import com.goockr.ui.view.view.BadgeView;
 import com.goockr.ui.view.view.TipDialog;
 
 import java.util.ArrayList;
@@ -28,7 +31,7 @@ import butterknife.ButterKnife;
 
 public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCallBack {
 
-    private static final int MaxConnectCount = 10;
+    private static final int MAX_CONNECT_COUNT = 10;
     @BindView(R.id.tabbar)
     Tabbar tabbar;
     HudHelper hudHelper;
@@ -36,6 +39,11 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
     private HomeFragment1 fragment;
     private NoticeFragment notifragment;
     private MoreFragment morefragment;
+    private BadgeView mBvNotice;
+    private PreferencesUitls instance;
+    private int count;
+    private final String SAVE_ITEM = "NOTICE_JSON";
+
     public HudHelper getHudHelper() {
 
         if (hudHelper == null) {
@@ -69,6 +77,7 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
     }
 
     private void initData() {
+        instance = PreferencesUitls.getInstance(HomeActivity.this);
         connectCount = 0;
     }
 
@@ -90,13 +99,21 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
                         break;
                     case (1):
                         fragmentTransaction.show(notifragment).hide(fragment).hide(morefragment);
+                        notifragment.set2Zero();
                         break;
                     case (2):
                         fragmentTransaction.show(morefragment).hide(fragment).hide(notifragment);
                         break;
+                    default:
+                        break;
                 }
 
                 fragmentTransaction.commit();
+            }
+
+            @Override
+            public void setTabbarCount(BadgeView bvNotice) {
+                mBvNotice = bvNotice;
             }
         });
 
@@ -114,6 +131,15 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
         fragmentTransaction.add(R.id.maincontent, morefragment, "HomeFragment");// 更多
         fragmentTransaction.show(fragment).hide(notifragment).hide(morefragment);
         fragmentTransaction.commit();
+        //监听通知
+        notifragment.setOnAlertListener(new NoticeFragment.onAlertListener() {
+            @Override
+            public void alertListener(int length) {
+                    if (NotNull.isNotNull(mBvNotice)){
+                        mBvNotice.setBadgeCount(length);
+                    }
+            }
+        });
     }
 
 
@@ -191,7 +217,7 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
 
     @Override
     public void onFailConnnect() {
-        if (connectCount < MaxConnectCount) {
+        if (connectCount < MAX_CONNECT_COUNT) {
             connectCount++;
             TcpSocket.getInstance().connect(Common.KIP, Common.KPORT, this);
         } else {
@@ -214,7 +240,7 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
     @Override
     public void onDisconnect() {
 
-        if (connectCount < MaxConnectCount) {
+        if (connectCount < MAX_CONNECT_COUNT) {
             connectCount++;
             TcpSocket.getInstance().connect(Common.KIP, Common.KPORT, this);
         } else {

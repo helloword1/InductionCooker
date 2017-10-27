@@ -1,6 +1,7 @@
 package com.goockr.inductioncooker.view;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Display;
@@ -68,8 +69,12 @@ public class PopWindowUtils {
         });
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
-        int height = display.getHeight();
+//        int height = display.getHeight();
+        Point outSize = new Point();
+        display.getSize(outSize);
+        int height=outSize.y;
         int mheight = height / 3;
+
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, mheight);
         recycleView.setLayoutParams(params);
         this.popWindow = new PopupWindow(popView, LinearLayout.LayoutParams.MATCH_PARENT,

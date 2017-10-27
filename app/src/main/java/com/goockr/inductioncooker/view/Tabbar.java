@@ -1,6 +1,7 @@
 package com.goockr.inductioncooker.view;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.goockr.inductioncooker.R;
+import com.goockr.inductioncooker.utils.NotNull;
 import com.goockr.ui.view.view.BadgeView;
 
 import butterknife.BindView;
@@ -54,6 +56,9 @@ public class Tabbar extends LinearLayout {
 
     public void setSelectChangeListener(TabbarCallback callback) {
         this.tabbarCallback = callback;
+        if (NotNull.isNotNull(tabbarCallback)){
+            tabbarCallback.setTabbarCount(bv_notise);
+        }
     }
 
     public Tabbar(Context context) {
@@ -69,12 +74,11 @@ public class Tabbar extends LinearLayout {
     public Tabbar(Context context, AttributeSet attrs) {
         super(context, attrs);
         // TODO Auto-generated constructor stub
-//        LayoutInflater inflater=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        inflater.inflate(R.layout.tabbar,this);
         View view = LayoutInflater.from(context).inflate(R.layout.tabbar, this, true);
         ButterKnife.bind(this, view);
         selLinearLayout = ll_home;
         bv_notise.setBadgeCount(0);
+
     }
 
 
@@ -88,34 +92,24 @@ public class Tabbar extends LinearLayout {
         }
         // 在每次点击后将所有的底部按钮(ImageView,TextView)颜色改为灰色，然后根据点击着色
         restartBotton();
-
-//        FragmentManager fragmentManager= getFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
         // ImageView和TetxView置为绿色，页面随之跳转
         switch (v.getId()) {
             case R.id.ll_home:
                 iv_home.setImageResource(R.mipmap.tab_icon_home_selected);
-                tv_home.setTextColor(getResources().getColor(R.color.white));
+                tv_home.setTextColor(ContextCompat.getColor(getContext(),R.color.white));
                 selectIndex = 0;
-
-//                fragmentTransaction.replace(R.id.maincontent,new HomeFragment(),"HomeFragment");
-//                fragmentTransaction.commit();
                 break;
             case R.id.ll_notise:
                 iv_notice.setImageResource(R.mipmap.tab_icon_notise_selected);
-                tv_notice.setTextColor(getResources().getColor(R.color.white));
+                tv_notice.setTextColor(ContextCompat.getColor(getContext(),R.color.white));
                 selectIndex = 1;
                 bv_notise.setBadgeCount(0);
                 break;
             case R.id.ll_more:
                 iv_more.setImageResource(R.mipmap.tab_icon_more_selected);
-                tv_more.setTextColor(getResources().getColor(R.color.white));
+                tv_more.setTextColor(ContextCompat.getColor(getContext(),R.color.white));
                 selectIndex = 2;
-
                 break;
-
-
             default:
                 break;
         }
@@ -125,19 +119,18 @@ public class Tabbar extends LinearLayout {
     }
 
     private void restartBotton() {
-        // ImageView置为灰色
         iv_home.setImageResource(R.mipmap.tab_icon_home_normal);
         iv_notice.setImageResource(R.mipmap.tab_icon_notise_normal);
         iv_more.setImageResource(R.mipmap.tab_icon_more_normal);
-        // TextView置为白色
-        tv_home.setTextColor(getResources().getColor(R.color.colorlightgray));
-        tv_notice.setTextColor(getResources().getColor(R.color.colorlightgray));
-        tv_more.setTextColor(getResources().getColor(R.color.colorlightgray));
+        tv_home.setTextColor(ContextCompat.getColor(getContext(),R.color.colorlightgray));
+        tv_notice.setTextColor(ContextCompat.getColor(getContext(),R.color.colorlightgray));
+        tv_more.setTextColor(ContextCompat.getColor(getContext(),R.color.colorlightgray));
 
     }
 
     public interface TabbarCallback {
-        public void tabbarItenChange(int selectIndex);
+        void tabbarItenChange(int selectIndex);
+        void setTabbarCount(BadgeView bvNotice);
     }
 
 

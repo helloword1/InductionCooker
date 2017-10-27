@@ -14,9 +14,9 @@ import com.goockr.ui.R;
 
 
 public class CompanyIntroduceActivity extends Activity {
-    Button bt_ComIntroduceBack;
-    ProgressBar pb_ProgressBar;
-    WebView web_View;
+    Button btComIntroduceBack;
+    ProgressBar pbProgressBar;
+    WebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,28 +28,28 @@ public class CompanyIntroduceActivity extends Activity {
 
     private void setupUI() {
 
-        pb_ProgressBar = (ProgressBar) findViewById(R.id.pb_ProgressBar);
-        web_View = (WebView) findViewById(R.id.web_View);
-        //  web_View.getSettings().setJavaScriptEnabled(true);
+        pbProgressBar = (ProgressBar) findViewById(R.id.pb_ProgressBar);
+        webView = (WebView) findViewById(R.id.web_View);
+        //  webView.getSettings().setJavaScriptEnabled(true);
 
 
 //支持javascript
-        //       web_View.getSettings().setJavaScriptEnabled(true);
+        //       webView.getSettings().setJavaScriptEnabled(true);
 // 设置可以支持缩放
-        web_View.getSettings().setSupportZoom(true);
+        webView.getSettings().setSupportZoom(true);
 // 设置出现缩放工具
-        web_View.getSettings().setBuiltInZoomControls(true);
+        webView.getSettings().setBuiltInZoomControls(true);
 //扩大比例的缩放
-        web_View.getSettings().setUseWideViewPort(true);
+        webView.getSettings().setUseWideViewPort(true);
 //自适应屏幕
 //        web.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 //        web.getSettings().setLoadWithOverviewMode(true);
 
 
-        web_View.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        web_View.getSettings().setLoadWithOverviewMode(true);
+        webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        webView.getSettings().setLoadWithOverviewMode(true);
 
-        web_View.setWebViewClient(new WebViewClient() {
+        webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
@@ -59,23 +59,23 @@ public class CompanyIntroduceActivity extends Activity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                pb_ProgressBar.setVisibility(View.GONE);
+                pbProgressBar.setVisibility(View.GONE);
             }
         });
 
-        web_View.loadUrl("http://www.goockr.com");
+        webView.loadUrl("http://www.goockr.com");
 
-        bt_ComIntroduceBack = (Button) findViewById(R.id.bt_ComIntroduceBack);
+        btComIntroduceBack = (Button) findViewById(R.id.bt_ComIntroduceBack);
 
     }
 
     private void eventHandle() {
 
-        bt_ComIntroduceBack.setOnClickListener(new View.OnClickListener() {
+        btComIntroduceBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (web_View.canGoBack()){
-                    web_View.goBack();
+                if (webView.canGoBack()){
+                    webView.goBack();
                 }else {
                     finish();
                 }
@@ -86,8 +86,8 @@ public class CompanyIntroduceActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        if (web_View.canGoBack()){
-            web_View.goBack();
+        if (webView.canGoBack()){
+            webView.goBack();
         }else {
             super.onBackPressed();
         }

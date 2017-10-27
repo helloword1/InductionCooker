@@ -10,6 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.goockr.inductioncooker.R;
+import com.goockr.inductioncooker.activity.BaseActivity;
 import com.goockr.inductioncooker.utils.NotNull;
 
 /**
@@ -38,7 +39,7 @@ public class DialogView {
         dialong = new AlertDialog.Builder(context, R.style.AlertDialog);
     }
 
-    public View showDialong(int layout, float Width, float Height) {
+    public View showDialong(int layout, float width, float height) {
         final View inflateDialong = LayoutInflater.from(context)
                 .inflate(layout, null);
         alertDialog = dialong.create();
@@ -48,10 +49,10 @@ public class DialogView {
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         window.setContentView(inflateDialong);
         WindowManager.LayoutParams lp = alertDialog.getWindow().getAttributes();
-        float dWidth = Width;
-        float DHeight = Height;
+        float dWidth = width;
+        float dHeight = height;
         lp.width = (int) dWidth;// 定义宽度
-        lp.height = (int) DHeight;// 定义高度
+        lp.height = (int) dHeight;// 定义高度
         alertDialog.getWindow().setAttributes(lp);
         return inflateDialong;
     }
@@ -65,10 +66,14 @@ public class DialogView {
     }
 
     public View showCustomDialong(int layout) {
+
         final View inflateDialong = LayoutInflater.from(context)
                 .inflate(layout, null);
         alertDialog = dialong.create();
         alertDialog.setCanceledOnTouchOutside(false);
+        if (context instanceof BaseActivity&&((BaseActivity) context).isFinishing()){
+           return inflateDialong;
+        }
         alertDialog.show();
         Window window = alertDialog.getWindow();
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

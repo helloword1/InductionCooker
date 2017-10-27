@@ -13,7 +13,7 @@ public class WifiConnectHelper {
     public static boolean isConnectWifi()
     {
         boolean isSuccess=false;
-        if (WifiHelper.getWifiSSID(MyApplication.getContext()).contains(Common.KWIFINameHead))
+        if (WifiHelper.getWifiSSID(MyApplication.getContext()).contains(Common.KWIFI_NAME_HEAD))
         {
             isSuccess=true;
         }

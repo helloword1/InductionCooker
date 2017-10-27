@@ -2,6 +2,7 @@ package com.goockr.inductioncooker.activity;
 
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -14,12 +15,14 @@ import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.common.Common;
 import com.goockr.inductioncooker.fragment.SmsLoginFragment;
 import com.goockr.inductioncooker.utils.FragmentHelper;
+import com.goockr.inductioncooker.utils.NotNull;
 
 import butterknife.ButterKnife;
 
 public class LoginActivity extends BaseActivity {
 
     FragmentManager fragmentManager;
+    private boolean fromGuide;
 
 //    @BindView(R.id.activity_login_content_fl)
 //    FrameLayout conten_fl;
@@ -41,27 +44,20 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void initUI() {
-
-        SmsLoginFragment fragment=new SmsLoginFragment();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.add(R.id.activity_login_content_fl,fragment, Common.PwdLoginFragment);
-//        fragmentTransaction.show(fragment);
-//        fragmentTransaction.addToBackStack(Common.PwdLoginFragment);
-//        fragmentTransaction.commit();
-
-
-        FragmentHelper.addFirstFragmentToBackStack(this,R.id.activity_login_content_fl,fragment,Common.PwdLoginFragment);
-
+        Intent intent = getIntent();
+        if (NotNull.isNotNull(intent)) {
+            fromGuide = intent.getBooleanExtra("FROM_GUIDE", false);
+        }
+        SmsLoginFragment fragment = SmsLoginFragment.newInstance(fromGuide);
+        FragmentHelper.addFirstFragmentToBackStack(this, R.id.activity_login_content_fl, fragment, Common.PWD_LOGIN_FRAGMENT);
     }
 
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        if (keyCode==KeyEvent.KEYCODE_BACK)
-        {
-            if (fragmentManager.getBackStackEntryCount()==1)
-            {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (fragmentManager.getBackStackEntryCount() == 1) {
                 finish();
             }
         }
@@ -90,16 +86,16 @@ public class LoginActivity extends BaseActivity {
         return onTouchEvent(ev);
     }
 
-    public  boolean isShouldHideInput(View v, MotionEvent event) {
+    public boolean isShouldHideInput(View v, MotionEvent event) {
 
         if (v != null && (v instanceof EditText)) {//instanceof 判断对象是否是一个类
-            int[] leftTop = { 0, 0 }; //获取输入框当前的location位置
+            int[] leftTop = {0, 0}; //获取输入框当前的location位置
             v.getLocationInWindow(leftTop);
             int left = leftTop[0];
             int top = leftTop[1];
             int bottom = top + v.getHeight();
             int right = left + v.getWidth();
-          //  Log.v("isShouldHideInput","top:"+top+"\neventy:"+event.getY()+"\nbottom:"+bottom+"\nleft:"+left+"\neventx:"+event.getX()+"\nright:"+right);
+            //  Log.v("isShouldHideInput","top:"+top+"\neventy:"+event.getY()+"\nbottom:"+bottom+"\nleft:"+left+"\neventx:"+event.getX()+"\nright:"+right);
 
             if (event.getX() > left && event.getX() < right && event.getY() > top && event.getY() < bottom) {
                 // 点击的是输入框区域，保留点击EditText的事件
@@ -110,10 +106,6 @@ public class LoginActivity extends BaseActivity {
         }
         return false;
     }
-
-
-
-
 
 
 }

@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 
 public class ReservationActivity extends BaseActivity {
     private static final String TAG = "ReservationActivity";
-    public static final String KModenKey = "KModenKey";
+    public static final String KMODEN_KEY = "KMODEN_KEY";
     @BindView(R.id.activity_reservation)
     FrameLayout activityReservation;
 
@@ -40,20 +40,22 @@ public class ReservationActivity extends BaseActivity {
 
     private void initData() {
         Intent intent = getIntent();
-        moden = intent.getIntExtra(Common.HomeFragmentSelectIndexKey, 0);
+        moden = intent.getIntExtra(Common.HOME_FRAGMENT_SELECT_INDEX_KEY, 0);
     }
 
     private void initUI() {
         fragment = new ReservationFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(KModenKey, moden);
+        bundle.putInt(KMODEN_KEY, moden);
         fragment.setArguments(bundle);
-        FragmentHelper.addFirstFragmentToBackStack(this, R.id.activity_reservation, fragment, Common.ReservationFragment);
+        FragmentHelper.addFirstFragmentToBackStack(this, R.id.activity_reservation, fragment, Common.RESERVATION_FRAGMENT);
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (activityReservation.getChildCount()==0) finish();
+        if (activityReservation.getChildCount()==0) {
+            finish();
+        }
     }
 }

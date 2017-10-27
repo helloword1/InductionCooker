@@ -7,7 +7,7 @@ import com.chad.library.R;
  * Created by BlingBling on 2016/10/11.
  */
 
-public final class SimpleLoadMoreView extends LoadMoreView {
+public final class SimpleAbstractLoadMoreView extends AbstractLoadMoreView {
 
     @Override public int getLayoutId() {
         return R.layout.quick_view_load_more;

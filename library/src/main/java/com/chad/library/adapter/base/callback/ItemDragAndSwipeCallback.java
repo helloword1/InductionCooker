@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.chad.library.R;
 import com.chad.library.adapter.base.BaseItemDraggableAdapter;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 
 /**
  * Created by luoxw on 2016/6/20.
@@ -186,8 +187,8 @@ public class ItemDragAndSwipeCallback extends ItemTouchHelper.Callback {
 
     private boolean isViewCreateByAdapter(RecyclerView.ViewHolder viewHolder) {
         int type = viewHolder.getItemViewType();
-        if (type == mAdapter.HEADER_VIEW || type == mAdapter.LOADING_VIEW
-                || type == mAdapter.FOOTER_VIEW || type == mAdapter.EMPTY_VIEW) {
+        if (type == BaseQuickAdapter.HEADER_VIEW || type == BaseQuickAdapter.LOADING_VIEW
+                || type == BaseQuickAdapter.FOOTER_VIEW || type == BaseQuickAdapter.EMPTY_VIEW) {
             return true;
         }
         return false;

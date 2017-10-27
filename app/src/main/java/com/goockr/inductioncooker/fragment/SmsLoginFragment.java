@@ -1,8 +1,10 @@
 package com.goockr.inductioncooker.fragment;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.goockr.inductioncooker.R;
+import com.goockr.inductioncooker.activity.HomeActivity;
 import com.goockr.inductioncooker.common.Common;
 import com.goockr.inductioncooker.lib.http.HttpError;
 import com.goockr.inductioncooker.lib.http.HttpHelper;
@@ -49,9 +52,9 @@ import butterknife.OnClick;
 
 public class SmsLoginFragment extends Fragment {
 
-    private static final int SmsModen = 0;
+    private static final int SMS_MODEN = 0;
 
-    private static final int PwdModen = 1;
+    private static final int PWD_MODEN = 1;
 
     View contentView;
 
@@ -95,14 +98,22 @@ public class SmsLoginFragment extends Fragment {
 
     public HudHelper hud = new HudHelper();
     private boolean isSMSLogin=true;
+    private boolean fromGuide;
 
+    public static SmsLoginFragment newInstance(boolean arg){
+        SmsLoginFragment fragment = new SmsLoginFragment();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("FROM_GUIDE", arg);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         contentView = inflater.inflate(R.layout.fragment_pwd_login, container, false);
 
         ButterKnife.bind(this, contentView);
-
+        fromGuide = getArguments().getBoolean("FROM_GUIDE");
         initData();
 
         initUI();
@@ -115,7 +126,7 @@ public class SmsLoginFragment extends Fragment {
 
     private void initData() {
 
-        moden = SmsModen;
+        moden = SMS_MODEN;
 
     }
 
@@ -123,7 +134,7 @@ public class SmsLoginFragment extends Fragment {
 
         title_tv.setText(R.string.login_sms_title);
         left_bt.setText("");
-        Drawable drawable = getResources().getDrawable(R.drawable.title_back);
+        Drawable drawable = ContextCompat.getDrawable(getActivity(),R.drawable.title_back);
         /// 这一步必须要做,否则不会显示.
         drawable.setBounds(DensityUtil.px2dip(getActivity(), 10), 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
         left_bt.setCompoundDrawables(drawable, null, null, null);
@@ -193,6 +204,8 @@ public class SmsLoginFragment extends Fragment {
                 pwdLogin();
 
                 break;
+            default:
+                break;
         }
     }
 
@@ -201,7 +214,7 @@ public class SmsLoginFragment extends Fragment {
      */
     private void pwdLogin() {
 
-        if (moden == PwdModen && (phone_et.getText().length() == 0 || pwd_et.getText().length() == 0)) {
+        if (moden == PWD_MODEN && (phone_et.getText().length() == 0 || pwd_et.getText().length() == 0)) {
             hud.hudShowTip(getActivity(), "请填写手机号码和密码", 1500);
             return;
         }
@@ -242,7 +255,7 @@ public class SmsLoginFragment extends Fragment {
 
     private void smsLogin() {
 
-        if (moden == SmsModen && (sms_phone_et.getText().length() == 0 || sms_et.getText().length() == 0)) {
+        if (moden == SMS_MODEN && (sms_phone_et.getText().length() == 0 || sms_et.getText().length() == 0)) {
             hud.hudShowTip(getActivity(), "请填写手机号码和验证码", 1500);
             return;
         }
@@ -273,10 +286,12 @@ public class SmsLoginFragment extends Fragment {
     private void loginSuccess(JSONObject jsonObject) {
 
         dataSave(jsonObject);
-
         hud.hudUpdateAndHid(getResources().getString(R.string.login_success), Common.KHUDFINISHTIME, new HudHelper.SuccessCallBack() {
             @Override
             public void success() {
+                if (fromGuide){
+                    startActivity(new Intent(getActivity(), HomeActivity.class));
+                }
                 getActivity().finish();
             }
         });
@@ -326,14 +341,14 @@ public class SmsLoginFragment extends Fragment {
 
 
     private void pwdModen() {
-        moden = PwdModen;
+        moden = PWD_MODEN;
         title_tv.setText(R.string.login_pwd_title);
         sms_ll.setVisibility(View.INVISIBLE);
         pwd_ll.setVisibility(View.VISIBLE);
     }
 
     private void smsModen() {
-        moden = SmsModen;
+        moden = SMS_MODEN;
         title_tv.setText(R.string.login_sms_title);
         pwd_ll.setVisibility(View.INVISIBLE);
         sms_ll.setVisibility(View.VISIBLE);
@@ -345,7 +360,7 @@ public class SmsLoginFragment extends Fragment {
         bundle.putInt("state", 1);
         bundle.putInt("content", R.id.activity_login_content_fl);
         fragment.setArguments(bundle);
-        FragmentHelper.addFragmentToBackStack(getActivity(), R.id.activity_login_content_fl, this, fragment, Common.VerifiedPhoneNumFragment);
+        FragmentHelper.addFragmentToBackStack(getActivity(), R.id.activity_login_content_fl, this, fragment, Common.VERIFIED_PHONE_NUM_FRAGMENT);
     }
 
     private void registerButtonClick() {
@@ -354,7 +369,7 @@ public class SmsLoginFragment extends Fragment {
         bundle.putInt("state", 0);
         bundle.putInt("content", R.id.activity_login_content_fl);
         fragment.setArguments(bundle);
-        FragmentHelper.addFragmentToBackStack(getActivity(), R.id.activity_login_content_fl, this, fragment, Common.VerifiedPhoneNumFragment);
+        FragmentHelper.addFragmentToBackStack(getActivity(), R.id.activity_login_content_fl, this, fragment, Common.VERIFIED_PHONE_NUM_FRAGMENT);
     }
     /**
      * 获取手机关联的信息
@@ -430,7 +445,7 @@ public class SmsLoginFragment extends Fragment {
 
     private void changeModen(int moden) {
         sms_et.setText("");
-        if (moden == SmsModen) {
+        if (moden == SMS_MODEN) {
             title_tv.setText(R.string.login_sms_title);
             // moden_bt.setText(R.string.login_sms_moden);
             forget_bt.setVisibility(View.INVISIBLE);

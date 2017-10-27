@@ -1,6 +1,8 @@
 package com.goockr.inductioncooker.activity;
 
+import android.annotation.TargetApi;
 import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
@@ -35,10 +37,10 @@ public class ChangePowerNextActivity extends BaseActivity implements View.OnClic
     private DialogView dialogView;
     private String code;
     private String phone;
-    private String TAG = "";
+    private String tag = "";
     public HudHelper hud = new HudHelper();
-    private int FINISH = 112;
-    private String Device;
+    private int finish = 112;
+    private String device;
 
 
     @Override
@@ -59,11 +61,13 @@ public class ChangePowerNextActivity extends BaseActivity implements View.OnClic
         initDatas();
     }
 
+    @TargetApi(Build.VERSION_CODES.N)
     private void initDatas() {
         phone = getIntent().getStringExtra("phone");
-        Device = getIntent().getStringExtra("Device");
-        if (NotNull.isNotNull(phone))
-            tvShowTips.setText(Html.fromHtml(String.format("请输入验证手机 <font color='#ff8212'>%s</font> 收到的短信验证码", phone)));
+        device = getIntent().getStringExtra("device");
+        if (NotNull.isNotNull(phone)){
+            tvShowTips.setText(Html.fromHtml(String.format("请输入验证手机 <font color='#ff8212'>%s</font> 收到的短信验证码", phone),Html.FROM_HTML_MODE_COMPACT));
+        }
     }
 
 
@@ -75,7 +79,7 @@ public class ChangePowerNextActivity extends BaseActivity implements View.OnClic
             @Override
             public void onClick(View v) {
                 dialogView.dismissDialong();
-                ChangePowerNextActivity.this.setResult(FINISH);
+                ChangePowerNextActivity.this.setResult(finish);
                 finish();
             }
         });
@@ -97,6 +101,8 @@ public class ChangePowerNextActivity extends BaseActivity implements View.OnClic
             case R.id.tvGetCode://再次获取验证码
                 initCode();
                 break;
+            default:
+                break;
         }
     }
 
@@ -107,21 +113,21 @@ public class ChangePowerNextActivity extends BaseActivity implements View.OnClic
         map.put("functype", "tp");
         map.put("curruser", SharePreferencesUtils.getMobile());
         map.put("transfer", phone);
-        map.put("devcode", Device);
+        map.put("devcode", device);
         map.put("token", SharePreferencesUtils.getToken());
         map.put("vcode", code);
 
         HttpHelper.tranferRight(map, new OKHttp.HttpCallback() {
             @Override
             public void onFailure(HttpError error) {
-                Log.d(TAG, "onFailure: " + error.msg);
+                Log.d(tag, "onFailure: " + error.msg);
             }
 
             @Override
             public void onSuccess(JSONObject jsonObject) {
                 hud.hudHide();
                 int result = 1;
-                Log.d(TAG, "onSuccess: " + jsonObject);
+                Log.d(tag, "onSuccess: " + jsonObject);
                 try {
                     result = jsonObject.getInt("result");
                 } catch (JSONException e) {
@@ -145,7 +151,7 @@ public class ChangePowerNextActivity extends BaseActivity implements View.OnClic
         HttpHelper.getLoginSmmCode(map, new OKHttp.HttpCallback() {
             @Override
             public void onFailure(HttpError error) {
-                Log.d(TAG, "onFailure: " + error.msg);
+                Log.d(tag, "onFailure: " + error.msg);
                 hud.hudShow(ChangePowerNextActivity.this, error.msg);
             }
 
@@ -153,7 +159,7 @@ public class ChangePowerNextActivity extends BaseActivity implements View.OnClic
             public void onSuccess(JSONObject jsonObject) {
                 hud.hudHide();
                 int result = 1;
-                Log.d(TAG, "onSuccess: " + jsonObject);
+                Log.d(tag, "onSuccess: " + jsonObject);
                 try {
                     result = jsonObject.getInt("result");
                     if (result == 0) {
