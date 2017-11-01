@@ -24,6 +24,9 @@ public class HttpCommon {
     public static final String COOKER_SERVLET_APP_SERVLET6 = "/cooker/servlet/AppServlet";
 
     public static final String COOKER_A_COMM_COMM_DEVICE_REF_FIND_APP_REF = "/cooker/a/comm/commDeviceRef/findAppRef";
+
     public static final String COOKER_A_COMM_COMM_DEVICE_REF_SAVE_DEVICE_REF = "/cooker/a/comm/commDeviceRef/saveDeviceRef";
+
+    public static final String COOKER_A_COMM_COMM_DEVICE_REF_DEL_DEVICE_REF = "/cooker/a/comm/commDeviceRef/delDeviceRef";
 
 }

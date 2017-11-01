@@ -58,6 +58,7 @@ public class MoreAdapter extends BaseSectionQuickAdapter<MyAbStractSection, Base
         helper.setText(R.id.item_section_content_des_tv, model.des);
 
         helper.setVisible(R.id.item_section_content_go_iv, model.isGo);
+        helper.setCenter(R.id.item_section_content_title_tv, model.isCenter);
     }
 
 

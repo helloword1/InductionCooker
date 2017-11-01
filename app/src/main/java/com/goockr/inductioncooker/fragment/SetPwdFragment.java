@@ -15,11 +15,13 @@ import com.goockr.inductioncooker.lib.http.HttpError;
 import com.goockr.inductioncooker.lib.http.HttpHelper;
 import com.goockr.inductioncooker.lib.http.OKHttp;
 import com.goockr.inductioncooker.models.User;
+import com.goockr.inductioncooker.utils.FileCache;
 import com.goockr.inductioncooker.utils.FragmentHelper;
 import com.goockr.inductioncooker.utils.SharePreferencesUtils;
 import com.goockr.inductioncooker.view.MyEditText;
 import com.goockr.ui.view.helper.HudHelper;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -231,8 +233,36 @@ public class SetPwdFragment extends Fragment {
         SharePreferencesUtils.setUserName(name);
         SharePreferencesUtils.setMobile(mobile);
         SharePreferencesUtils.setUserID(userId);
-
+        myInitData();
     }
+    /**
+     * 获取手机关联的信息
+     */
+    private void myInitData() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("mobile", SharePreferencesUtils.getMobile());
+        map.put("token", SharePreferencesUtils.getToken());
 
+        HttpHelper.checkDevice(map, new OKHttp.HttpCallback() {
+            @Override
+            public void onFailure(HttpError error) {
 
+            }
+
+            @Override
+            public void onSuccess(JSONObject jsonObject) {
+                int result = 1;
+                try {
+                    result = jsonObject.getInt("result");
+                    if (result == 0) {//成功
+                        JSONArray list = jsonObject.getJSONArray("list");
+                        FileCache.get(getActivity()).put("DEVICE_LIST",list);
+                        SharePreferencesUtils.setDeviceId(list.get(0).toString());
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 }

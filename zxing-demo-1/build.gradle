@@ -4,6 +4,7 @@ dependencies {
     compile 'com.android.support:support-compat:25.2.0'
     compile 'com.google.code.gson:gson:2.8.1'
     compile files('libs/core-3.3.0.jar')
+    implementation 'com.android.support:support-annotations:27.0.0'
 }
 
 android {

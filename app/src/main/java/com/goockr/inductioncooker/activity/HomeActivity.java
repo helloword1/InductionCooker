@@ -131,6 +131,7 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
         fragmentTransaction.add(R.id.maincontent, morefragment, "HomeFragment");// 更多
         fragmentTransaction.show(fragment).hide(notifragment).hide(morefragment);
         fragmentTransaction.commit();
+
         //监听通知
         notifragment.setOnAlertListener(new NoticeFragment.onAlertListener() {
             @Override
@@ -231,10 +232,7 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
                 }
             });
             tipDialog.show();
-
         }
-
-
     }
 
     @Override

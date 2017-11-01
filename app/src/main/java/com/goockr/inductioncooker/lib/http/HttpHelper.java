@@ -67,6 +67,9 @@ public class HttpHelper {
     public static void addDevice(Map<String, Object> map, OKHttp.HttpCallback callback) {
         String urlString = HttpCommon.K_HTTP_IP + HttpCommon.COOKER_A_COMM_COMM_DEVICE_REF_SAVE_DEVICE_REF;
         OKHttp.post(urlString, map, callback);
-
+    }
+    public static void unBindDevice(Map<String, Object> map, OKHttp.HttpCallback callback) {
+        String urlString = HttpCommon.K_HTTP_IP + HttpCommon.COOKER_A_COMM_COMM_DEVICE_REF_DEL_DEVICE_REF;
+        OKHttp.post(urlString, map, callback);
     }
 }

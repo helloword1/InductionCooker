@@ -52,4 +52,5 @@ dependencies {
     // OkHttp
     compile 'com.squareup.okhttp3:okhttp:3.9.0'
     compile 'com.google.code.gson:gson:2.2.4'
+    implementation 'com.android.support:support-annotations:27.0.0'
 }

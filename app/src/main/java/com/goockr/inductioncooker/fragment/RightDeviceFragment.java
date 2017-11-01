@@ -56,6 +56,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -178,7 +179,7 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
     private final int POWER_OFF = 0;
     private final int POWER_ON = 1;
     private String RPower;
-    private int stall;
+    private int stall=-1;
     ImageTopButton select_bt_r; // 之前的按钮
     private boolean isReverBl = false;
     private static String effectStr0;
@@ -209,6 +210,17 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
     private List<PowerObserver> observers = new ArrayList<>();
     private OnDeviceListener listener;
     private Thread modeThread;
+    //点击时间的间隔
+    public final int UP_MIN_CLICK_DELAY_TIME = 700;
+    public final int DOWN_MIN_CLICK_DELAY_TIME = 700;
+    //最后一次点击时间
+    private long UP_LAST_CLICK_TIME = 0;
+    private long DOWN_LAST_CLICK_TIME = 0;
+    private Thread plusThread;
+    private Thread reduceThread;
+    private int reduceIndex;
+    private int plusIndex;
+    private ScheduledThreadPoolExecutor service;
 
     @Override
     public void registerObserver(PowerObserver observer) {
@@ -509,8 +521,8 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                     }
                     bsaeHudHelper.hudShow(getActivity(), "正在加载...");
                     clickRever = true;
-                    if (thread == null||!thread.isAlive()) {
-                        touTime=0;
+                    if (thread == null || !thread.isAlive()) {
+                        touTime = 0;
                         //右边返回还有错
                         runnable = new Runnable() {
                             @Override
@@ -543,8 +555,8 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                     bsaeHudHelper = new HudHelper();
                 }
                 bsaeHudHelper.hudShow(getActivity(), "正在加载...");
-                if (thread == null||!thread.isAlive()) {
-                    touTime1=0;
+                if (thread == null || !thread.isAlive()) {
+                    touTime1 = 0;
                     target = new Runnable() {
                         @Override
                         public void run() {
@@ -667,7 +679,9 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
         }
         switch (mode) {
             case 8://煎焗
-                stall = 4;
+                if (stall == -1) {
+                    stall = 4;
+                }
                 cookMode8();
                 tvPower.setText("1000W");
                 notifyObservers("1000W");
@@ -680,7 +694,9 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                 cookMode7();
                 break;
             case 10://爆炒
-                stall = 10;
+                if (stall == -1) {
+                    stall = 10;
+                }
                 cookMode10();
                 tvTemperature.setText("280℃");
                 tvPower.setText("2000W");
@@ -688,7 +704,9 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                 tvData.setText(hourToTime(rightTime));
                 break;
             case 11://油炸
-                stall = 3;
+                if (stall == -1) {
+                    stall = 3;
+                }
                 cookMode11();
                 tvTemperature.setText("260℃");
                 tvRightTemperature.setText("80℃");
@@ -697,7 +715,9 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                 tvData.setText(hourToTime(rightTime));
                 break;
             case 12://文火
-                stall = 5;
+                if (stall == -1) {
+                    stall = 5;
+                }
                 cookMode12();
                 tvPower.setText("1200W");
                 notifyObservers("1200W");
@@ -832,7 +852,10 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
 //            rightSumTime = rightTime;
 //            tvData.setText(hourToTime(rightTime));
             sumBack = 5;
-            hubShow("正在设置");
+            if (bsaeHudHelper == null) {
+                bsaeHudHelper = new HudHelper();
+            }
+            bsaeHudHelper.hudShow(getActivity(),"正在设置");
             if (timeThread == null || (timeThread != null && !timeThread.isAlive())) {
                 timeThread = new Thread(new Runnable() {
                     @Override
@@ -845,7 +868,7 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
-                                hubDismiss();
+                                bsaeHudHelper.hudHide();
                             }
                         });
                     }
@@ -887,18 +910,62 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
     }
 
     private void reducePower() {
-        if (stall < 2) {
-            TcpSocket.getInstance().write(Protocol2.stall(1, 0));
-        } else {
-            TcpSocket.getInstance().write(Protocol2.stall(1, stall - 1));
+        stall--;
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - DOWN_LAST_CLICK_TIME > DOWN_MIN_CLICK_DELAY_TIME) {
+            DOWN_LAST_CLICK_TIME = currentTime;
+            if (stall < 2) {
+                stall = 0;
+            }
+            reduceIndex = 5;
+            if (bsaeHudHelper == null) {
+                bsaeHudHelper = new HudHelper();
+            }
+            bsaeHudHelper.hudShow(getActivity(),"正在设置");
+            if (!NotNull.isNotNull(reduceThread) || !reduceThread.isAlive()) {
+                reduceThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (!Thread.currentThread().isInterrupted() && reduceIndex > 0) {
+                            TcpSocket.getInstance().write(Protocol2.stall(1, stall));
+                            reduceIndex--;
+                            SystemClock.sleep(500);
+                        }
+                    }
+                });
+                reduceThread.start();
+            }
+
         }
     }
 
     private void plusPower() {
-        if (stall > ring_pv.maxCount) {
-            TcpSocket.getInstance().write(Protocol2.stall(1, ring_pv.maxCount));
-        } else {
-            TcpSocket.getInstance().write(Protocol2.stall(1, stall + 1));
+        stall++;
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - UP_LAST_CLICK_TIME > UP_MIN_CLICK_DELAY_TIME) {
+            UP_LAST_CLICK_TIME = currentTime;
+            if (stall > ring_pv.maxCount) {
+                stall = ring_pv.maxCount;
+            }
+            plusIndex = 5;
+            if (bsaeHudHelper == null) {
+                bsaeHudHelper = new HudHelper();
+            }
+           bsaeHudHelper.hudShow(getActivity(),"正在设置");
+            if (!NotNull.isNotNull(plusThread) || !plusThread.isAlive()) {
+                plusThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (!Thread.currentThread().isInterrupted() && plusIndex > 0) {
+                            TcpSocket.getInstance().write(Protocol2.stall(1, stall));
+                            plusIndex--;
+                            SystemClock.sleep(500);
+                        }
+                    }
+                });
+                plusThread.start();
+            }
+
         }
 
     }
@@ -1046,9 +1113,19 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                         break;
                     case 4://档位设定返回
                         Log.d(TAG, "setMProtocol: ");
+                        if (NotNull.isNotNull(plusThread)) {
+                            plusThread.interrupt();
+                            plusIndex = 0;
+                        }
+                        if (NotNull.isNotNull(reduceThread)) {
+                            reduceThread.interrupt();
+                            reduceIndex = 0;
+                        }
+                        bsaeHudHelper.hudHide();
                         moden = orderObject.getString("moden");
-//                        stall = Integer.valueOf(orderObject.getString("stall"));
+                        stall = Integer.valueOf(orderObject.getString("stall"));
                         mode = Integer.valueOf(moden);
+                        changeRightMode(moden, orderObject);
                         break;
                     case 5://工作时间查询返回
                         double stopTime = orderObject.getDouble("stoptime");
@@ -1103,9 +1180,12 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                             if (timeThread != null) {
                                 timeThread.interrupt();
                             }
-                            hubShow("设置成功");
+                            if (bsaeHudHelper == null) {
+                                bsaeHudHelper = new HudHelper();
+                            }
+                            bsaeHudHelper.hudShow(getActivity(),"设置成功");
                         }
-                        hubDismiss();
+                        bsaeHudHelper.hudHide();
                         break;
                     default:
                         break;
@@ -1252,7 +1332,7 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
     }
 
     private void showTurnOn() {
-        if (getActivity().isFinishing()){
+        if (getActivity().isFinishing()) {
             return;
         }
         View view = dialogView.showCustomDialong(R.layout.dialong_view);
@@ -1341,19 +1421,6 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
         }
     }
 
-    private void hubDismiss() {
-        if (NotNull.isNotNull(hud) && hud.isShowing()) {
-            hud.dismiss();
-        }
-    }
-
-    private void hubShow(String text) {
-        if (!NotNull.isNotNull(hud)) {
-            hud = KProgressHUD.create(getActivity()).setStyle(KProgressHUD.Style.SPIN_INDETERMINATE).setCancellable(true).setAnimationSpeed(1).setDimAmount(0.5f);
-        }
-        hud.setLabel(text);
-        hud.show();
-    }
 
     public interface OnDeviceListener {
         void deviceListener(String deviceName);

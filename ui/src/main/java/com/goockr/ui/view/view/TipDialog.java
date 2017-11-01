@@ -15,6 +15,7 @@ import com.goockr.ui.R;
 
 /**
  * Created by CMQ on 2017/7/17.
+ * 老黄到此一游
  */
 
 public class TipDialog extends Dialog implements View.OnClickListener {
@@ -23,7 +24,7 @@ public class TipDialog extends Dialog implements View.OnClickListener {
 
     private String tip;
 
-    private  String msg;
+    private String msg;
 
     private boolean showCancel;
 
@@ -50,33 +51,33 @@ public class TipDialog extends Dialog implements View.OnClickListener {
         super(context);
     }
 
-    public TipDialog(Context context,String tip,String msg,boolean touchCancel,boolean showCancel) {
+    public TipDialog(Context context, String tip, String msg, boolean touchCancel, boolean showCancel) {
         super(context);
 
-        this.tip=tip;
+        this.tip = tip;
 
-        this.msg=msg;
+        this.msg = msg;
 
-        this.touchCancel=touchCancel;
+        this.touchCancel = touchCancel;
 
-        this.showCancel=showCancel;
+        this.showCancel = showCancel;
 
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        mContext=context;
+        mContext = context;
 
     }
 
-    public TipDialog(Context context,String tip,String msg,boolean touchCancel) {
+    public TipDialog(Context context, String tip, String msg, boolean touchCancel) {
         super(context);
 
-        this.tip=tip;
+        this.tip = tip;
 
-        this.msg=msg;
+        this.msg = msg;
 
-        this.touchCancel=touchCancel;
+        this.touchCancel = touchCancel;
 
-        this.showCancel=true;
+        this.showCancel = true;
     }
 
     @Override
@@ -84,31 +85,30 @@ public class TipDialog extends Dialog implements View.OnClickListener {
         super.onCreate(savedInstanceState);
 
         //以view来引入布局
-         setContentView(R.layout.dialog_tip);
+        setContentView(R.layout.dialog_tip);
 
-        tip_tv=(TextView)findViewById(R.id.dialog_tip_tip_tv);
+        tip_tv = (TextView) findViewById(R.id.dialog_tip_tip_tv);
 
-        msg_tv=(TextView)findViewById(R.id.dialog_tip_text_tv);
+        msg_tv = (TextView) findViewById(R.id.dialog_tip_text_tv);
 
-        cancel_bt=(Button)findViewById(R.id.dialog_tip_cancle_bt);
+        cancel_bt = (Button) findViewById(R.id.dialog_tip_cancle_bt);
 
-        action_bt=(Button)findViewById(R.id.dialog_tip_action_bt);
+        action_bt = (Button) findViewById(R.id.dialog_tip_action_bt);
 
-        TextView margin_tv=(TextView)findViewById(R.id.dialog_tip_btmargin_tv);
+        TextView margin_tv = (TextView) findViewById(R.id.dialog_tip_btmargin_tv);
 
         tip_tv.setText(tip);
 
         msg_tv.setText(msg);
 
-       setCanceledOnTouchOutside(touchCancel);
-
+        setCanceledOnTouchOutside(touchCancel);
 
 
         cancel_bt.setOnClickListener(this);
 
         action_bt.setOnClickListener(this);
 
-        if (!this.showCancel) {;
+        if (!this.showCancel) {
             cancel_bt.setVisibility(View.GONE);
             margin_tv.setVisibility(View.GONE);
         }
@@ -119,44 +119,38 @@ public class TipDialog extends Dialog implements View.OnClickListener {
          */
         WindowManager m = getWindow().getWindowManager();
         Display d = m.getDefaultDisplay(); // 获取屏幕宽、高用
-        WindowManager.LayoutParams p =getWindow().getAttributes(); // 获取对话框当前的参数值
-       // p.height = (int) (d.getHeight() * 0.4); // 高度设置为屏幕的0.6
+        WindowManager.LayoutParams p = getWindow().getAttributes(); // 获取对话框当前的参数值
+        // p.height = (int) (d.getHeight() * 0.4); // 高度设置为屏幕的0.6
         p.width = (int) (d.getWidth() * 0.8); // 宽度设置为屏幕的0.65
         getWindow().setAttributes(p);
 
         getWindow().setBackgroundDrawable(new ColorDrawable(0));
 
 
-
     }
 
-    public void setActionButtonClick(TipDialogCallBack callBack)
-    {
-        this.callBack=callBack;
+    public void setActionButtonClick(TipDialogCallBack callBack) {
+        this.callBack = callBack;
     }
 
     @Override
     public void onClick(View v) {
 
-      if (v.getId()==R.id.dialog_tip_cancle_bt)
-      {
-          this.dismiss();
+        if (v.getId() == R.id.dialog_tip_cancle_bt) {
+            this.dismiss();
 
-      }else if (v.getId()==R.id.dialog_tip_action_bt)
-      {
-          this.callBack.buttonClick(this);
-      }
+        } else if (v.getId() == R.id.dialog_tip_action_bt) {
+            this.callBack.buttonClick(this);
+        }
 
     }
 
 
-    public interface TipDialogCallBack
-    {
+    public interface TipDialogCallBack {
         void buttonClick(TipDialog dialog);
     }
 
-    public void  dialogShow()
-    {
+    public void dialogShow() {
 
     }
 

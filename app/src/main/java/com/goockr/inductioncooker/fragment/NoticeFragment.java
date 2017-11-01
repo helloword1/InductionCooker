@@ -248,10 +248,17 @@ public class NoticeFragment extends Fragment implements NoticeObserver {
             try {
                 JSONObject jsonObject = notice_json.getJSONObject(i);
                 String warm = jsonObject.getString("warm");
+                String deviceId = jsonObject.getString("deviceId");
+                String textDevice="";
+                if (TextUtils.equals("0",deviceId)){
+                    textDevice="(左炉) ";
+                }else{
+                    textDevice="(右炉) ";
+                }
                 if (warm.contains("___")) {
                     String[] strings = warm.split("___");
                     Integer index = Integer.valueOf(strings[0].substring(1, 2));
-                    mData.add(new NotiseAbStractSection(new NotiseAdapterModel(drablwIcon[index - 1], getStringArray()[index - 1], new Date(Long.valueOf(strings[1])))));
+                    mData.add(new NotiseAbStractSection(new NotiseAdapterModel(drablwIcon[index - 1], textDevice+getStringArray()[index - 1], new Date(Long.valueOf(strings[1])))));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

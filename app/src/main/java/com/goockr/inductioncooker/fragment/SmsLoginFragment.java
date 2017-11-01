@@ -289,9 +289,9 @@ public class SmsLoginFragment extends Fragment {
         hud.hudUpdateAndHid(getResources().getString(R.string.login_success), Common.KHUDFINISHTIME, new HudHelper.SuccessCallBack() {
             @Override
             public void success() {
-                if (fromGuide){
+//                if (fromGuide){
                     startActivity(new Intent(getActivity(), HomeActivity.class));
-                }
+//                }
                 getActivity().finish();
             }
         });

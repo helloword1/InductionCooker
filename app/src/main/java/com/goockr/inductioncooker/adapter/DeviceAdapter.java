@@ -51,6 +51,15 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 }
             }
         });
+        textViewHolder.cardview.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (NotNull.isNotNull(listener)){
+                    listener.itemLongClickListener(position);
+                }
+                return true;
+            }
+        });
     }
 
     @Override
@@ -79,6 +88,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public interface OnItemClickListener {
         void itemClickListener(int position);
+        void itemLongClickListener(int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {

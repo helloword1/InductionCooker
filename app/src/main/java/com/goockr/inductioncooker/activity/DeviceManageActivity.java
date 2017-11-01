@@ -16,8 +16,11 @@ import com.goockr.inductioncooker.lib.http.HttpError;
 import com.goockr.inductioncooker.lib.http.HttpHelper;
 import com.goockr.inductioncooker.lib.http.OKHttp;
 import com.goockr.inductioncooker.models.BaseDevice;
+import com.goockr.inductioncooker.utils.FileCache;
+import com.goockr.inductioncooker.utils.MyToast;
 import com.goockr.inductioncooker.utils.NotNull;
 import com.goockr.inductioncooker.utils.SharePreferencesUtils;
+import com.goockr.inductioncooker.view.DialogView;
 import com.goockr.ui.view.helper.HudHelper;
 
 import org.json.JSONArray;
@@ -40,6 +43,7 @@ public class DeviceManageActivity extends BaseActivity {
     private List<BaseDevice> codes;
     private DeviceAdapter adapter;
     private TextView textView;
+    private DialogView dialogView;
     private PercentRelativeLayout notiPercent;
 
     @Override
@@ -55,6 +59,8 @@ public class DeviceManageActivity extends BaseActivity {
                 finish();
             }
         });
+        dialogView = DialogView.getSingleton();
+        dialogView.setContext(this);
         codes = new ArrayList<>();
         slideListView.setLayoutManager(new LinearLayoutManager(DeviceManageActivity.this));
         slideListView.setAdapter(adapter = new DeviceAdapter(this, codes));
@@ -64,6 +70,70 @@ public class DeviceManageActivity extends BaseActivity {
             public void itemClickListener(int position) {
                 String deviceId = codes.get(position).getDeviceId();
                 startActivity(new Intent(DeviceManageActivity.this, ChangePowerActivity.class).putExtra("DEVICE_ID", deviceId));
+            }
+
+            @Override
+            public void itemLongClickListener(int position) {
+                showTurnOn("确定解除绑定？",position);
+            }
+        });
+    }
+
+    private void showTurnOn(String msg,final int position) {
+        View view = dialogView.showCustomDialong(R.layout.dialog_power_change);
+        TextView tvCancel = view.findViewById(R.id.tvCancel);
+        TextView tvContent = view.findViewById(R.id.tvContent);
+
+        tvContent.setText(msg);
+        TextView tvCommit = view.findViewById(R.id.tvCommit);
+        tvCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogView.dismissDialong();
+            }
+        });
+        tvCommit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setCancel(position);
+            }
+        });
+
+    }
+
+    //解除绑定
+    private void setCancel(final int position) {
+        hud.hudShow(this, "正在加载。。。");
+        Map<String, Object> map = new HashMap<>();
+        map.put("mobile", SharePreferencesUtils.getMobile());
+        map.put("token", SharePreferencesUtils.getToken());
+        map.put("devcode", codes.get(position).getDeviceId());
+
+        HttpHelper.unBindDevice(map, new OKHttp.HttpCallback() {
+            @Override
+            public void onFailure(HttpError error) {
+                Log.d(TAG, "onFailure: " + error.msg);
+                dialogView.dismissDialong();
+            }
+
+            @Override
+            public void onSuccess(JSONObject jsonObject) {
+                hud.hudHide();
+                int result = 1;
+                Log.d(TAG, "onSuccess: " + jsonObject);
+                try {
+                    result = jsonObject.getInt("result");
+                    if (result == 0) {//成功
+                        codes.remove(position);
+                        adapter.notifyDataSetChanged();
+                        myInitData1();
+                        dialogView.dismissDialong();
+                        MyToast.showToastCustomerStyleText(DeviceManageActivity.this,"解绑成功！");
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -114,6 +184,35 @@ public class DeviceManageActivity extends BaseActivity {
                             textView.setVisibility(View.GONE);
                         }
                         adapter.notifyDataSetChanged();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+    /**
+     * 获取手机关联的信息
+     */
+    private void myInitData1() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("mobile", SharePreferencesUtils.getMobile());
+        map.put("token", SharePreferencesUtils.getToken());
+
+        HttpHelper.checkDevice(map, new OKHttp.HttpCallback() {
+            @Override
+            public void onFailure(HttpError error) {
+            }
+
+            @Override
+            public void onSuccess(JSONObject jsonObject) {
+                int result = 1;
+                try {
+                    result = jsonObject.getInt("result");
+                    if (result == 0) {//成功
+                        JSONArray list = jsonObject.getJSONArray("list");
+                        FileCache.get(DeviceManageActivity.this).put("DEVICE_LIST",list);
+                        SharePreferencesUtils.setDeviceId(list.get(0).toString());
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -11,6 +11,7 @@ public class MoreAdapterModel {
     public String des;
 
     public boolean isGo;
+    public boolean isCenter;
 
     public MoreAdapterModel(String title,String des ,boolean isGo)
     {
@@ -22,4 +23,8 @@ public class MoreAdapterModel {
 
     }
 
+    public MoreAdapterModel setCenter(boolean center) {
+        isCenter = center;
+        return this;
+    }
 }

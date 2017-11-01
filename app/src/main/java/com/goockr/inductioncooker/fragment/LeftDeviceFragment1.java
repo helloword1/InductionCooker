@@ -77,7 +77,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
     private static String effectStr0 = "";
     private static String effectStr1 = "";
     private LeftDeviceFragment1 adjustFragment;
-
+    private ScheduledExecutorService service;
     private int mode = -1;
     @BindView(R.id.flAdjust)
     RelativeLayout flAdjust;
@@ -180,7 +180,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
     private final int POWER_OFF = 0;
     private final int POWER_ON = 1;
     private String lPower;
-    private int stall;
+    private int stall = -1;
     private int revermode = -1;
     private Long aBootTime = 0L;
     private Long aAppointment = 0L;
@@ -210,6 +210,19 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
     private OnDeviceListener listener;
     private ScheduledExecutorService theadPool;
     private Thread modeThread;
+    //点击时间的间隔
+    public final int UP_MIN_CLICK_DELAY_TIME = 800;
+    public final int DOWN_MIN_CLICK_DELAY_TIME = 800;
+    //最后一次点击时间
+    private long UP_LAST_CLICK_TIME = 0;
+    private long DOWN_LAST_CLICK_TIME = 0;
+    //档位线程
+    private Thread reduceThread;
+    private Thread plusThread;
+    //档位倒计时标志
+    private int reduceIndex;
+    private int plusIndex;
+
 
     @Override
     public void registerObserver(PowerObserver observer) {
@@ -465,10 +478,6 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                         e.printStackTrace();
                     }
                 }
-//                if (list.size() == 1) {
-//                    MyToast.showToastCustomerStyleText(getActivity(), "没有发现其他设备");
-//                    return;
-//                }
                 PopWindowUtils popWindow = PopWindowUtils.getPopWindow();
                 popWindow.showButtonPopwindow(getActivity(), list);
                 popWindow.setOnItemclickListener(new PopWindowUtils.OnItemClickListener() {
@@ -542,8 +551,8 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     }
                     bsaeHudHelper.hudShow(getActivity(), "正在加载...");
                     clickRever = true;
-                    if (thread == null||!thread.isAlive()) {
-                        touTime=0;
+                    if (thread == null || !thread.isAlive()) {
+                        touTime = 0;
                         thread = new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -566,8 +575,8 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     bsaeHudHelper = new HudHelper();
                 }
                 bsaeHudHelper.hudShow(getActivity(), "正在加载...");
-                if (thread == null||!thread.isAlive()) {
-                    touTime1=0;
+                if (thread == null || !thread.isAlive()) {
+                    touTime1 = 0;
                     thread = new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -717,11 +726,15 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                 cookMode3();
                 break;
             case 4://火锅
-                stall = 8;
+                if (stall == -1) {
+                    stall = 8;
+                }
                 cookMode4();
                 break;
             case 5://煎炒
-                stall = 8;
+                if (stall == -1) {
+                    stall = 8;
+                }
                 cookMode5();
                 tvTemperature.setText("260℃");
                 tvPower.setText("1600W");
@@ -729,7 +742,9 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                 tvData.setText(hourToTime(leftTime));
                 break;
             case 6://烤炒
-                stall = 3;
+                if (stall == -1) {
+                    stall = 3;
+                }
                 cookMode6();
                 tvTemperature.setText("260℃");
                 tvRightTemperature.setText("80℃");
@@ -774,7 +789,10 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
             final int hour = data.getIntExtra("HOUR", -1);
             final int second = data.getIntExtra("SECOND", -1);
             sumBack = 5;
-            hubShow("正在设置");
+            if (bsaeHudHelper == null) {
+                bsaeHudHelper = new HudHelper();
+            }
+            bsaeHudHelper.hudShow(getActivity(),"正在设置");
             if (timeThread == null || (timeThread != null && !timeThread.isAlive())) {
                 timeThread = new Thread(new Runnable() {
                     @Override
@@ -787,7 +805,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
-                                hubDismiss();
+                                bsaeHudHelper.hudHide();
                             }
                         });
                     }
@@ -908,18 +926,61 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
     }
 
     private void reducePower() {
-        if (stall < 2) {
-            TcpSocket.getInstance().write(Protocol2.stall(0, 0));
-        } else {
-            TcpSocket.getInstance().write(Protocol2.stall(0, stall - 1));
+        stall--;
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - DOWN_LAST_CLICK_TIME > DOWN_MIN_CLICK_DELAY_TIME) {
+            DOWN_LAST_CLICK_TIME = currentTime;
+            if (stall < 2) {
+                stall = 0;
+            }
+            reduceIndex = 5;
+            if (bsaeHudHelper == null) {
+                bsaeHudHelper = new HudHelper();
+            }
+            bsaeHudHelper.hudShow(getActivity(), "正在设置");
+            if (!NotNull.isNotNull(reduceThread) || !reduceThread.isAlive()) {
+                reduceThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (!Thread.currentThread().isInterrupted() && reduceIndex > 0) {
+                            TcpSocket.getInstance().write(Protocol2.stall(0, stall));
+                            reduceIndex--;
+                            SystemClock.sleep(500);
+                        }
+                    }
+                });
+                reduceThread.start();
+            }
         }
     }
 
     private void plusPower() {
-        if (stall > ring_pv.maxCount) {
-            TcpSocket.getInstance().write(Protocol2.stall(0, ring_pv.maxCount));
-        } else {
-            TcpSocket.getInstance().write(Protocol2.stall(0, stall + 1));
+        stall++;
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - UP_LAST_CLICK_TIME > UP_MIN_CLICK_DELAY_TIME) {
+            UP_LAST_CLICK_TIME = currentTime;
+            if (stall > ring_pv.maxCount) {
+                stall = ring_pv.maxCount;
+            }
+            plusIndex = 5;
+            if (bsaeHudHelper == null) {
+                bsaeHudHelper = new HudHelper();
+            }
+            bsaeHudHelper.hudShow(getActivity(), "正在设置");
+            if (!NotNull.isNotNull(plusThread) || !plusThread.isAlive()) {
+                plusThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (!Thread.currentThread().isInterrupted() && plusIndex > 0) {
+                            TcpSocket.getInstance().write(Protocol2.stall(0, stall));
+                            plusIndex--;
+                            SystemClock.sleep(500);
+                        }
+                    }
+                });
+                plusThread.start();
+            }
+
         }
     }
 
@@ -1111,9 +1172,19 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                     break;
                 case 4://档位设定返回
                     Log.d(TAG, "setMProtocol: ");
+                    bsaeHudHelper.hudHide();
+                    if (NotNull.isNotNull(plusThread)) {
+                        plusThread.interrupt();
+                        plusIndex = 0;
+                    }
+                    if (NotNull.isNotNull(reduceThread)) {
+                        reduceThread.interrupt();
+                        reduceIndex = 0;
+                    }
                     moden = orderObject.getString("moden");
                     stall = Integer.valueOf(orderObject.getString("stall"));
                     mode = Integer.valueOf(moden);
+                    changeLeftMode(moden, orderObject);
                     break;
                 case 5://工作时间查询返回
                     Log.d(TAG, "setMProtocol: ");
@@ -1377,20 +1448,6 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         });
     }
 
-    private void hubDismiss() {
-        if (NotNull.isNotNull(hud) && hud.isShowing()) {
-            hud.dismiss();
-        }
-    }
-
-    private void hubShow(String text) {
-        if (!NotNull.isNotNull(hud)) {
-            hud = KProgressHUD.create(getActivity()).setStyle(KProgressHUD.Style.SPIN_INDETERMINATE).setCancellable(true).setAnimationSpeed(1).setDimAmount(0.5f);
-        }
-        hud.setLabel(text);
-        hud.show();
-    }
-
     /**
      * 结束倒计时
      */
@@ -1406,4 +1463,5 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
     public void setOnDeviceListener(OnDeviceListener listener) {
         this.listener = listener;
     }
+
 }

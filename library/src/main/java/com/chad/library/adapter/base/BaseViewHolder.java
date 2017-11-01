@@ -37,6 +37,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.HashSet;
@@ -229,7 +230,7 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
      */
     public BaseViewHolder setVisible(@IdRes int viewId, boolean visible) {
         View view = getView(viewId);
-        view.setVisibility(visible ? View.VISIBLE : View.GONE);
+        view.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
         return this;
     }
 
@@ -610,5 +611,19 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
      */
     public void setAssociatedObject(Object associatedObject) {
         this.associatedObject = associatedObject;
+    }
+
+    public void setCenter(@IdRes int viewId, boolean isCenter) {
+        TextView view = getView(viewId);
+        if (isCenter){
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
+            params.addRule(RelativeLayout.CENTER_IN_PARENT);
+            view.setLayoutParams(params); //使layout更新
+        }else{
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
+            params.addRule(RelativeLayout.LEFT_OF);
+            view.setLayoutParams(params); //使layout更新
+        }
+
     }
 }

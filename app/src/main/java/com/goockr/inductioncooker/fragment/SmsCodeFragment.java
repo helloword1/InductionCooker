@@ -143,10 +143,7 @@ public class SmsCodeFragment extends Fragment {
             hud.hudShowTip(getActivity(), getResources().getString(R.string.sms_code_null), Common.KHUDTIPSHORTTIME);
             return;
         }
-
         SetPwdFragment fragment = new SetPwdFragment();
-
-
         Bundle bundle = new Bundle();
         bundle.putInt("content", fragmentContent);
         bundle.putString("phoneNumber", phone);
