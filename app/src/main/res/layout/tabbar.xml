@@ -7,8 +7,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@mipmap/tab_bg"
-        android:paddingTop="10dp">
+        android:gravity="center_vertical"
+        android:background="@mipmap/tab_bg">
 
         <LinearLayout
             android:id="@+id/ll_home"
@@ -16,7 +16,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-
             android:orientation="vertical">
 
             <ImageView
@@ -31,6 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:text="首页"
+                android:textSize="13sp"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -68,6 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:text="通知"
+                android:textSize="13sp"
                 android:textColor="@color/colorTabarSelect"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -92,6 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:text="更多"
+                android:textSize="13sp"
                 android:textColor="@color/colorTabarSelect"
                 android:textStyle="bold" />
         </LinearLayout>

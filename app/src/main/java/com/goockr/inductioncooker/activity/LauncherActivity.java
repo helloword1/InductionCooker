@@ -43,16 +43,17 @@ public class LauncherActivity extends Activity {
      * 获取手机关联的信息
      */
     private void myInitData() {
+        String token = SharePreferencesUtils.getToken();
         Map<String, Object> map = new HashMap<>();
         String mobile = SharePreferencesUtils.getMobile();
         if (!NotNull.isNotNull(mobile)) {
-            startActivity(new Intent(this, LoginActivity.class).putExtra("FROM_GUIDE",true));
+//            startActivity(new Intent(this, LoginActivity.class).putExtra("FROM_GUIDE",true));
+            startActivity(new Intent(LauncherActivity.this, HomeActivity.class));
             finish();
             return;
         }
         map.put("mobile", mobile);
-        map.put("token", SharePreferencesUtils.getToken());
-
+        map.put("token", token);
         HttpHelper.checkDevice(map, new OKHttp.HttpCallback() {
             @Override
             public void onFailure(HttpError error) {
@@ -72,15 +73,17 @@ public class LauncherActivity extends Activity {
                         if (!NotNull.isNotNull(deviceId)) {
                             SharePreferencesUtils.setDeviceId(list.get(0).toString());
                         }
-                        Intent intent = new Intent();
-                        intent.setClass(LauncherActivity.this, HomeActivity.class);
-                        startActivity(intent);
-                        finish();
+
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         });
+        Intent intent = new Intent();
+        intent.setClass(LauncherActivity.this, HomeActivity.class);
+        startActivity(intent);
+        finish();
     }
+
 }

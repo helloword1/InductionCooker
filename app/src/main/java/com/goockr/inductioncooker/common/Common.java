@@ -36,8 +36,8 @@ public class Common {
 
     /***********************************Sokect参数*****************************************************/
 //    public static final String KIP  = "192.168.1.190";
-//    public static final String KIP  = "192.168.1.187";
-    public static final String KIP  = "120.24.5.252";
+    public static final String KIP  = "120.78.212.242";
+//    public static final String KIP  = "120.24.5.252";
 
     public static final int KPORT = 9001;
 

@@ -23,6 +23,7 @@ import com.goockr.inductioncooker.view.Tabbar;
 import com.goockr.ui.view.helper.HudHelper;
 import com.goockr.ui.view.view.BadgeView;
 import com.goockr.ui.view.view.TipDialog;
+import com.google.zxing.common.Runnable;
 
 import java.util.ArrayList;
 
@@ -34,39 +35,22 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
     private static final int MAX_CONNECT_COUNT = 10;
     @BindView(R.id.tabbar)
     Tabbar tabbar;
-    HudHelper hudHelper;
     private int connectCount;
     private HomeFragment1 fragment;
     private NoticeFragment notifragment;
     private MoreFragment morefragment;
     private BadgeView mBvNotice;
-    private PreferencesUitls instance;
-    private int count;
-    private final String SAVE_ITEM = "NOTICE_JSON";
-
-    public HudHelper getHudHelper() {
-
-        if (hudHelper == null) {
-            hudHelper = new HudHelper();
-        }
-
-        return hudHelper;
-    }
+    private int count = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
         setContentView(R.layout.activity_home);
-
         initPermissions();
-
         ButterKnife.bind(this);
-
         initData();
-
         initUI();
-
         initListener();
 
     }
@@ -77,7 +61,6 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
     }
 
     private void initData() {
-        instance = PreferencesUitls.getInstance(HomeActivity.this);
         connectCount = 0;
     }
 
@@ -136,9 +119,9 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
         notifragment.setOnAlertListener(new NoticeFragment.onAlertListener() {
             @Override
             public void alertListener(int length) {
-                    if (NotNull.isNotNull(mBvNotice)){
-                        mBvNotice.setBadgeCount(length);
-                    }
+                if (NotNull.isNotNull(mBvNotice)) {
+                    mBvNotice.setBadgeCount(length);
+                }
             }
         });
     }
@@ -151,13 +134,7 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //添加需要申请的权限
             ArrayList<String> PerList = new ArrayList<>();
-            //PerList.add(Manifest.permission.ACCESS_WIFI_STATE);
             PerList.add(Manifest.permission.CAMERA);
-            //PerList.add(Manifest.permission.READ_PHONE_STATE);
-            //PerList.add(Manifest.permission.ACCESS_NETWORK_STATE);
-            //	PerList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            //	PerList.add(Manifest.permission.RECORD_AUDIO);
-
             if (!checkSelfPermissions(PerList)) {
                 requestPermissions(PerList.toArray(new String[PerList.size()]), REQUEST_CODE_ASK_PERMISSIONS);
             }
@@ -175,38 +152,30 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
         }
         return true;
     }
-
-
-    private int backCount = 0;
-
-
     /**
      * 返回键退出
+     *
      * @param keyCode
      * @param event
      * @return
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            backCount++;
-
-            if (backCount < 2) {
-                Toast.makeText(this, "5秒内按返回键退出应用", Toast.LENGTH_SHORT).show();
-
-                new Handler().postDelayed(new Runnable() {
+            if (count < 2) {
+                finishActivities();
+            } else {
+                count=1;
+                Toast.makeText(this, "3秒内按返回键退出应用", Toast.LENGTH_SHORT).show();
+                new Handler().postDelayed(new java.lang.Runnable() {
                     @Override
                     public void run() {
-                        backCount = 0;
+                        count = 3;
                     }
-                }, 5000);
-                return false;
+                }, 3000);
             }
-
-
+            return true;
         }
-
         return super.onKeyDown(keyCode, event);
     }
 
@@ -217,7 +186,7 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
     }
 
     @Override
-    public void onFailConnnect() {
+    public void onFailConnect() {
         if (connectCount < MAX_CONNECT_COUNT) {
             connectCount++;
             TcpSocket.getInstance().connect(Common.KIP, Common.KPORT, this);
@@ -242,9 +211,7 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
             connectCount++;
             TcpSocket.getInstance().connect(Common.KIP, Common.KPORT, this);
         } else {
-
             connectCount = 0;
-
             TipDialog tipDialog = new TipDialog(HomeActivity.this, getResources().getString(R.string.dialog_tip), getResources().getString(R.string.dialog_disconnect), false, false);
             tipDialog.setActionButtonClick(new TipDialog.TipDialogCallBack() {
                 @Override
@@ -259,6 +226,7 @@ public class HomeActivity extends BaseActivity implements TcpSocket.TcpSocketCal
 
 
     }
+
     @Override
     public void onRead(String read) {
 

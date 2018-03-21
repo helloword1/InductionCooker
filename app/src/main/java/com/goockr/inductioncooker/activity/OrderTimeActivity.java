@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.support.annotation.RequiresApi;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -82,9 +83,11 @@ public class OrderTimeActivity extends BaseActivity {
                     long aHour = appointment / 3600 / 1000;
                     long aMutes = (appointment % 3600000) / 60000;
                     if (aHour > 0 && aMutes > 0) { // 说明时分都有
-                        tvOrderCompleteInfo.setText(String.format("模式:  %1$s\n开机时间：%2$s\n工作时长：%3$s小时%4$s分钟", modeStr[mMode], time, String.valueOf(aHour), aMutes));
+                        tvOrderCompleteInfo.setText(Html.fromHtml("模 &emsp 式： <font color='#ff8212'>" + modeStr[mMode] + "</font>" + "<br>开机时间： <font color='#ff8212'>" + time + "</font>" +
+                                "<br>工作时长： <font color='#ff8212'>" + String.valueOf(aHour) + "小时" + aMutes + "分钟</font>"));
                     } else if (aHour <= 0 && aMutes > 0) { // 说明只有分
-                        tvOrderCompleteInfo.setText(String.format("模式:  %1$s\n开机时间：%2$s\n工作时长：%3$s分钟", modeStr[mMode], time, aMutes));
+                        tvOrderCompleteInfo.setText(Html.fromHtml("模 &emsp 式:  <font color='#ff8212'>" + modeStr[mMode] + "</font>" + "<br>开机时间： <font color='#ff8212'>" + time + "</font>" +
+                                "<br>工作时长： <font color='#ff8212'>" + aMutes + "</font>"));
                     }
                 }
                 break;
@@ -94,7 +97,8 @@ public class OrderTimeActivity extends BaseActivity {
             case 3:
             case 8:
             case 9:
-                tvOrderCompleteInfo.setText(String.format("模式:  %1$s\n开机时间：%2$s\n工作时长：自动", modeStr[mMode], time));
+                tvOrderCompleteInfo.setText(Html.fromHtml("模 &emsp 式： <font color='#ff8212'>" + modeStr[mMode] + "</font>" + "<br>开机时间： <font color='#ff8212'>" + time + "</font>" +
+                        "<br>工作时长： <font color='#ff8212'>自动</font>"));
                 break;
             default:
                 break;
@@ -117,11 +121,10 @@ public class OrderTimeActivity extends BaseActivity {
         if (lrIndex == -1) {
             return;
         }
-        if (bsaeHudHelper == null)
-        {
-            bsaeHudHelper = new HudHelper();
+        if (baseHudHelper == null) {
+            baseHudHelper = new HudHelper();
         }
-        bsaeHudHelper.hudShow(this, "正在加载...");
+        baseHudHelper.hudShow(this, "正在加载...");
         if (thread == null) {
             thread = new Thread(new Runnable() {
                 @Override
@@ -136,7 +139,7 @@ public class OrderTimeActivity extends BaseActivity {
                                 public void run() {
                                     thread.interrupt();
                                     SystemClock.sleep(500);
-                                    bsaeHudHelper.hudHide();
+                                    baseHudHelper.hudHide();
                                     if (HomeFragment1.success == 1) {
                                         Toast.makeText(OrderTimeActivity.this, "已取消预约", Toast.LENGTH_SHORT).show();
                                         handler.removeCallbacksAndMessages(null);
@@ -152,8 +155,7 @@ public class OrderTimeActivity extends BaseActivity {
                 }
             });
         }
-        if (!thread.isAlive())
-        {
+        if (!thread.isAlive()) {
             thread.start();
         }
     }

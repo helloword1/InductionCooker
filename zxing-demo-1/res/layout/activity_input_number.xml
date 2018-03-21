@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.jinlin.zxing.InputNumberActivity">
+
+    <RelativeLayout
+        android:id="@+id/capture_narbar"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="@color/colorbg">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="添加设备"
+            android:textColor="@color/colorblack"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/capture_back_tv"
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingLeft="5dp"
+            android:text="返回"
+            android:textColor="@color/colormain"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:background="#807f7f" />
+
+    <RelativeLayout
+        android:id="@+id/capture_bottomview"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_gravity="bottom"
+        android:background="@color/colorbg"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="15dp">
+
+        <TextView
+            android:id="@+id/capture_tip_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="或输入设备序号"
+            android:textColor="@color/colorblack" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/capture_tip_tv"
+            android:layout_marginTop="10dp">
+
+            <Button
+                android:id="@+id/capture_add_bt"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/add_button"
+                android:text="添加"
+                android:textColor="@color/status_text" />
+
+            <EditText
+                android:id="@+id/etCapicture"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/capture_add_bt"
+                android:background="@drawable/bg_edittext"
+                android:inputType="textCapSentences"
+                android:lines="1"
+                android:paddingLeft="5dp" />
+        </RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>

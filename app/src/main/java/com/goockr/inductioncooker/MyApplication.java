@@ -15,11 +15,7 @@ import org.json.JSONObject;
  */
 
 public class MyApplication extends Application {
-
-    static Context context;
-    private int activityCount;//activity的count数
-    TipDialog tipDialog;
-
+    public static Context context;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -27,7 +23,6 @@ public class MyApplication extends Application {
         context = getApplicationContext();
         instances = this;
         autoLogin();
-
     }
 
     private void autoLogin() {
@@ -45,91 +40,6 @@ public class MyApplication extends Application {
         User.getInstance().updateUserInfoWithdict(json);
 
     }
-
-
-
-//    private void registerActivityLifecycleCallbacks() {
-//
-//        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
-//                                               @Override
-//                                               public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-//
-//                                               }
-//
-//                                               @Override
-//                                               public void onActivityStarted(final Activity activity) {
-//
-//                                                   if (activity.getClass()!=LauncherActivity.class)
-//                                                   {
-//                                                       activityCount++;
-//                                                   }
-//
-//
-//                                                   if (!WifiConnectHelper.isConnectWifi()) {
-//
-//                                                       if (activityCount==1)
-//                                                       {
-//                                                           if (tipDialog!=null&&tipDialog.isShowing())
-//                                                           {
-//                                                               return;
-//                                                           }
-//
-//                                                           String msg = "请连接名称以“" + Common.KWIFI_NAME_HEAD + "”开头的wifi";
-//
-//                                                           tipDialog = new TipDialog(activity, getResources().getString(R.string.dialog_tip), msg, false, true);
-//                                                           tipDialog.setActionButtonClick(new TipDialog.TipDialogCallBack() {
-//                                                               @Override
-//                                                               public void buttonClick(TipDialog dialog) {
-//                                                                   activity.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));//直接进入手机中的wifi网络设置界面
-//                                                                   dialog.dismiss();
-//                                                               }
-//                                                           });
-//                                                           tipDialog.show();
-//                                                       }
-//
-//                                                   }else {
-//                                                       if (tipDialog!=null&&tipDialog.isShowing())
-//                                                       {
-//                                                           tipDialog.dismiss();
-//                                                       }
-//                                                   }
-//
-//
-//                                               }
-//
-//                                               @Override
-//                                               public void onActivityResumed(Activity activity) {
-//
-//                                               }
-//
-//                                               @Override
-//                                               public void onActivityPaused(Activity activity) {
-//
-//                                               }
-//
-//                                               @Override
-//                                               public void onActivityStopped(Activity activity) {
-//                                                   if (activity.getClass()!=LauncherActivity.class)
-//                                                   {
-//                                                       activityCount--;
-//                                                   }
-//                                               }
-//
-//                                               @Override
-//                                               public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-//
-//                                               }
-//
-//                                               @Override
-//                                               public void onActivityDestroyed(Activity activity) {
-//
-//                                               }
-//                                           }
-//        );
-//
-//    }
-
-
     //获取context
     public static final Context getContext() {
         return context;

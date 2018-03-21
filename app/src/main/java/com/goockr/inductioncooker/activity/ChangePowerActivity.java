@@ -42,10 +42,7 @@ public class ChangePowerActivity extends BaseActivity {
     private DialogView dialogView;
     private String mphone = "phone";
     private int finish = 112;
-    private List<String> codes = new ArrayList<>();
-    private JSONArray list;
     private String deviceId;
-    private String devcode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,11 +73,11 @@ public class ChangePowerActivity extends BaseActivity {
                     hud.hudShowTip(ChangePowerActivity.this, "请写正确的手机号码", 1500);
                     return;
                 }
-                if (NotNull.isNotNull(list) && list.length() > 0) {
+//                if (NotNull.isNotNull(list) && list.length() > 0) {
                     initNet(phoneStr);
-                } else {
-                    hud.hudShowTip(ChangePowerActivity.this, "暂无可用设备", 1500);
-                }
+//                } else {
+//                    hud.hudShowTip(ChangePowerActivity.this, "暂无可用设备", 1500);
+//                }
 
             }
 
@@ -171,7 +168,8 @@ public class ChangePowerActivity extends BaseActivity {
                     e.printStackTrace();
                 }
                 if (result == 0) {//成功
-                    startActivityForResult(new Intent(ChangePowerActivity.this, ChangePowerNextActivity.class).putExtra(mphone, phone).putExtra("Device", codes.get(0)), 111);
+                    startActivityForResult(new Intent(ChangePowerActivity.this, ChangePowerNextActivity.class).putExtra(mphone, phone).putExtra("DEVICE_ID", deviceId), 111);
+
                 }
 
             }

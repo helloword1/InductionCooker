@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:paddingTop="5dp"
-        android:text="电磁炉-0001"
+        android:text=""
         android:textSize="13sp" />
 
     <LinearLayout

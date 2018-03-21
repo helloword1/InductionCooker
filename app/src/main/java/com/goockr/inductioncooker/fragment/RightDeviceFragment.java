@@ -1,8 +1,10 @@
 package com.goockr.inductioncooker.fragment;
 
+import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -26,6 +28,7 @@ import android.widget.Toast;
 
 import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.activity.ChoiceCookTimeActivity;
+import com.goockr.inductioncooker.activity.LoginActivity;
 import com.goockr.inductioncooker.activity.OrderTimeActivity;
 import com.goockr.inductioncooker.activity.ReservationActivity;
 import com.goockr.inductioncooker.common.Common;
@@ -179,7 +182,7 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
     private final int POWER_OFF = 0;
     private final int POWER_ON = 1;
     private String RPower;
-    private int stall=-1;
+    private int stall = -1;
     ImageTopButton select_bt_r; // 之前的按钮
     private boolean isReverBl = false;
     private static String effectStr0;
@@ -433,6 +436,10 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
         device_change.buttonOnClickListener(new ImageTopButton.ImageTopButtonOnClickListener() {
             @Override
             public void imageTopButtonOnClickListener(ImageTopButton button) {
+                if (!NotNull.isNotNull(SharePreferencesUtils.getToken())) {
+                    showTurnOn("请先登陆，才可操作");
+                    return;
+                }
                 //设备切换
                 JSONArray device_list = FileCache.get(getActivity()).getAsJSONArray("DEVICE_LIST");
                 if (!NotNull.isNotNull(device_list)) {
@@ -496,9 +503,14 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
 
     @Override
     public void imageTopButtonOnClickListener(ImageTopButton button) {
-        if (code < 0) {
-            button.setEnabledStatus(false);
-            showTurnOn();
+        if (NotNull.isNotNull(SharePreferencesUtils.getToken())) {
+            if (code < 0) {
+                button.setEnabledStatus(false);
+                showTurnOn();
+                return;
+            }
+        } else {
+            showTurnOn("请先登陆，才可操作");
             return;
         }
         int id = button.getId();
@@ -661,7 +673,11 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
             currentButton = button;
         } else {
             button.setEnabledStatus(false);
-            showTurnOn();
+            if (NotNull.isNotNull(SharePreferencesUtils.getToken())) {
+                showTurnOn();
+            } else {
+                showTurnOn("请先登陆，才可操作");
+            }
         }
 
     }
@@ -855,7 +871,7 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
             if (bsaeHudHelper == null) {
                 bsaeHudHelper = new HudHelper();
             }
-            bsaeHudHelper.hudShow(getActivity(),"正在设置");
+            bsaeHudHelper.hudShow(getActivity(), "正在设置");
             if (timeThread == null || (timeThread != null && !timeThread.isAlive())) {
                 timeThread = new Thread(new Runnable() {
                     @Override
@@ -921,7 +937,7 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
             if (bsaeHudHelper == null) {
                 bsaeHudHelper = new HudHelper();
             }
-            bsaeHudHelper.hudShow(getActivity(),"正在设置");
+            bsaeHudHelper.hudShow(getActivity(), "正在设置");
             if (!NotNull.isNotNull(reduceThread) || !reduceThread.isAlive()) {
                 reduceThread = new Thread(new Runnable() {
                     @Override
@@ -951,7 +967,7 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
             if (bsaeHudHelper == null) {
                 bsaeHudHelper = new HudHelper();
             }
-           bsaeHudHelper.hudShow(getActivity(),"正在设置");
+            bsaeHudHelper.hudShow(getActivity(), "正在设置");
             if (!NotNull.isNotNull(plusThread) || !plusThread.isAlive()) {
                 plusThread = new Thread(new Runnable() {
                     @Override
@@ -1183,7 +1199,7 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
                             if (bsaeHudHelper == null) {
                                 bsaeHudHelper = new HudHelper();
                             }
-                            bsaeHudHelper.hudShow(getActivity(),"设置成功");
+                            bsaeHudHelper.hudShow(getActivity(), "设置成功");
                         }
                         bsaeHudHelper.hudHide();
                         break;
@@ -1345,6 +1361,33 @@ public class RightDeviceFragment extends Fragment implements ImageTopButton.Imag
         });
         TextView dialongText = (TextView) view.findViewById(R.id.dialongText);
         dialongText.setText("请先打开电磁炉");
+    }
+
+    private void showTurnOn(String msg) {
+        final DialogView dialogView = DialogView.getSingleton();
+        dialogView.setContext(getActivity());
+        View view = dialogView.showCustomDialong(R.layout.dialog_power_change);
+        TextView tvCancel = (TextView) view.findViewById(R.id.tvCancel);
+        TextView tvContent = (TextView) view.findViewById(R.id.tvContent);
+        TextView alert_title = (TextView) view.findViewById(R.id.alert_title);
+        alert_title.setText("提示");
+        tvContent.setText(msg);
+        TextView tvCommit = (TextView) view.findViewById(R.id.tvCommit);
+        tvCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogView.dismissDialong();
+            }
+        });
+        tvCommit.setOnClickListener(new View.OnClickListener() {
+            @TargetApi(Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View v) {
+                getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
+                dialogView.dismissDialong();
+            }
+        });
+
     }
 
     /**

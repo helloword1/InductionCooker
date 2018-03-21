@@ -68,7 +68,6 @@ public class Tabbar extends LinearLayout {
         selLinearLayout = ll_home;
         selectIndex = 0;
 
-
     }
 
     public Tabbar(Context context, AttributeSet attrs) {

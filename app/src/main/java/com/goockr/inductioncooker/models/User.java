@@ -9,7 +9,6 @@ import org.json.JSONObject;
 
 public class User {
 
-
     public String name;
 
     public String token;
@@ -17,14 +16,6 @@ public class User {
     public String userId;
 
     public String mobile;
-
-
-
-    public Device device;
-
-
-
-
     static User user;
 
     public static User getInstance(){

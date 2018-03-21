@@ -133,14 +133,16 @@ public class HudHelper {
     }
 
     public void hudUpdateAndHid(String tip, double delay) {
-        hud.setLabel(tip);
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                hudHide();
-            }
-        }, (int) delay * 1000);
+        if (hud!=null){
+            hud.setLabel(tip);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    hudHide();
+                }
+            }, (int) delay * 1000);
+        }
     }
 
     public void hudUpdateAndHid(String tip, double delay, final SuccessCallBack callBack) {

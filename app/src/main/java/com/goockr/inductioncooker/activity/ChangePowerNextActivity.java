@@ -1,5 +1,6 @@
 package com.goockr.inductioncooker.activity;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
@@ -61,15 +62,15 @@ public class ChangePowerNextActivity extends BaseActivity implements View.OnClic
         initDatas();
     }
 
+    @SuppressLint("SetTextI18n")
     @TargetApi(Build.VERSION_CODES.N)
     private void initDatas() {
         phone = getIntent().getStringExtra("phone");
-        device = getIntent().getStringExtra("device");
+        device = getIntent().getStringExtra("DEVICE_ID");
         if (NotNull.isNotNull(phone)){
-            tvShowTips.setText(Html.fromHtml(String.format("请输入验证手机 <font color='#ff8212'>%s</font> 收到的短信验证码", phone),Html.FROM_HTML_MODE_COMPACT));
+            tvShowTips.setText(Html.fromHtml("请输入验证手机 <font color='#ff8212'>"+phone+"</font> 收到的短信验证码"));
         }
     }
-
 
     private void showTurnOn() {
         View view = dialogView.showCustomDialong(R.layout.dialog_power_change_succeed);
@@ -154,7 +155,6 @@ public class ChangePowerNextActivity extends BaseActivity implements View.OnClic
                 Log.d(tag, "onFailure: " + error.msg);
                 hud.hudShow(ChangePowerNextActivity.this, error.msg);
             }
-
             @Override
             public void onSuccess(JSONObject jsonObject) {
                 hud.hudHide();

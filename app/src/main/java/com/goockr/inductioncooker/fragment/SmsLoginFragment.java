@@ -171,10 +171,8 @@ public class SmsLoginFragment extends Fragment {
     public void OnClick(View v) {
         switch (v.getId()) {
             case (R.id.navbar_left_bt):
-
                 FragmentHelper.pop(getActivity());
                 getActivity().finish();
-
                 break;
             case (R.id.navbar_right_bt):
                 registerButtonClick();
@@ -298,9 +296,7 @@ public class SmsLoginFragment extends Fragment {
     }
 
     private void dataSave(JSONObject json) {
-
         JSONObject object = new JSONObject();
-
         String name = "";
         String token = "";
         String mobile = "";

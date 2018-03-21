@@ -185,7 +185,7 @@ public class TimeReservationFragment extends Fragment {
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
                 String format = df.format(new Date(time1));// new Date()为获取当前系统时间
                 Log.d(TAG, "onClick: " + format);
-                bsaeHudHelper.hudShow(getActivity(), "正在加载...");
+                bsaeHudHelper.hudShow(getActivity(), "正在设置...");
                 if (thread == null) {
                     thread = new Thread(new Runnable() {
                         @Override

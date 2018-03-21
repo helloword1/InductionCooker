@@ -85,7 +85,6 @@ public class SharePreferencesUtils {
     }
 
     private static String getInfo(String filename, String key) {
-
         SharedPreferences sharedPreferences = MyApplication.getContext().getSharedPreferences(filename, Context.MODE_PRIVATE);
         return sharedPreferences.getString(key, null);
 

@@ -18,28 +18,16 @@ import butterknife.ButterKnife;
 public class RegisterFragment extends Fragment {
 
     View contentView;
-
     private FragmentManager fragmentManager;
-
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
         contentView = inflater.inflate(R.layout.fragment_pwd_login, container, false);
-
         ButterKnife.bind(this, contentView);
-
         initData();
-
         initUI();
-
-
         initEvent();
-
         return contentView;
     }
 
@@ -51,17 +39,9 @@ public class RegisterFragment extends Fragment {
 
     private void initUI() {
 
-
-
     }
 
     private void initEvent() {
 
-
-
     }
-
-
-
-
 }

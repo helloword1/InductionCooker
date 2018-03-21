@@ -3,14 +3,17 @@ package com.jinlin.zxing;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -27,6 +30,8 @@ import com.google.zxing.DecodeHintType;
 import com.google.zxing.Result;
 import com.google.zxing.camera.CameraManager;
 import com.google.zxing.client.result.ResultParser;
+import com.google.zxing.common.BitmapUtils;
+import com.google.zxing.decode.BitmapDecoder;
 import com.google.zxing.decode.CaptureActivityHandler;
 import com.google.zxing.decode.FinishListener;
 import com.google.zxing.view.ViewfinderView;
@@ -183,6 +188,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         findViewById(R.id.capture_scan_photo).setOnClickListener(this);
 
         findViewById(R.id.capture_flashlight).setOnClickListener(this);
+        findViewById(R.id.inputNumber).setOnClickListener(this);
 
         findViewById(R.id.capture_back_tv).setOnClickListener(this);
 
@@ -352,56 +358,11 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-
-       /* if (resultCode == RESULT_OK) {
-            final ProgressDialog progressDialog;
-            switch (requestCode) {
-                case REQUEST_CODE:
-
-                    // 获取选中图片的路径
-                    Cursor cursor = getContentResolver().query(intent.getData(), null, null, null, null);
-                    if (cursor.moveToFirst()) {
-                        photoPath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-                    }
-                    cursor.close();
-
-                    progressDialog = new ProgressDialog(this);
-                    progressDialog.setMessage("正在扫描...");
-                    progressDialog.setCancelable(false);
-                    progressDialog.show();
-
-                    new Thread(new Runnable() {
-
-                        @Override
-                        public void run() {
-
-                            Bitmap img = BitmapUtils.getCompressedBitmap(photoPath);
-
-                            BitmapDecoder decoder = new BitmapDecoder(
-                                    CaptureActivity.this);
-                            Result result = decoder.getRawResult(img);
-
-                            if (result != null) {
-                                Message m = mHandler.obtainMessage();
-                                m.what = PARSE_BARCODE_SUC;
-                                m.obj = ResultParser.parseResult(result)
-                                        .toString();
-                                mHandler.sendMessage(m);
-                            } else {
-                                Message m = mHandler.obtainMessage();
-                                m.what = PARSE_BARCODE_FAIL;
-                                mHandler.sendMessage(m);
-                            }
-
-                            progressDialog.dismiss();
-
-                        }
-                    }).start();
-
-                    break;
-
-            }
-        }*/
+        if (resultCode == RESULT_OK&&requestCode==110) {
+            String number = intent.getExtras().getString("INPUT_NUMBER");
+            CaptureActivity.this.setResult(110, new Intent().putExtra("RESULT_DATA", number));
+            finish();
+        }
 
     }
 
@@ -544,7 +505,6 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
     @Override
     public void onClick(View v) {
-
         if (v.getId() == R.id.capture_scan_photo) {
             Intent innerIntent = new Intent(Intent.ACTION_GET_CONTENT); // "android.intent.action.GET_CONTENT"
             innerIntent.setType("image/*");
@@ -563,32 +523,10 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         } else if (v.getId() == R.id.capture_add_bt) {
             CaptureActivity.this.setResult(RESULT_OK, new Intent().putExtra("RESULT_DATA", editText.getText().toString()));
             finish();
+        } else if (v.getId() == R.id.inputNumber) {
+            startActivityForResult(new Intent(this, InputNumberActivity.class),110);
         }
-
-//		switch (v.getId()) {
-//			case R.id.capture_scan_photo: // 图片识别
-//				// 打开手机中的相册
-//				Intent innerIntent = new Intent(Intent.ACTION_GET_CONTENT); // "android.intent.action.GET_CONTENT"
-//				innerIntent.setType("image/*");
-//				Intent wrapperIntent = Intent.createChooser(innerIntent,
-//						"选择二维码图片");
-//				this.startActivityForResult(wrapperIntent, REQUEST_CODE);
-//				break;
-//
-//			case R.id.capture_flashlight:
-//				if (isFlashlightOpen) {
-//					cameraManager.setTorch(false); // 关闭闪光灯
-//					isFlashlightOpen = false;
-//				}
-//				else {
-//					cameraManager.setTorch(true); // 打开闪光灯
-//					isFlashlightOpen = true;
-//				}
-//				break;
-//			default:
-//				break;
-//		}
-
     }
+
 
 }

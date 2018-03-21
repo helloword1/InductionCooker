@@ -78,7 +78,6 @@ public class ChoiceCookTimeActivity extends BaseActivity {
         navbarLeftBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 finish();
             }
         });

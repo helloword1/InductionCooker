@@ -23,8 +23,9 @@
     <!--dialog 提示-->
     <string name="dialog_tip">提示</string>
     <string name="dialog_disconnect">设备连接已断开，是否重新连接？</string>
-    <string name="dialog_failconnect">连接服务器超时..</string>
+    <string name="dialog_failconnect">连接服务器超时！</string>
     <string name="dialog_connect">连接服务器成功</string>
+    <string name="dialog_connecting">正在连接...</string>
 
     <!--登录注册相关-->
     <string name="phone_null">请先填写手机号码</string>

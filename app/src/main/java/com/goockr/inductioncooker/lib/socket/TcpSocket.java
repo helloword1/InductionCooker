@@ -5,7 +5,6 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.goockr.inductioncooker.utils.NotNull;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -85,7 +84,6 @@ public class TcpSocket {
                 try {
                     socket = new Socket();
                     SocketAddress socAddress = new InetSocketAddress(host, port);
-                    //  Log.v("","开始连接");
                     socket.connect(socAddress, 2000);
                 } catch (UnknownHostException e) {
                     isConnect = false;
@@ -97,13 +95,11 @@ public class TcpSocket {
                     isConnect = false;
                     e.printStackTrace();
                 }
-                //  Log.v("","连接结果："+isConnect);
                 if (isConnect == false) {
-                    // Log.v("","连接失败回调："+isConnect);
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            callBack.onFailConnnect();
+                            callBack.onFailConnect();
                         }
                     });
                     disConnect();
@@ -195,7 +191,7 @@ public class TcpSocket {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            callBack.onFailConnnect();
+                            callBack.onFailConnect();
                         }
                     });
                     disConnect();
@@ -299,6 +295,10 @@ public class TcpSocket {
         DataOutputStream out = null;
         try {
             if (socket == null) {
+                if (NotNull.isNotNull(callBack))
+                {
+                    callBack.onDisconnect();
+                }
                 return;
             }
             out = new DataOutputStream(socket.getOutputStream());
@@ -388,7 +388,7 @@ public class TcpSocket {
     public interface TcpSocketCallBack {
         void onConnect();
 
-        void onFailConnnect();
+        void onFailConnect();
 
         void onDisconnect();
 

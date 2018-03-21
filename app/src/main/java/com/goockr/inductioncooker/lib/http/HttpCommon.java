@@ -6,7 +6,8 @@ package com.goockr.inductioncooker.lib.http;
 
 public class HttpCommon {
 
-    public static final String K_HTTP_IP = "http://120.24.5.252:8099";
+//    public static final String K_HTTP_IP = "http://120.24.5.252:8099";
+    public static final String K_HTTP_IP = "http://www.zhuhaiheyi.com";
 //    public static final String K_HTTP_IP  = "http://192.168.1.187:8080";
 
     public static final String COOKER_SERVLET_APP_SERVLET = "/cooker/servlet/AppServlet";

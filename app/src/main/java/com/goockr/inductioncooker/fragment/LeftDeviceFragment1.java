@@ -1,8 +1,11 @@
 package com.goockr.inductioncooker.fragment;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -26,6 +29,7 @@ import android.widget.Toast;
 
 import com.goockr.inductioncooker.R;
 import com.goockr.inductioncooker.activity.ChoiceCookTimeActivity;
+import com.goockr.inductioncooker.activity.LoginActivity;
 import com.goockr.inductioncooker.activity.OrderTimeActivity;
 import com.goockr.inductioncooker.activity.ReservationActivity;
 import com.goockr.inductioncooker.common.Common;
@@ -54,6 +58,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
@@ -115,6 +120,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
     private final int TIME_COOK = 1;
     private final int TIME_OUT = 2;
     // 更新进度条用的
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -315,7 +321,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         hud = KProgressHUD.create(getActivity()).setStyle(KProgressHUD.Style.SPIN_INDETERMINATE).setLabel("切换中....").setCancellable(true).setAnimationSpeed(1).setDimAmount(0.5f);
 
         power_bt.setNormImageId(R.mipmap.btn_openkey_normal);
-        power_bt.setDisabledImageId(R.mipmap.btn_openkey_pressed);
+        power_bt.setDisabledImageId(R.mipmap.btn_openkey_normal);
         power_bt.setSelImageId(R.mipmap.btn_openkey_selected);
 //        power_bt.setNormTextCoclor(R.color.colorBlack);
         power_bt.setText("开关机");
@@ -460,6 +466,10 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         device_change.buttonOnClickListener(new ImageTopButton.ImageTopButtonOnClickListener() {
             @Override
             public void imageTopButtonOnClickListener(ImageTopButton button) {
+                if (!NotNull.isNotNull(SharePreferencesUtils.getToken())) {
+                    showTurnOn("请先登陆，才可操作");
+                    return;
+                }
                 //设备切换
                 JSONArray device_list = FileCache.get(getActivity()).getAsJSONArray("DEVICE_LIST");
                 if (!NotNull.isNotNull(device_list)) {
@@ -487,6 +497,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
                             listener.deviceListener(list.get(position).getDeviceId());
                             new HudHelper().hudShowChange(getActivity(), "正在切换中");
                             SharePreferencesUtils.setDeviceId(list.get(position).getDeviceId());
+
                         }
                     }
                 });
@@ -521,11 +532,19 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
      */
     @Override
     public void imageTopButtonOnClickListener(ImageTopButton button) {
-        if (code < 0) {
-            button.setEnabledStatus(false);
-            showTurnOn();
+        if (NotNull.isNotNull(SharePreferencesUtils.getToken())) {
+            if (code < 0) {
+                button.setEnabledStatus(false);
+
+                showTurnOn();
+
+                return;
+            }
+        } else {
+            showTurnOn("请先登陆，才可操作");
             return;
         }
+
         int id = button.getId();
 
         // 开关机、预约、取消预约三个按钮点击事件
@@ -684,7 +703,11 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
             currentButton = button;
         } else {
             button.setEnabledStatus(false);
-            showTurnOn();
+            if (NotNull.isNotNull(SharePreferencesUtils.getToken())) {
+                showTurnOn();
+            } else {
+                showTurnOn("请先登陆，才可操作");
+            }
         }
     }
 
@@ -792,7 +815,7 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
             if (bsaeHudHelper == null) {
                 bsaeHudHelper = new HudHelper();
             }
-            bsaeHudHelper.hudShow(getActivity(),"正在设置");
+            bsaeHudHelper.hudShow(getActivity(), "正在设置");
             if (timeThread == null || (timeThread != null && !timeThread.isAlive())) {
                 timeThread = new Thread(new Runnable() {
                     @Override
@@ -1419,6 +1442,33 @@ public class LeftDeviceFragment1 extends Fragment implements ImageTopButton.Imag
         if (select_bt != null) {
             select_bt.setEnabledStatus(false);
         }
+
+    }
+
+    private void showTurnOn(String msg) {
+        final DialogView dialogView = DialogView.getSingleton();
+        dialogView.setContext(getActivity());
+        View view = dialogView.showCustomDialong(R.layout.dialog_power_change);
+        TextView tvCancel = (TextView) view.findViewById(R.id.tvCancel);
+        TextView tvContent = (TextView) view.findViewById(R.id.tvContent);
+        TextView alert_title = (TextView) view.findViewById(R.id.alert_title);
+        alert_title.setText("提示");
+        tvContent.setText(msg);
+        TextView tvCommit = (TextView) view.findViewById(R.id.tvCommit);
+        tvCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogView.dismissDialong();
+            }
+        });
+        tvCommit.setOnClickListener(new View.OnClickListener() {
+            @TargetApi(Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View v) {
+                getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
+                dialogView.dismissDialong();
+            }
+        });
 
     }
 

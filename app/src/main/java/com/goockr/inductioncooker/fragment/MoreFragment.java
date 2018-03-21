@@ -60,6 +60,8 @@ public class MoreFragment extends Fragment {
 
     private List<MyAbStractSection> mData;
     private MoreAdapter sectionAdapter;
+    private List<MyAbStractSection> list;
+    private boolean isLogin = true;
 
     @Override
     public void onResume() {
@@ -77,8 +79,6 @@ public class MoreFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 
-
-
         return view;
     }
 
@@ -90,19 +90,24 @@ public class MoreFragment extends Fragment {
             if (TextUtils.equals(result_data, "")) {
                 return;
             }
+            if (result_data.contains("@_@")) {
+                String[] split = result_data.split("@_@");
+                result_data = split[1];
+            } else {
+                MyToast.showToastCustomerStyleText(getActivity(), "二维码不正确");
+                return;
+            }
             bindDevice(result_data);
-
+        } else if (resultCode == 110 && requestCode == 120 && NotNull.isNotNull(data)) {
+            String result_data = data.getStringExtra("RESULT_DATA");
+            if (TextUtils.equals(result_data, "")) {
+                return;
+            }
+            bindDevice(result_data);
         }
     }
 
     private void bindDevice(String device) {
-        if (device.contains("@_@")) {
-            String[] split = device.split("@_@");
-            device = split[1];
-        } else {
-            MyToast.showToastCustomerStyleText(getActivity(), "二维码不正确");
-            return;
-        }
         Map<String, Object> map = new HashMap<>();
         map.put("mobile", SharePreferencesUtils.getMobile());
         map.put("token", SharePreferencesUtils.getToken());
@@ -171,7 +176,7 @@ public class MoreFragment extends Fragment {
         if (mData.size() != 0) {
             mData.clear();
         }
-        List<MyAbStractSection> list = new ArrayList<>();
+        list = new ArrayList<>();
         list.add(new MyAbStractSection(true, "Section 1", false));
         list.add(new MyAbStractSection(new MoreAdapterModel("添加设备", "", true).setCenter(false)));
         list.add(new MyAbStractSection(true, "Section 2", true));
@@ -179,13 +184,17 @@ public class MoreFragment extends Fragment {
         if (!NotNull.isNotNull(userName)) {
             userName = SharePreferencesUtils.getMobile();
         }
+        if (!NotNull.isNotNull(userName)) {
+            isLogin = false;
+        }
         list.add(new MyAbStractSection(new MoreAdapterModel("权限转移", "", true).setCenter(false)));
         list.add(new MyAbStractSection(new MoreAdapterModel("用户名", userName, false).setCenter(false)));
         list.add(new MyAbStractSection(new MoreAdapterModel("修改登录密码", "", true).setCenter(false)));
         list.add(new MyAbStractSection(new MoreAdapterModel("版本", "V1.0", false).setCenter(false)));
         list.add(new MyAbStractSection(new MoreAdapterModel("厂家信息", "", true).setCenter(false)));
         list.add(new MyAbStractSection(true, "Section 2", true));
-        list.add(new MyAbStractSection(new MoreAdapterModel("退出登录", "", false).setCenter(true)));
+        String loginStr = isLogin ? "退出登录" : "登录";
+        list.add(new MyAbStractSection(new MoreAdapterModel(loginStr, "", false).setCenter(true)));
         mData.addAll(list);
         sectionAdapter = new MoreAdapter(R.layout.item_section_content, R.layout.def_section_head, mData);
         mRecyclerView.setAdapter(sectionAdapter);
@@ -215,8 +224,12 @@ public class MoreFragment extends Fragment {
                         getActivity().startActivity(new Intent(getActivity(), CompanyIntroduceActivity.class));
                         break;
                     case 9://退出登陆
-                        //调用
-                        showTurnOn("");
+                        if (isLogin) {
+                            showTurnOn("");
+                        } else {
+                            getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
+                        }
+
                         break;
                     default:
                         break;
@@ -230,16 +243,18 @@ public class MoreFragment extends Fragment {
             }
         });
     }
+
     /**
      * 删除方法 这里只会删除某个文件夹下的文件，如果传入的directory是个文件，将不做处理 * * @param directory
      */
-    private  void deleteFilesByDirectory(File directory) {
+    private void deleteFilesByDirectory(File directory) {
         if (directory != null && directory.exists() && directory.isDirectory()) {
             for (File item : directory.listFiles()) {
                 item.delete();
             }
         }
     }
+
     private void showTurnOn(String msg) {
         final DialogView dialogView = DialogView.getSingleton();
         dialogView.setContext(getActivity());
@@ -260,9 +275,13 @@ public class MoreFragment extends Fragment {
             @TargetApi(Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
-
-                deleteFilesByDirectory(new File("/data/data/" + getContext().getPackageName() + "/shared_prefs"));
+                MyAbStractSection myAbStractSection = list.get(4);
+                myAbStractSection.t.title = "";
+                sectionAdapter.notifyDataSetChanged();
+                SharePreferencesUtils.cleanUserINfo();
+                FileCache.get(getActivity()).clear();
                 getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
+//                deleteFilesByDirectory(new File("/data/data/" + getContext().getPackageName() + "/shared_prefs"));
                 getActivity().finish();
             }
         });

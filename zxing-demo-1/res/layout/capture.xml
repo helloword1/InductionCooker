@@ -22,6 +22,16 @@
             android:background="@android:color/transparent" />
     </RelativeLayout>
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="80dp"
+        android:id="@+id/inputNumber"
+        android:background="@drawable/input_number_selector"
+        android:src="@mipmap/number_input" />
+
     <RelativeLayout
         android:id="@+id/capture_bottomview"
         android:layout_width="match_parent"
@@ -31,7 +41,8 @@
         android:background="@color/colorbg"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="15dp">
+        android:paddingTop="15dp"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/capture_tip_tv"
@@ -56,18 +67,16 @@
                 android:textColor="@color/status_text" />
 
             <EditText
+                android:id="@+id/etCapicture"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
                 android:layout_marginRight="10dp"
-                android:id="@+id/etCapicture"
                 android:layout_toLeftOf="@+id/capture_add_bt"
                 android:background="@drawable/bg_edittext"
                 android:inputType="textCapSentences"
                 android:lines="1"
                 android:paddingLeft="5dp" />
-
-
         </RelativeLayout>
 
     </RelativeLayout>

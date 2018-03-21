@@ -19,7 +19,6 @@ import java.util.Map;
  * Created by JJT-ssd on 2016/8/31.
  */
 public class WifiHelper {
-
     /**
      * 检查当前网络是否可用
      */
@@ -65,9 +64,6 @@ public class WifiHelper {
         }
         return maps;
     }
-
-
-
     public static String getWifiIP(WifiManager wifiManager)
     {
         //获取wifi下网关
@@ -163,9 +159,4 @@ public class WifiHelper {
                 ((i >> 16 ) & 0xFF) + "." +
                 ( i >> 24 & 0xFF) ;
     }
-
-
-
-
-
 }

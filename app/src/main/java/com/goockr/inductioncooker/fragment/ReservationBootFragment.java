@@ -219,7 +219,6 @@ public class ReservationBootFragment extends Fragment {
             default:
                 break;
         }
-
     }
 
     private void rightButtonClick() {
@@ -233,7 +232,7 @@ public class ReservationBootFragment extends Fragment {
         }
         bsaeHudHelper = new HudHelper();
         if (!canRever) {//不可定时
-            bsaeHudHelper.hudShow(getActivity(), "正在连接...");
+            bsaeHudHelper.hudShow(getActivity(), "正在设置...");
             if (thread == null) {
                 thread = new Thread(new Runnable() {
                     @Override
@@ -262,10 +261,7 @@ public class ReservationBootFragment extends Fragment {
                                 } else {
                                     Toast.makeText(getActivity(), "设置失败", Toast.LENGTH_SHORT).show();
                                 }
-
                             }
-
-
                         }
                     }
                 });
